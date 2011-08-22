@@ -1,5 +1,6 @@
 package spine
 
+
 class NetworkController {
 
 	def networkService
