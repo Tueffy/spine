@@ -10,8 +10,8 @@
 </head>
 <body>
 <div class="body">
-<g:link action="show" controller="graph">Show Graph</g:link><br>
-<g:link url="${resource(dir:'network', file:'importGraph.gsp')}">Import Graph</g:link>
+<g:link action="linkProperties" controller="network">Show available properties</g:link><br>
+<g:link url="${resource(dir:'network', file:'importGraph.gsp')}">Import Graph</g:link> 
 <br>
 <g:link action="exportGraph" controller="graph">Export Graph to stdout</g:link><br>
 

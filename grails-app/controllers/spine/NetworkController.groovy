@@ -10,6 +10,11 @@ class NetworkController {
 		[param : params.filter]
 	}
 	
+	def linkProperties = {
+		def allProperties = networkService.getProperties()
+		[param : allProperties]
+	}
+	
 	def filterGraph = {
 		//println params.filterProperty
 		redirect(controller:'network', action:'index', params : ['filter':params.filterProperty])

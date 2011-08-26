@@ -13,6 +13,21 @@ class NetworkService {
 	def http = new RESTClient( 'http://localhost:7474' )
 	//def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 	
+	def getProperties() {
+		def Set props = []
+		//iterate through all relationships
+		try {
+			//TODO not optimal to retrieve all edges, just to get the list of properties
+			http.get( path: '/db/data/index/relationship/edges' , query: ['query' : '*:*'],  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
+				json.data.each { props.addAll(it.keySet())}
+			}
+		} catch (HttpResponseException ex) {
+			println 'Nothing found when filtering edges: ' + ex.toString()
+			return [] //no edge found with this name, result set empty
+		}
+		return props
+	}
+	
 	def getNodesFromEdge(String edge) {
 		def nodes = []
 		http.get( path: edge,  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
@@ -48,8 +63,8 @@ class NetworkService {
 	def getFilteredEdges (List props){
 		def result
 		//create query string for Lucene
-		def query = props.join(':* OR ') + ':1'
-		//println 'Query string: ' + query
+		def query = props.join(':* OR ') + ':*'
+		println 'Query string: ' + query
 		try {
 			http.get( path: '/db/data/index/relationship/edges' , query: ['query' : query],  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
 				result =  json
