@@ -15,6 +15,14 @@ class NetworkController {
 		[param : allProperties]
 	}
 	
+	def connectPeople = {
+		println "Connect: " + params
+		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
+			def result = networkService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
+			[param : 'Successfully connected']
+		}
+	}
+	
 	def filterGraph = {
 		//println params.filterProperty
 		redirect(controller:'network', action:'index', params : ['filter':params.filterProperty])

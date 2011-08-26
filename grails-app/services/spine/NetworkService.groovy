@@ -25,7 +25,7 @@ class NetworkService {
 			println 'Nothing found when filtering edges: ' + ex.toString()
 			return [] //no edge found with this name, result set empty
 		}
-		return props
+		return props.toList().sort()
 	}
 	
 	def getNodesFromEdge(String edge) {
@@ -58,6 +58,13 @@ class NetworkService {
 			return [] //no node found with this name, result set empty
 		}
 		return result.self
+	}
+	
+	def connectPeople(String source, String target, String props) {
+		//create nodes if they do not exist
+		createNode(source)
+		createNode(target)
+		createEdge([source, target, props])
 	}
 	
 	def getFilteredEdges (List props){

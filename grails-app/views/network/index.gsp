@@ -11,6 +11,7 @@
 <body>
 <div class="body">
 <g:link action="linkProperties" controller="network">Show available properties</g:link><br>
+<g:link action="connectPeople" controller="network">Connect people</g:link><br>
 <g:link url="${resource(dir:'network', file:'importGraph.gsp')}">Import Graph</g:link> 
 <br>
 <g:link action="exportGraph" controller="graph">Export Graph to stdout</g:link><br>
