@@ -4,7 +4,11 @@ package spine
 class NetworkController {
 
 	def networkService
-	
+
+	def ajaxAutoComplete = {
+		println "auto complete.."
+	}
+			
 	def index = {
 		//println params.filter
 		[param : params.filter]
