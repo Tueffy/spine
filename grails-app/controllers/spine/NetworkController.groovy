@@ -2,6 +2,7 @@ package spine
 
 
 class NetworkController {
+	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
 	def networkService
 
@@ -48,5 +49,13 @@ class NetworkController {
 			networkService.importEdges(f.getFileItem().getString())
 		}
 		redirect(controller:'network', action:'index')
+	}
+
+	def checkUser() {
+		if(!session.user) {
+			// i.e. user not logged in
+			redirect(controller:'user',action:'login')
+			return false
+		}
 	}
 }

@@ -113,6 +113,7 @@ class NetworkService {
 			return
 		}
 		def newNodeRef = ""
+
 		def postBody = ['name' : name]
 		http.post( path: '/db/data/node', body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
 			newNodeRef = json
@@ -122,7 +123,28 @@ class NetworkService {
 		postBody = '\"' + newNodeRef.self + '\"'
 		http.post( path: indexPath, body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
 		}
-		
+				
+		//println "Created new node: " + name
+	}
+	
+	//creates a new user in the database
+	def createNewUser(String name, String email, String password) {
+		if (exists(name)) {
+			//println "Node already exists, will do nothing.."
+			return
+		}
+		def newNodeRef = ""
+
+		def postBody = ['name' : name]
+		http.post( path: '/db/data/node', body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
+			newNodeRef = json
+		}
+		//add to lucene index with key "name"
+		def indexPath = '/db/data/index/node/names/name/' + newNodeRef.data.getAt('name')
+		postBody = '\"' + newNodeRef.self + '\"'
+		http.post( path: indexPath, body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
+		}
+				
 		//println "Created new node: " + name
 	}
 	
