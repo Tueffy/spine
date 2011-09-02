@@ -2,7 +2,6 @@ package spine
 
 import java.util.List;
 
-//import groovyx.net.http.HTTPBuilder
 import grails.converters.JSON
 import static groovyx.net.http.ContentType.JSON
 import groovyx.net.http.HttpResponseException
@@ -11,53 +10,35 @@ import groovyx.net.http.RESTClient
 class NetworkService {
     static transactional = false
 	def http = new RESTClient( 'http://localhost:7474' )
+	def graphcomm = new GraphCommunicatorService()
 	//def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
-	
+
 	def getProperties() {
 		def Set props = []
-		//iterate through all relationships
-		try {
-			//TODO not optimal to retrieve all edges, just to get the list of properties
-			http.get( path: '/db/data/index/relationship/edges' , query: ['query' : '*:*'],  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				json.data.each { props.addAll(it.keySet())}
-			}
-		} catch (HttpResponseException ex) {
-			println 'Nothing found when filtering edges: ' + ex.toString()
-			return [] //no edge found with this name, result set empty
+		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : '*:*'])
+		json.data.each {
+			props.addAll(it.keySet())
 		}
 		return props.toList().sort()
 	}
 	
 	def getNodesFromEdge(String edge) {
 		def nodes = []
-		http.get( path: edge,  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			nodes.add(json.start)
-			nodes.add(json.end)
-		}
+		println edge
+		def json = graphcomm.neoGet(edge)
+		nodes.add(json.start)
+		nodes.add(json.end)
 		return nodes
 	}
 	
 	def findNodeByName(String name) {
-		def result
-		try {
-			//lucene query uses " because of whitespaces in the name..
-			http.get( path: '/db/data/index/node/names/name' , query: ['query' : '"'+name+'"'],  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				result =  json
-		} } catch (HttpResponseException ex) {
-			return [] //no node found with this name, result set empty
-		}
-		return result.self
+		def json = graphcomm.neoGet('/db/data/index/node/names/name', ['query' : '"'+name+'"'])
+		return json.self
 	}
 	
 	def getAllNodes() {
-		def result
-		try {
-			http.get( path: '/db/data/index/node/names/name' , query: ['query' : '*'],  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				result =  json
-		} } catch (HttpResponseException ex) {
-			return [] //no node found with this name, result set empty
-		}
-		return result.self
+		def json = graphcomm.neoGet('/db/data/index/node/names/name', ['query' : '*'])
+		return json.self
 	}
 	
 	def connectPeople(String source, String target, String props) {
@@ -68,33 +49,19 @@ class NetworkService {
 	}
 	
 	def getFilteredEdges (List props){
-		def result
-		//create query string for Lucene
 		def query = props.join(':* OR ') + ':*'
-		println 'Query string: ' + query
-		try {
-			http.get( path: '/db/data/index/relationship/edges' , query: ['query' : query],  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				result =  json
-				//println 'Query Result: '
-				//println result
-		} } catch (HttpResponseException ex) {
-			println 'Nothing found when filtering edges'
-			return [] //no edge found with this name, result set empty
-		}
-		return result.self
+		def json = graphcomm.neoGet('/db/data/index/relationship/edges', ['query' : query])
+		return json.self
 	}
 	
 	def findNameByNode(String node) {
-		http.get( path: node,  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			return json.data.name
-		}
+		def json = graphcomm.neoGet(node)
+		return json.data.name
 	}
 	
 	def getTargets(String node) {
-		http.get( path: node+'/relationships/out',  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			//println json.end
-			return json.end
-		}
+		def json = graphcomm.neoGet(node+'/relationships/out')
+		return json.end
 	}
 	
 	def exists(String nameUser)
@@ -108,80 +75,37 @@ class NetworkService {
 	}
 	
 	def createNode(String name) {
-		if (exists(name)) {
-			//println "Node already exists, will do nothing.."
+		if (exists(name)) { //if name exists, do nothing
 			return
 		}
-		def newNodeRef = ""
-
-		def postBody = ['name' : name]
-		http.post( path: '/db/data/node', body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			newNodeRef = json
-		}
-		//add to lucene index with key "name"
+		def newNodeRef = graphcomm.neoPost('/db/data/node', ['name' : name])
 		def indexPath = '/db/data/index/node/names/name/' + newNodeRef.data.getAt('name')
-		postBody = '\"' + newNodeRef.self + '\"'
-		http.post( path: indexPath, body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-		}
-				
-		//println "Created new node: " + name
-	}
-	
-	//creates a new user in the database
-	def createNewUser(String name, String email, String password) {
-		if (exists(name)) {
-			//println "Node already exists, will do nothing.."
-			return
-		}
-		def newNodeRef = ""
-
-		def postBody = ['name' : name]
-		http.post( path: '/db/data/node', body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			newNodeRef = json
-		}
-		//add to lucene index with key "name"
-		def indexPath = '/db/data/index/node/names/name/' + newNodeRef.data.getAt('name')
-		postBody = '\"' + newNodeRef.self + '\"'
-		http.post( path: indexPath, body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-		}
-				
-		//println "Created new node: " + name
+		def postBody = '\"' + newNodeRef.self + '\"'
+		graphcomm.neoPost(indexPath, postBody)
 	}
 	
 	def createEdge (List edgeProperties) {
 		if (!exists(edgeProperties[0])) { //start node
-			println "Source node not found, will create it.."
 			createNode(edgeProperties[0])
 		}
 		if (!exists(edgeProperties[1])) { //end node
-			println "Target node not found, will create it.."
 			createNode(edgeProperties[1])
-		}
+		} 
 		String node1 = findNodeByName(edgeProperties[0])[0]
 		String node2 = findNodeByName(edgeProperties[1])[0]
 		println ('Nodes to connect are: ' + node1 + '->' + node2)
 		def postBody = ['to' : node2, 'type': 'connect']
-		//create relationship
-		def relationship
-		http.post( path: node1+'/relationships', body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			relationship = json.self
-		}
+		def relationship = graphcomm.neoPost(node1+'/relationships', ['to' : node2, 'type': 'connect']).self
 				
 		//update properties with default strength 1
 		def String props = edgeProperties[2] //csv separated properties
 		def String[] allProperties = props.tokenize(';')
 		//println 'All properties: ' + allProperties
 		allProperties.each() { prop ->
-			def putBody = [ (prop) : 1 ]
-			http.put( path: relationship+'/properties', body: putBody, requestContentType: groovyx.net.http.ContentType.JSON  )
-
+			graphcomm.neoPut(relationship+'/properties',  [ (prop) : 1 ] )
 			//add this relationship to index with this property
 			def indexPath = '/db/data/index/relationship/edges/' + prop + '/1'
-			postBody = '\"' + relationship + '\"'
-			//println 'Adding relationship to index with: '
-			//println indexPath + '->' + relationship
-			http.post( path: indexPath, body: postBody, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-			}
+			graphcomm.neoPost(indexPath, '\"' + relationship + '\"')
 		}
 	}
 	
@@ -228,6 +152,5 @@ class NetworkService {
 		def converter = jsongraph as grails.converters.JSON
 		//println converter
 		return converter
-	}
-	
+	}	
 }
