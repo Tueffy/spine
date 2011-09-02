@@ -77,10 +77,16 @@ class NetworkService {
 	def createNode(HashMap props) {
 		if (exists(props.name)) { //if name exists, do nothing
 			return
-		}
-		def newNodeRef = graphcomm.neoPost('/db/data/node', ['name' : props.name])
+		}		
+		def newNodeRef = graphcomm.neoPost('/db/data/node', ['name' : props.name, 'email' : props.email, 'password' : props.password, 'image' : props.image])
+		//put name into index
 		def indexPath = '/db/data/index/node/names/name/' + newNodeRef.data.getAt('name')
 		def postBody = '\"' + newNodeRef.self + '\"'
+		graphcomm.neoPost(indexPath, postBody)
+		
+		//put email into index
+		indexPath = '/db/data/index/node/names/email/' + newNodeRef.data.getAt('email')
+		postBody = '\"' + newNodeRef.self + '\"'
 		graphcomm.neoPost(indexPath, postBody)
 	}
 	
