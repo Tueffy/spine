@@ -36,6 +36,11 @@ class NetworkService {
 		return json.self
 	}
 	
+	def findNodeByEmail(String email) {
+		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : '"'+email+'"'])
+		return json.self
+	}
+	
 	def getAllNodes() {
 		def json = graphcomm.neoGet('/db/data/index/node/names/name', ['query' : '*'])
 		return json.self
