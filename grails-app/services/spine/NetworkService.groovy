@@ -43,8 +43,8 @@ class NetworkService {
 	
 	def connectPeople(String source, String target, String props) {
 		//create nodes if they do not exist
-		createNode(source)
-		createNode(target)
+		createNode([name : source])
+		createNode([name: target])
 		createEdge([source, target, props])
 	}
 	
@@ -74,11 +74,11 @@ class NetworkService {
 		}
 	}
 	
-	def createNode(String name) {
-		if (exists(name)) { //if name exists, do nothing
+	def createNode(HashMap props) {
+		if (exists(props.name)) { //if name exists, do nothing
 			return
 		}
-		def newNodeRef = graphcomm.neoPost('/db/data/node', ['name' : name])
+		def newNodeRef = graphcomm.neoPost('/db/data/node', ['name' : props.name])
 		def indexPath = '/db/data/index/node/names/name/' + newNodeRef.data.getAt('name')
 		def postBody = '\"' + newNodeRef.self + '\"'
 		graphcomm.neoPost(indexPath, postBody)
@@ -86,10 +86,10 @@ class NetworkService {
 	
 	def createEdge (List edgeProperties) {
 		if (!exists(edgeProperties[0])) { //start node
-			createNode(edgeProperties[0])
+			createNode([name : edgeProperties[0]])
 		}
 		if (!exists(edgeProperties[1])) { //end node
-			createNode(edgeProperties[1])
+			createNode([name : edgeProperties[1]])
 		} 
 		String node1 = findNodeByName(edgeProperties[0])[0]
 		String node2 = findNodeByName(edgeProperties[1])[0]
