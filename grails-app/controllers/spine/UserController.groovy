@@ -22,7 +22,7 @@ class UserController {
 	}
 	
 	def doRegister = {	
-		def result = userService.createNewUser(params.name, params.email, params.password)
+		def result = networkService.createNode([name : params.name, email : params.email, password : params.password])
 		redirect(controller:'user', action:'login')
 	}
 	

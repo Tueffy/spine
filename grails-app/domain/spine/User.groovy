@@ -1,6 +1,7 @@
 package spine
 
 class User {
+
 	Long id
 	Long version
 	String email
