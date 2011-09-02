@@ -10,8 +10,10 @@
 </head>
 <body>
 <div class="body">
-<g:link action="index" controller="network">Show Graph</g:link><br>
-<br>
+
+<h2>User: ${user}</h2>
+<g:link action="doLogout" controller="user">Logout</g:link><br>
+<br><br>
 
 <h1>All properties</h1>
 <g:each in="${param}" var="p">

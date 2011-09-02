@@ -3,6 +3,7 @@ package spine
 class UserController {
 
 	def networkService
+	def userService
 
 	def login = {
 	}
@@ -22,7 +23,12 @@ class UserController {
 	}
 	
 	def doRegister = {	
-			def result = networkService.createNewUser(params.name, params.email, params.password)
-			redirect(controller:'user', action:'login')
+		def result = userService.createNewUser(params.name, params.email, params.password)
+		redirect(controller:'user', action:'login')
+	}
+	
+	def doLogout = 	{
+		session.user = null
+		redirect(controller:'user', action:'login')
 	}
 }

@@ -6,25 +6,27 @@ class NetworkController {
 
 	def networkService
 
+	
+	
 	def ajaxAutoComplete = {
 		println "auto complete.."
 	}
 			
 	def index = {
 		//println params.filter
-		[param : params.filter]
+		[param : params.filter, user : session.user]
 	}
 	
 	def linkProperties = {
 		def allProperties = networkService.getProperties()
-		[param : allProperties]
+		[param : allProperties, user : session.user]
 	}
 	
 	def connectPeople = {
 		println "Connect: " + params
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
 			def result = networkService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
-			[param : 'Successfully connected']
+			[param : 'Successfully connected', user : session.user]
 		}
 	}
 	
@@ -51,6 +53,7 @@ class NetworkController {
 		redirect(controller:'network', action:'index')
 	}
 
+	// need to be shifted to the user service
 	def checkUser() {
 		if(!session.user) {
 			// i.e. user not logged in

@@ -10,6 +10,11 @@
 </head>
 <body>
 <div class="body">
+
+<h2>User: ${user}</h2>
+<g:link action="doLogout" controller="user">Logout</g:link><br>
+<br><br>
+
 <g:link action="linkProperties" controller="network">Show available properties</g:link><br>
 <g:link action="connectPeople" controller="network">Connect people</g:link><br>
 <g:link url="${resource(dir:'network', file:'importGraph.gsp')}">Import Graph</g:link> 

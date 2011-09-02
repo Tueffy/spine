@@ -22,6 +22,11 @@ window.onload = function()
 
 <h1>Connect people</h1>
 <div class="body">
+
+<h2>User: ${user}</h2>
+<g:link action="doLogout" controller="user">Logout</g:link><br>
+<br><br>
+
 		<g:form action="connectPeople" method="post">
 			Start person: <input type="text" name="sourcePerson" id="autocomplete" /><br>
 			Target person: <input type="text" name="targetPerson" id="targetPerson" /><br>
