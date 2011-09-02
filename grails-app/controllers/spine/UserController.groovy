@@ -3,7 +3,6 @@ package spine
 class UserController {
 
 	def networkService
-	def userService
 
 	def login = {
 	}
