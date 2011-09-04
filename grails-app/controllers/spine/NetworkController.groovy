@@ -14,19 +14,19 @@ class NetworkController {
 			
 	def index = {
 		//println params.filter
-		[param : params.filter, user : session.user]
+		[param : params.filter, user : session.username]
 	}
 	
 	def linkProperties = {
 		def allProperties = networkService.getProperties()
-		[param : allProperties, user : session.user]
+		[param : allProperties, user : session.username]
 	}
 	
 	def connectPeople = {
 		println "Connect: " + params
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
 			def result = networkService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
-			[param : 'Successfully connected', user : session.user]
+			[param : 'Successfully connected', user : session.username]
 		}
 	}
 	
