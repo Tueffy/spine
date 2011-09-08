@@ -23,7 +23,6 @@ class UserController {
 		if (user.password == params['password']) {
 			session.user = user
 			session.username = user.name
-			println session
 			redirect(controller:'network',action:'index')
 		}
 		else {

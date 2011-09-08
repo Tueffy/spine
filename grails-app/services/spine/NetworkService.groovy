@@ -61,6 +61,11 @@ class NetworkService {
 		createEdge([source, target, props])
 	}
 	
+	def disconnectPeople(String source, String target ){
+		def result = deleteAllEdges([source, target])
+		return result
+	}
+	
 	def getFilteredEdges (List props){
 		def query = props.join(':* OR ') + ':*'
 		def json = graphcomm.neoGet('/db/data/index/relationship/edges', ['query' : query])
@@ -127,7 +132,29 @@ class NetworkService {
 			graphcomm.neoPost(indexPath, '\"' + relationship + '\"')
 		}
 	}
-	
+
+	def deleteAllEdges (List edgeProperties) {
+		def result = ''
+		if (exists(edgeProperties[0])&& exists(edgeProperties[1])) {
+				String node1 = findNodeByName(edgeProperties[0])[0]
+				String node2 = findNodeByName(edgeProperties[1])[0]
+				println ('Nodes to disconnect are: ' + node1 + ' -> ' + node2)
+				def allEdges = graphcomm.neoPost(node1 + '/paths', ['to' : node2,'direction':'out','max_depth': 1])
+
+				if (allEdges.size() != 0){
+					def rels = allEdges.relationships
+					// das muss doch besser gehen
+					rels.each(){ json ->
+						json.each(){ json2 ->
+							graphcomm.neoDelete(json2)
+						}
+					}
+					result = 'Disconnected'
+				}
+				else {result = 'Nothing to disconnect'}
+		}
+	}
+		
     def importEdges(String file) {
 		def input = file.splitEachLine("\t") {fields ->
 			createEdge(fields)
@@ -135,7 +162,7 @@ class NetworkService {
 		println "Edges loaded!"
 	}
 	
-	def getGraphJSON(List allEdges) {
+	def getGraphJSON(List allEdges, String username) {
 		/*TODO
 		 * for each edge, extract nodes (they should not be counted twice)
 		 * then create links in JSON, based on edges list and link to extracted nodes
@@ -146,12 +173,23 @@ class NetworkService {
 		def countMapping = new HashMap() //node ID -> count, needed for force.js
 		def nodes = new ArrayList()
 		def links = new ArrayList()
+		def name
+
 		int count = 0
 		//println 'Number of edges to render: ' + allNodes.size()
 		allEdges.each {	
 			getNodesFromEdge(it).each() {
 				if (!countMapping.containsKey(it)) {
-					nodes.add(['name':findNameByNode(it), 'group':1, 'number':count])
+					
+					//get the username
+					name = findNameByNode(it)
+					
+					// check, if username, then highlight
+					if (name == username)
+						nodes.add(['name':name, 'group':1, 'number':count])
+					else
+						nodes.add(['name':name, 'group':2, 'number':count])
+					
 					countMapping.putAt(it, count)
 					count = count+1
 				}
@@ -169,7 +207,7 @@ class NetworkService {
 		jsongraph.put('nodes',nodes)
 		jsongraph.put('links',links)
 		def converter = jsongraph as grails.converters.JSON
-		//println converter
+		println converter
 		return converter
 	}	
 }

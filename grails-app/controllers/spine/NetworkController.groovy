@@ -14,20 +14,24 @@ class NetworkController {
 			
 	def index = {
 		//println params.filter
-		[param : params.filter, user : session.username]
+		[param : params.filter, user : session.user]
 	}
 	
 	def linkProperties = {
 		def allProperties = networkService.getProperties()
-		[param : allProperties, user : session.username]
+		[param : allProperties, user : session.user]
 	}
 	
 	def connectPeople = {
 		println "Connect: " + params
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
 			def result = networkService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
-			[param : 'Successfully connected', user : session.username]
+			[param : 'Successfully connected', user : session.user]
 		}
+		else if ((params.sourcePerson2 != null) &&  (params.targetPerson2 != null)){
+			def result = networkService.disconnectPeople(params.sourcePerson2, params.targetPerson2)
+			[param : result, user : session.user]
+			}
 	}
 	
 	def filterGraph = {
@@ -40,7 +44,7 @@ class NetworkController {
 		//def edges = networkService.getFilteredEdges( ['ECB','EnBW'])
 		def edges = networkService.getFilteredEdges(params.filter.toString().tokenize(','))
 		//println 'Filtered edges for rendering: ' + edges
-		render (text:networkService.getGraphJSON(edges), contentType:"application/json", encoding:"UTF-8")
+		render (text:networkService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
 	}
 	
 	def importGraph = {

@@ -24,4 +24,12 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		def props = n.getPropertiesByEmail('jure@zakotnik.de')
 		assert props
 	}
+
+	void testDeleteAllEdges() {
+		def n = new NetworkService()
+		n.connectPeople("testuser1","testuser2","test123;test456")
+		def props = n.deleteAllEdges(['testuser1','testuser2'])
+		assert props
+	}
+	
 }

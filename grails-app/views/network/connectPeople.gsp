@@ -43,6 +43,15 @@ window.onload = function()
 				<input type="submit" />
 				<%-- supporting div to display potential matches.--%>
 			</g:form>
+			
+		<h1>Disconnect people</h1>
+			<g:form action="connectPeople" method="post">
+			Start person: <input type="text" name="sourcePerson2" id="autocomplete" /><br>
+			Target person: <input type="text" name="targetPerson2" id="targetPerson2" /><br>
+			<input type="submit" />
+			</g:form>	
+			
+			
 			<div id="autocomplete_choices" class="autocomplete"></div>
 		</div>
 

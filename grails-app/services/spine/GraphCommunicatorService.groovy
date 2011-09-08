@@ -63,12 +63,14 @@ class GraphCommunicatorService {
 	
 	def neoDelete(requestPath) {
 		def result = ''
+		println 'Delete ' + requestPath
 		try {
-			http.delete( path: requestPath, requestContentType: groovyx.net.http.ContentType.JSON )
-		} catch (HttpResponseException ex) {
-			println 'http exception: ' + ex.toString()
+			result = http.delete( path: requestPath)
+		}	catch (HttpResponseException ex) {
+			println 'Nothing found when trying to delete: ' + ex.toString()
 			return []
 		}
 		return result
 	}
+	
 }
