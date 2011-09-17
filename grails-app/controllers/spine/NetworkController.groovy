@@ -40,14 +40,9 @@ class NetworkController {
 	} 
 	
 	def graphJSON = { //callback used by visualisation
-		println params.filter.toString().tokenize(',') + params.userID.toString()
-		//def edges = networkService.getFilteredEdges( ['ECB','EnBW'])
-		def edges
-		if(params.filter.toString() != "")
-			edges = networkService.getFilteredEdges(params.filter.toString().tokenize(','))
-		else
-			edges = networkService.getUserEdges(params.userID.toString(), 2)
-		//println 'Filtered edges for rendering: ' + edges
+		//TODO Jure, merge filter and properties
+		println "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
+		def edges = networkService.getUserEdges(params.userID.toString(), params.filter.toString().tokenize(','), 2)
 		render (text:networkService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
 	}
 	

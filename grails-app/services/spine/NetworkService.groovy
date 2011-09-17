@@ -81,13 +81,24 @@ class NetworkService {
 		return json.self
 	}
 	
-	def getUserEdges (String name, Integer depth){
+	def getUserEdges (String name, List props, Integer depth){
 		def node = findNodeByName(name)
-		def postBody = ['order' : 'depth_first', 'uniqueness' : 'node_path', 'max_depth' : depth]
+		def resultingEdges = []
+		def postBody = ""
+		postBody = ['order' : 'depth_first', 'uniqueness' : 'node_path', 'max_depth' : depth]
 		def json = graphcomm.neoPost(node[0]+'/traverse/relationship', postBody)
-		//def json = graphcomm.neoGet(node[0] + '/relationships/all')
-		println "getUserEdges, with depth: " + json
-		return json.self
+		//filter for props edges only (TODO, could be maybe done already in neo4j instead of application level)
+		json.each {
+			def edge = it
+			edge.data.each {
+				if ((props.size() == 0) || (props.contains(it.key))) { //if no filter, just add all edges
+					resultingEdges.add(edge.self)
+				}
+				println 'getUserEdges, another edge: ' + edge
+			}
+		}
+		println "getUserEdges, with depth: " + resultingEdges
+		return resultingEdges
 		}
 	
 	def findNameByNode(String node) {
@@ -127,6 +138,7 @@ class NetworkService {
 	}
 	
 	def createEdge (List edgeProperties) {
+		//TODO check why only 1 property seems to be created per edge
 		if (!exists(edgeProperties[0])) { //start node
 			createNode([name : edgeProperties[0]])
 		}
