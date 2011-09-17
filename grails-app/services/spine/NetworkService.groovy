@@ -66,6 +66,15 @@ class NetworkService {
 		return result
 	}
 	
+	def getPropsForEdge (List edges) {
+		def props = []
+		edges.each {
+			def json = graphcomm.neoGet(it + '/properties')
+			json.each { props.add(it.key) }
+		}
+		return props
+	}
+	
 	def getFilteredEdges (List props){
 		def query = props.join(':* OR ') + ':*'
 		def json = graphcomm.neoGet('/db/data/index/relationship/edges', ['query' : query])
@@ -73,15 +82,11 @@ class NetworkService {
 	}
 	
 	def getUserEdges (String name, Integer depth){
-		println name
 		def node = findNodeByName(name)
-		//node = findNodeByName("Jure Zakotnik")
-		//def query = '"start":'+'"'+node[0]+'"'
-		def query = 'source:1'
-		println node
-		def json = graphcomm.neoGet(node[0] + '/relationships/all')
-		//def json= graphcomm.neoGet('/db/data/index/relationship/edges', ['query' : query])
-		println "Json: " + json.self
+		def postBody = ['order' : 'depth_first', 'uniqueness' : 'node_path', 'max_depth' : depth]
+		def json = graphcomm.neoPost(node[0]+'/traverse/relationship', postBody)
+		//def json = graphcomm.neoGet(node[0] + '/relationships/all')
+		println "getUserEdges, with depth: " + json
 		return json.self
 		}
 	

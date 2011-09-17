@@ -6,10 +6,24 @@ var vis = d3.select("#chart")
   .append("svg:svg")
     .attr("width", w)
     .attr("height", h)
-    .append("svg:g");
+    .append("svg:g")
+    .attr("id","spineCanvas");
 
+var link;
+var node;
+var force;
+
+function renderCanvas(d){
+	
+	if (d != userID) {
+		//alert(d);
+		userID = d.name;
+		node.remove();
+		link.remove();
+	}
+	
 d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&userID="+userID, function(json) {
-	var force = d3.layout.force()
+	force = d3.layout.force()
       .charge(-350)
       .linkDistance(120)
       .nodes(json.nodes)
@@ -17,7 +31,7 @@ d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&u
       .size([w, h])
       .start();
 
-  var link = vis.selectAll("line.link")
+  link = vis.selectAll("line.link")
       .data(json.links)
     .enter().append("svg:line")
       .attr("class", "link")
@@ -28,7 +42,7 @@ d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&u
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
 
-  var node = vis.selectAll("circle.node")
+  node = vis.selectAll("circle.node")
       .data(json.nodes)
       .enter().append("svg:g")
       .attr("class", "node")
@@ -43,13 +57,12 @@ d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&u
    .attr("font-size", "11")
    .text(function(d) { return d.name; });
 
- 
+	link.on("click", function(d) {
+		  alert(d.source.name + " -> "+d.target.name);
+		  
+	    });//close link.on
 
-  link.on("click", function(d) {
-	  alert(d.source.name + " -> "+d.target.name);
-
-  });
-
+	node.on("click", renderCanvas);
 
   vis.style("opacity", 1e-6)
     .transition()
@@ -63,10 +76,25 @@ d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&u
         .attr("y2", function(d) { return d.target.y; });
     
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; }); 
-  });
+  });//close force.on
+  
+});//close d3.js
 
-  node.on("click", function(d) {
+} // close renderCanvas
+
+// Init the Canvas (Events are registered inside renderCanvas 
+  renderCanvas(userID);
+
+
+		  
+function showNewNodes(d) {
+	
+	//d3.selectAll(node).remove();
+	node.remove();
+	link.remove();
+	//d3.select("#spineCanvas").remove();
 	  var guy = d;
+
 	  d3.json("http://localhost:8080/spine/network/graphJSON?filter=&userID="+d.name, function(json) {
 		  force = d3.layout.force()
 	      .charge(-350)
@@ -100,7 +128,6 @@ d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&u
 	   .attr("font-size", "11")
 	   .text(function(d) { return d.name; });
 	  });
+	  
+  }  
 
-  });  
-  
-});
