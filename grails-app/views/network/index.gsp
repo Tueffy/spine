@@ -12,7 +12,8 @@
 	<div class="body">
 
 		<h3>
-			User:${user}
+			User: ${user.name} <br>
+			Email: ${user.email}
 		</h3>
 		<g:link action="doLogout" controller="user">Logout</g:link>
 		<br> <br>
@@ -38,8 +39,9 @@ Node: <input name="filterProperty" type="text" />
 		<br>
 		<div id="chart"></div>
 		<g:javascript>var filterString='${param}'</g:javascript>
+		<g:javascript>var userID='${user.name}'</g:javascript>
 		<g:javascript src="force.js" />
 	</div>
-
+${user.name}
 </body>
 </html>

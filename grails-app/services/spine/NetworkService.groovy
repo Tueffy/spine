@@ -72,6 +72,19 @@ class NetworkService {
 		return json.self
 	}
 	
+	def getUserEdges (String name, Integer depth){
+		println name
+		def node = findNodeByName(name)
+		//node = findNodeByName("Jure Zakotnik")
+		//def query = '"start":'+'"'+node[0]+'"'
+		def query = 'source:1'
+		println node
+		def json = graphcomm.neoGet(node[0] + '/relationships/all')
+		//def json= graphcomm.neoGet('/db/data/index/relationship/edges', ['query' : query])
+		println "Json: " + json.self
+		return json.self
+		}
+	
 	def findNameByNode(String node) {
 		def json = graphcomm.neoGet(node)
 		return json.data.name
