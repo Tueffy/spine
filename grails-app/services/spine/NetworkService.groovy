@@ -54,6 +54,20 @@ class NetworkService {
 		return json.self
 	}
 	
+	def getAllEdges(String source, String target){
+		// Source and target are node addresses
+		// return List of Edges	
+		def postBody = ['to' : target, 'max_depth': 1]
+		println "S:" + source + "/paths" + postBody
+		def json = graphcomm.neoPost(source+'/paths', postBody)
+		def rels = json.relationships
+		def returnValues = []
+		rels.each{
+			returnValues.add(it[0])
+		}
+		return returnValues
+	}
+	
 	def connectPeople(String source, String target, String props) {
 		//create nodes if they do not exist
 		createNode([name : source])
@@ -190,6 +204,14 @@ class NetworkService {
 			createEdge(fields)
 		}
 		println "Edges loaded!"
+	}
+	
+	def getGraphEdgesJSON(List allEdges) {
+		
+	def values = getPropsForEdge(allEdges)
+	def converter = values as grails.converters.JSON
+	println converter
+	return converter
 	}
 	
 	def getGraphJSON(List allEdges, String username) {

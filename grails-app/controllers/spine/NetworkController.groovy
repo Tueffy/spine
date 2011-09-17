@@ -46,6 +46,20 @@ class NetworkController {
 		render (text:networkService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
 	}
 	
+	def graphEdgesJSON = {
+		println params.source + params.target
+		
+		def sourceNode = networkService.findNodeByName(params.source)
+		def targetNode = networkService.findNodeByName(params.target)
+		println "Source1 " + sourceNode
+		println "Source1 " + targetNode
+		def edges = networkService.getAllEdges(sourceNode[0],targetNode[0])
+		println edges
+		//edges = ["Test","test"]
+		render (text:networkService.getGraphEdgesJSON(edges), contentType:"application/json", encoding:"UTF-8")
+		
+	}
+	
 	def importGraph = {
 		def String fileContent
 		if (params.edgesFile != null) {

@@ -88,13 +88,12 @@ d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&u
 		  
 function showTagsOnLink(d) {
 // Shows all tags on link d	
-	/*
-	d3.json("http://localhost:8080/spine/network/graphJSON?source="+d.source.name+"&target="+d.target.name, function(json) { 
-	alert(json);
-	link.
 	
+	d3.json("http://localhost:8080/spine/network/graphEdgesJSON?source="+d.source.name+"&target="+d.target.name, function(json) { 
+	alert(json);
+		
 	}); // end d2.json
-	*/
+	
 	} // end showTagsOnLink
   
 
