@@ -13,6 +13,9 @@ var link;
 var node;
 var force;
 
+//var serverName = "http://ec2-46-137-44-25.eu-west-1.compute.amazonaws.com:80";
+var serverName = "http://localhost:8080";
+
 function renderCanvas(d){
 	
 	if (d != userID) {
@@ -22,7 +25,7 @@ function renderCanvas(d){
 		link.remove();
 	}
 	
-d3.json("http://localhost:8080/spine/network/graphJSON?filter="+filterString+"&userID="+userID, function(json) {
+d3.json(serverName+"/spine/network/graphJSON?filter="+filterString+"&userID="+userID, function(json) {
 	force = d3.layout.force()
       .charge(-350)
       .linkDistance(120)
