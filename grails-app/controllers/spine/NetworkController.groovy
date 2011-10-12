@@ -13,7 +13,6 @@ class NetworkController {
 	}
 			
 	def index = {
-		//println params.filter
 		[param : params.filter, user : session.user]
 	}
 	
@@ -66,6 +65,11 @@ class NetworkController {
 			println "Loading Edges file now.."
 			def f = request.getFile('edgesFile')
 			networkService.importEdges(f.getFileItem().getString())
+		}
+		if (params.nodesFile != null) {
+			println "Loading Nodes file now.."
+			def f = request.getFile('nodesFile')
+			networkService.importNodes(f.getFileItem().getString())
 		}
 		redirect(controller:'network', action:'index')
 	}

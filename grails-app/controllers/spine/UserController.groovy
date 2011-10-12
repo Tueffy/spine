@@ -17,12 +17,12 @@ class UserController {
 
 		// get json with user information
 		def user = networkService.getPropertiesByEmail(params.email)
-		
+		println 'Login service, recognized user: ' + user
 		// validate, if password is correct, then switch to network view, 
 		//otherwise remain on the site
 		if (user.password == params['password']) {
 			session.user = user
-			session.username = user.name
+			session.username = user.email
 			redirect(controller:'network',action:'index')
 		}
 		else {
@@ -43,7 +43,8 @@ class UserController {
 			redirect(controller:'user', action:'register')
 		} 
 		else {
-			networkService.createNode(['name' : params.name, 'email' : params.email, 'password' : params.password])
+			//TODO the service below needs to be updated to the current property structure
+			//networkService.createNode(['name' : params.name, 'email' : params.email, 'password' : params.password])
 			redirect(controller:'user', action:'login')
 		}
 	}

@@ -21,6 +21,11 @@
 			<input type="file" name="edgesFile" id="edges" />
 			<input type="submit" />
 		</g:uploadForm>
+		<br> Import nodes file
+		<g:uploadForm action="importGraph" method="post">
+			<input type="file" name="nodesFile" id="nodes" />
+			<input type="submit" />
+		</g:uploadForm>
 	</div>
 </body>
 </html>

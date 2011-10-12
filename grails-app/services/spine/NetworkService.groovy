@@ -42,6 +42,7 @@ class NetworkService {
 	}
 	
 	def getPropertiesByEmail(String email) {
+		println 'Searching node by email..'
 		def node = findNodeByEmail(email)
 		def json = graphcomm.neoGet(node)
 		println json.data
@@ -136,18 +137,18 @@ class NetworkService {
 	}
 	
 	def createNode(HashMap props) {
-		if (exists(props.name)) { //if name exists, do nothing
+		if (exists(props.lastName)) { //if name exists, do nothing
 			return
 		}		
-		def newNodeRef = graphcomm.neoPost('/db/data/node', ['name' : props.name, 'email' : props.email, 'password' : props.password, 'image' : props.image])
+		def newNodeRef = graphcomm.neoPost('/db/data/node', props)
 		//put name into index
-		def indexPath = '/db/data/index/node/names/name/' + newNodeRef.data.getAt('name')
-		def postBody = '\"' + newNodeRef.self + '\"'
-		graphcomm.neoPost(indexPath, postBody)
+		def indexPath = '/db/data/index/node/names/'
 		
+		//put last name into index
+		def postBody = ['value' : props.lastName, 'key' : 'name', 'uri' : newNodeRef.self]
+		graphcomm.neoPost(indexPath, postBody)
 		//put email into index
-		indexPath = '/db/data/index/node/names/email/' + newNodeRef.data.getAt('email')
-		postBody = '\"' + newNodeRef.self + '\"'
+		postBody = ['value' : props.email, 'key' : 'email', 'uri' : newNodeRef.self]
 		graphcomm.neoPost(indexPath, postBody)
 	}
 	
@@ -204,6 +205,23 @@ class NetworkService {
 			createEdge(fields)
 		}
 		println "Edges loaded!"
+	}
+	
+	def importNodes(String file) {
+		//per node from file, create a hashmap with properties, which are imported
+		def input = file.splitEachLine("\t") {fields ->
+			println fields
+			def props = [:]
+			props['firstName'] = fields[0]
+			props['lastName'] = fields[1]
+			props['email'] = fields[2]
+			props['password'] = fields[3]
+			props['city'] = fields[4]
+			props['country'] = fields[5]
+			props['image'] = fields[6]
+			createNode(props)
+		}
+		println "Nodes created!"
 	}
 	
 	def getGraphEdgesJSON(List allEdges) {
