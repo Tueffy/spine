@@ -136,10 +136,7 @@ class NetworkService {
 		}
 	}
 	
-	def createNode(HashMap props) {
-		if (exists(props.lastName)) { //if name exists, do nothing
-			return
-		}		
+	def createNode(HashMap props) {		
 		def newNodeRef = graphcomm.neoPost('/db/data/node', props)
 		//put name into index
 		def indexPath = '/db/data/index/node/names/'
@@ -152,16 +149,9 @@ class NetworkService {
 		graphcomm.neoPost(indexPath, postBody)
 	}
 	
-	def createEdge (List edgeProperties) {
-		//TODO check why only 1 property seems to be created per edge
-		if (!exists(edgeProperties[0])) { //start node
-			createNode([name : edgeProperties[0]])
-		}
-		if (!exists(edgeProperties[1])) { //end node
-			createNode([name : edgeProperties[1]])
-		} 
-		String node1 = findNodeByName(edgeProperties[0])[0]
-		String node2 = findNodeByName(edgeProperties[1])[0]
+	def createEdge (List edgeProperties) { 
+		String node1 = findNodeByEmail(edgeProperties[0])[0]
+		String node2 = findNodeByEmail(edgeProperties[1])[0]
 		println ('Nodes to connect are: ' + node1 + '->' + node2)
 		def postBody = ['to' : node2, 'type': 'connect']
 		def relationship = graphcomm.neoPost(node1+'/relationships', ['to' : node2, 'type': 'connect']).self
@@ -169,12 +159,14 @@ class NetworkService {
 		//update properties with default strength 1
 		def String props = edgeProperties[2] //csv separated properties
 		def String[] allProperties = props.tokenize(';')
-		//println 'All properties: ' + allProperties
 		allProperties.each() { prop ->
 			graphcomm.neoPut(relationship+'/properties',  [ (prop) : 1 ] )
 			//add this relationship to index with this property
-			def indexPath = '/db/data/index/relationship/edges/' + prop + '/1'
-			graphcomm.neoPost(indexPath, '\"' + relationship + '\"')
+			//def indexPath = '/db/data/index/relationship/edges/' + prop + '/1'
+			//graphcomm.neoPost(indexPath, '\"' + relationship + '\"')
+			def indexPath = '/db/data/index/relationship/edges/'
+			postBody = ['value' : prop, 'key' : 'tag', 'uri' : relationship]
+			graphcomm.neoPost(indexPath, postBody)
 		}
 	}
 
