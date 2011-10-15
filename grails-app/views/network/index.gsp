@@ -37,10 +37,22 @@ Node: <input name="filterProperty" type="text" />
 		<h1>Filtered graph</h1>
 		${param}
 		<br>
-		<div id="chart"></div>
+		<table>
+		<tr>
+		<td>eMail</td><td>distance</td>
+		</tr>
+			<g:each in="${neighbours}" var="n">
+				<tr>
+					<td>${n.key}</td>
+					<td>${n.value}</td>
+				</tr>
+			</g:each>
+		</table>
+		<!--  
+		 <div id="chart"></div>
 		<g:javascript>var filterString='${param}'</g:javascript>
 		<g:javascript>var userID='${user.name}'</g:javascript>
 		<g:javascript src="force.js" />
-	</div>
+	</div>-->
 </body>
 </html>

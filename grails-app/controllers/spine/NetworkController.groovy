@@ -13,7 +13,9 @@ class NetworkController {
 	}
 			
 	def index = {
-		[param : params.filter, user : session.user]
+		def neighbourParameters = ['userCenter' : session.user]
+		def n  = networkService.getNeighbours(neighbourParameters)
+		[param : params.filter, user : session.user, neighbours : n]
 	}
 	
 	def linkProperties = {

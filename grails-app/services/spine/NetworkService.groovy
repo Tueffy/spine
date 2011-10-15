@@ -118,12 +118,27 @@ class NetworkService {
 	
 	def findNameByNode(String node) {
 		def json = graphcomm.neoGet(node)
-		return json.data.name
+		return json.data.email
 	}
 	
 	def getTargets(String node) {
 		def json = graphcomm.neoGet(node+'/relationships/out')
 		return json.end
+	}
+	
+	def getNeighbours(HashMap parameters) {
+		//parameters contain user session, and others
+		def centerNode = findNodeByEmail(parameters.userCenter.email)[0]
+		def postBody = ['order' : 'breadth_first', 'max_depth' : 3]
+		def path = graphcomm.neoPost(centerNode+'/traverse/path', postBody)
+		//def result = ['center':parameters.userCenter.email , 'centerNode' : centerNode, 'path' : path]
+		def result = [:]
+		path.each { 
+			println 'Searching neighbourhood:' + findNameByNode(it.end)
+			result.put(findNameByNode(it.end), it.length) 
+			 }
+		println 'Neighbourhood search finished: ' + result
+		return result
 	}
 	
 	def exists(String nameUser)
