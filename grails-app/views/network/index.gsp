@@ -50,9 +50,8 @@ Filter ${user.firstName}'s Spine: <input name="filter" type="text" id="autocompl
 		</g:form>
 		<div id="autocomplete_choices" class="autocomplete"></div>
 		<h1>
-			${user.firstName}'s SPINE
+			${user.firstName}'s Spine ${param}
 		</h1>
-		${param}
 		<br>
 		<table>
 			<tr>

@@ -127,20 +127,48 @@ class NetworkService {
 		return json.end
 	}
 	
+
+	
 	def getNeighbours(HashMap parameters) {
 		//parameters contain user session, and others
+		def postBody, result
+			
 		println "Filters used: " + parameters.filter
 		def centerNode = findNodeByEmail(parameters.userCenter.email)[0]
-		def postBody = ['order' : 'breadth_first', 'max_depth' : 3]
+		
+		if (parameters.filter != null && parameters.filter != ''){ 	
+		//1. Index nach Filter suchen
+		def filteredEdges = graphcomm.neoGet('/db/data/index/relationship/edges/tag/'+ parameters.filter)
+		
+		//2. Resultat for each nach length zu center
+		println filteredEdges
+		
+		def lengthMap = [:]
+		filteredEdges.each {  
+			// Length für Center zu Node ermitteln 
+			postBody = ['to' : it.end, 'algorithm' : 'shortestPath','max_depth':10]
+			result = graphcomm.neoPost (centerNode+'/path/', postBody)
+			println "R: " + it.end+ " " + result.length
+			lengthMap.put(findNameByNode(it.end),result.length)
+			}
+		//3. Sort nach length und return
+		return lengthMap.sort { a, b -> a.value <=> b.value }
+		}
+		else {
+		// gib alle Kontakte aus
+		postBody = ['order' : 'breadth_first', 'max_depth' : 3]
 		def path = graphcomm.neoPost(centerNode+'/traverse/path', postBody)
 		//def result = ['center':parameters.userCenter.email , 'centerNode' : centerNode, 'path' : path]
-		def result = [:]
+		// result = empty Map
+		result = [:]
 		path.each { 
 			println 'Searching neighbourhood:' + findNameByNode(it.end)
 			result.put(findNameByNode(it.end), it.length) 
 			 }
 		println 'Neighbourhood search finished: ' + result
 		return result
+		}
+		
 	}
 	
 	def exists(String nameUser)
