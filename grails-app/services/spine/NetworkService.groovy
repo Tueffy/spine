@@ -128,6 +128,7 @@ class NetworkService {
 	
 	def getNeighbours(HashMap parameters) {
 		//parameters contain user session, and others
+		println "Filters used: " + parameters.filter
 		def centerNode = findNodeByEmail(parameters.userCenter.email)[0]
 		def postBody = ['order' : 'breadth_first', 'max_depth' : 3]
 		def path = graphcomm.neoPost(centerNode+'/traverse/path', postBody)
@@ -174,11 +175,13 @@ class NetworkService {
 		//update properties with default strength 1
 		def String props = edgeProperties[2] //csv separated properties
 		def String[] allProperties = props.tokenize(';')
+		println "Property imported for edge is: " + allProperties
+		def m = [:]
+		//each property gets an initial 1 value assigned, i.e. the list is converted to map
+		allProperties.each { m[it]=1 } 
+		graphcomm.neoPut(relationship+'/properties',  m )
 		allProperties.each() { prop ->
-			graphcomm.neoPut(relationship+'/properties',  [ (prop) : 1 ] )
 			//add this relationship to index with this property
-			//def indexPath = '/db/data/index/relationship/edges/' + prop + '/1'
-			//graphcomm.neoPost(indexPath, '\"' + relationship + '\"')
 			def indexPath = '/db/data/index/relationship/edges/'
 			postBody = ['value' : prop, 'key' : 'tag', 'uri' : relationship]
 			graphcomm.neoPost(indexPath, postBody)
