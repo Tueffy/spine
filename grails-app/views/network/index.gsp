@@ -3,21 +3,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
 <title>Social Graph</title>
-<g:javascript src="d3.js" />
-<g:javascript src="d3.geom.js" />
-<g:javascript src="d3.layout.js" />
+<g:javascript library='scriptaculous' />
+<g:javascript>
+window.onload = function()
+                {
+                  new Ajax.Autocompleter("autocomplete",
+                                         "autocomplete_choices",
+                                         "/spine/network/ajaxAutoComplete",
+                                         {}
+                                        );
+                }
+</g:javascript>
+
 
 </head>
 <body>
 	<div class="body">
 
 		<h3>
-			User: ${user.lastName} <br>
-			Email: ${user.email}
+			User:
+			${user.lastName}
+			<br> Email:
+			${user.email}
 		</h3>
 		<g:link action="doLogout" controller="user">Logout</g:link>
-		<br> <br>
-		<br>
+		<br> <br> <br>
 
 		<g:link action="linkProperties" controller="network">Show available properties</g:link>
 		<br>
@@ -34,17 +44,29 @@ Node: <input name="filterProperty" type="text" />
 			<input class="calculate" type="submit" value="Filter graph" />
 		</g:form>
 
-		<h1>Filtered graph</h1>
+		<g:form name="filterByTag" method="post" action="index">
+Filter ${user.firstName}'s Spine: <input name="filter" type="text" id="autocomplete"/>
+			<input class="calculate" type="submit" value="Filter" />
+		</g:form>
+		<div id="autocomplete_choices" class="autocomplete"></div>
+		<h1>
+			${user.firstName}'s SPINE
+		</h1>
 		${param}
 		<br>
 		<table>
-		<tr>
-		<td>eMail</td><td>distance</td>
-		</tr>
+			<tr>
+				<td>eMail</td>
+				<td>distance</td>
+			</tr>
 			<g:each in="${neighbours}" var="n">
 				<tr>
-					<td>${n.key}</td>
-					<td>${n.value}</td>
+					<td>
+						${n.key}
+					</td>
+					<td>
+						${n.value}
+					</td>
 				</tr>
 			</g:each>
 		</table>

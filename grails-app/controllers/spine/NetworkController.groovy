@@ -6,10 +6,11 @@ class NetworkController {
 
 	def networkService
 
-	
-	
 	def ajaxAutoComplete = {
-		println "auto complete.."
+		println "auto complete executed with: " + params.filter
+		
+		def choices = "<ul><li>choice1</li><li>choice2</li></ul>"
+		render choices
 	}
 			
 	def index = {
@@ -19,7 +20,7 @@ class NetworkController {
 	}
 	
 	def linkProperties = {
-		def allProperties = networkService.getProperties()
+		def allProperties = networkService.getProperties('*')
 		[param : allProperties, user : session.user]
 	}
 	

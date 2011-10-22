@@ -13,9 +13,10 @@ class NetworkService {
 	def graphcomm = new GraphCommunicatorService()
 	//def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 
-	def getProperties() {
+	def getProperties(String filter) {
 		def Set props = []
-		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : '*:*'])
+		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : 'ta*:'+filter])
+		//TODO: not optimal solution, because there are too many edges returned
 		json.data.each {
 			props.addAll(it.keySet())
 		}
