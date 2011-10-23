@@ -15,7 +15,8 @@ class NetworkService {
 
 	def getProperties(String filter) {
 		def Set props = []
-		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : 'ta*:'+filter])
+		def json = graphcomm.neoGet('/db/data/index/relationship/tags',['query' : '*:'+filter])
+		println json
 		//TODO: not optimal solution, because there are too many edges returned
 		json.data.each {
 			props.addAll(it.keySet())

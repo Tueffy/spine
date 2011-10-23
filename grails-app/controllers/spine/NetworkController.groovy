@@ -8,8 +8,19 @@ class NetworkController {
 
 	def ajaxAutoComplete = {
 		println "auto complete executed with: " + params.filter
-		
-		def choices = "<ul><li>choice1</li><li>choice2</li></ul>"
+		def inputText = params.filter
+		def allProperties = networkService.getProperties('*')
+		//lookup properties with filter
+		def choices = '<ul>' //ajax list
+		allProperties.each {
+			def choice = it.substring(0,Math.min(inputText.length(),it.length()))
+			println 'Choice is: ' + choice
+			if (choice.compareToIgnoreCase(inputText) == 0) {
+				//println it
+				choices = choices + '<li>' + it + '</li>'
+			}
+		}
+		choices = choices + '</ul>'
 		render choices
 	}
 			
