@@ -15,15 +15,33 @@
 				<table class="userForm">
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'><label
-							for='name'>Name:</label></td>
+							for='lastname'>Last Name:</label></td>
 						<td valign='top' style='text-align: left;' width='80%'><input
-							id="name" type='text' name='name' value='${user?.name}' /></td>
+							id="lastname" type='text' name='lastname' value='${user?.lastname}' /></td>
+					</tr>
+					<tr class='prop'>
+						<td valign='top' style='text-align: left;' width='20%'><label
+							for='firstname'>First Name:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input
+							id="firstname" type='text' name='firstname' value='${user?.firstname}' /></td>
 					</tr>
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'><label
 							for='email'>Email:</label></td>
 						<td valign='top' style='text-align: left;' width='80%'><input
 							id="email" type='text' name='email' value='${user?.email}' /></td>
+					</tr>
+					<tr class='prop'>
+						<td valign='top' style='text-align: left;' width='20%'><label
+							for='country'>Country:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input
+							id="country" type='text' name='country' value='${user?.country}' /></td>
+					</tr>
+					<tr class='prop'>
+						<td valign='top' style='text-align: left;' width='20%'><label
+							for='city'>City:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input
+							id="city" type='text' name='city' value='${user?.city}' /></td>
 					</tr>
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'><label
