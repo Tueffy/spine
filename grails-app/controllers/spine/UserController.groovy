@@ -44,7 +44,13 @@ class UserController {
 		} 
 		else {
 			//TODO the service below needs to be updated to the current property structure
-			//networkService.createNode(['name' : params.name, 'email' : params.email, 'password' : params.password])
+			networkService.createNode(['lastName' : params.lastname, 
+					'firstName' : params.firstname, 
+					'email' : params.email, 
+					'city' : params.city, 
+					'country' : params.country,
+					 'image' : params.email+".jpg",
+					  'password' : params.password])
 			redirect(controller:'user', action:'login')
 		}
 	}
