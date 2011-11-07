@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="layout" content="main" />
-<title>Social Graph</title>
+<title>spine</title>
 <g:javascript library='scriptaculous' />
 <g:javascript>
 window.onload = function()
@@ -20,38 +20,33 @@ window.onload = function()
 <body>
 	<div class="body">
 
-		<h3>
-			User:
-			${user.lastName}
-			<br> Email:
-			${user.email}
-		</h3>
-		<g:link action="doLogout" controller="user">Logout</g:link>
-		<br> <br> <br>
+	<g:link action="about" controller="home">About spine</g:link> . 
+	<g:link action="contact" controller="home">Contact us</g:link> . 
+	Current User: ${user.firstName} ${user.lastName}
+	<g:link action="doLogout" controller="user">Logout</g:link>
+	
+    <h1>spine. the backbone of your knowledge organisation</h1>
 
-		<g:link action="linkProperties" controller="network">Show available properties</g:link>
-		<br>
-		<g:link action="connectPeople" controller="network">Connect people</g:link>
-		<br>
-		<g:link url="${resource(dir:'network', file:'importGraph.gsp')}">Import Graph</g:link>
-		<br>
-		<g:link action="exportGraph" controller="graph">Export Graph to stdout</g:link>
-		<br>
-
-		<g:form name="filterGraph" method="post" action="filterGraph">
-Node: <input name="filterProperty" type="text" />
-			<br>
-			<input class="calculate" type="submit" value="Filter graph" />
-		</g:form>
-
+	<table>
+	<tr>
+		<th>${user.firstName}'s profile</th>
+		<th>${user.firstName}'s spine</th>
+		<th>placeholder</th>
+	</tr>
+	<tr>
+		<td>
+			<img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" /><br>
+			${user.email}<br>
+			${user.city}<br>
+			${user.country}<br>
+			here we need to get all tags for the user
+		</td>
+		<td>
 		<g:form name="filterByTag" method="post" action="index">
 Filter ${user.firstName}'s Spine: <input name="filter" type="text" id="autocomplete"/>
 			<input class="calculate" type="submit" value="Filter" />
 		</g:form>
 		<div id="autocomplete_choices" class="autocomplete"></div>
-		<h1>
-			${user.firstName}'s Spine ${param}
-		</h1>
 		<br>
 		<table>
 			<tr>
@@ -68,6 +63,12 @@ Filter ${user.firstName}'s Spine: <input name="filter" type="text" id="autocompl
 					</td>
 				</tr>
 			</g:each>
+		</table>
+		</td>
+		<td>
+		here area for tag cloud, news, banners, etc.
+		</td>
+		</tr>
 		</table>
 		<!--  
 		 <div id="chart"></div>

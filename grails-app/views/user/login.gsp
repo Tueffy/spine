@@ -5,7 +5,13 @@
 <title>User Login</title>
 </head>
 <body>
+
 	<div class="body">
+
+	<g:link action="about" controller="home">About spine</g:link> . 
+	<g:link action="contact" controller="home">Contact us</g:link> . 
+    <h1>spine. the backbone of your knowledge organisation</h1>
+
 		<g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
@@ -37,8 +43,6 @@
 				</span>
 			</div>
 		</g:form>
-		<g:link action="register" controller="user">Register as new user</g:link>
-		<br>
 	</div>
 </body>
 </html>
