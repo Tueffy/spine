@@ -6,6 +6,12 @@
 </head>
 <body>
 	<div class="body">
+	
+	<g:link action="about" controller="home">About spine</g:link> . 
+	<g:link action="contact" controller="home">Contact us</g:link> . 
+	<g:link action="login" controller="user">Login</g:link><br>
+    <h1>spine. the backbone of your knowledge organisation</h1>
+	
 		<g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
@@ -29,7 +35,7 @@
 						<td valign='top' style='text-align: left;' width='20%'><label
 							for='email'>Email:</label></td>
 						<td valign='top' style='text-align: left;' width='80%'><input
-							id="email" type='text' name='email' value='${user?.email}' /></td>
+							id="email" type='text' name='email' value='${tmp_email}' /></td>
 					</tr>
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'><label

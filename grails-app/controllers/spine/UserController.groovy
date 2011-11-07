@@ -10,6 +10,7 @@ class UserController {
 	
 	// for the register gsp
 	def register = {
+		[tmp_email : session.email]
 	}
 
 	// login user
