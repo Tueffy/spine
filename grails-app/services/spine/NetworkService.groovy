@@ -13,6 +13,21 @@ class NetworkService {
 	def graphcomm = new GraphCommunicatorService()
 	//def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 
+	def getProps() { // not used
+		def postBody = [script : "neo4j = g.getRawGraph().toString()"]	
+		/*
+		 * 
+		 *import org.neo4j.graphdb.index.*
+import org.neo4j.index.lucene.*
+import org.apache.lucene.search.*
+def index = g.getRawGraph().index().forRelationships().
+		 *	
+		 */
+		def json = graphcomm.neoPost('/db/data/ext/GremlinPlugin/graphdb/execute_script', postBody)
+		println json
+		return json
+	}
+	
 	def getProperties(String filter) {
 		def Set props = []
 		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : '*:'+filter])

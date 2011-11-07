@@ -7,6 +7,9 @@ class NetworkController {
 	def networkService
 
 	def ajaxAutoComplete = {
+		println "test.."
+		//def test = networkService.getProps()
+		//println "New props function: " + test
 		println "auto complete executed with: " + params.filter
 		def inputText = params.filter
 		def allProperties = networkService.getProperties('*')
