@@ -49,17 +49,16 @@ Filter ${user.firstName}'s Spine: <input name="filter" type="text" id="autocompl
 		<div id="autocomplete_choices" class="autocomplete"></div>
 		<br>
 		<table>
-			<tr>
-				<td>eMail</td>
-				<td>distance</td>
-			</tr>
 			<g:each in="${neighbours}" var="n">
 				<tr>
 					<td>
-						${n.key}
+						<img src="/spine/images/profiles/${n.email}.jpg" alt="${user.firstName}" width="25" height="25" /><br>
 					</td>
 					<td>
-						${n.value}
+						${n.firstName} ${n.lastName}
+					</td>
+					<td>
+						${n.distance}
 					</td>
 				</tr>
 			</g:each>
