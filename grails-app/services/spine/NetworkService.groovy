@@ -171,8 +171,8 @@ def index = g.getRawGraph().index().forRelationships().
 		return lengthMap.sort { a, b -> a.value <=> b.value }
 		}
 		else {
-		// gib alle Kontakte aus
-		postBody = ['order' : 'breadth_first', 'max_depth' : 3]
+		// gib alle Kontakte aus (CT: auf 2 reduziert)
+		postBody = ['order' : 'breadth_first', 'max_depth' : 2]
 		def path = graphcomm.neoPost(centerNode+'/traverse/path', postBody)
 		//def result = ['center':parameters.userCenter.email , 'centerNode' : centerNode, 'path' : path]
 		// result = empty Map

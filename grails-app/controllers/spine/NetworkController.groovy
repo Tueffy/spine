@@ -30,7 +30,16 @@ class NetworkController {
 	def index = {
 		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
 		def n  = networkService.getNeighbours(neighbourParameters)
-		[param : params.filter, user : session.user, neighbours : n]
+		
+		def allusers = []
+		n.each {
+			def neighbour = networkService.getPropertiesByEmail(it.key)
+			neighbour["distance"] = it.value
+			allusers.add(neighbour)
+		}
+		
+		//println allusers
+		[param : params.filter, user : session.user, neighbours : allusers]
 	}
 	
 	def linkProperties = {
