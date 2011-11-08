@@ -17,10 +17,11 @@ class GraphCommunicatorService {
 		try {
 			http.post( path: requestPath, body: requestQuery, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
 				result = json 
-				//println json
+				//println "Result reveived: " +  resp + ", " + json
 				}
 		} catch (HttpResponseException ex) {
-			println 'http exception: ' + ex.toString()
+			println 'http exception: ' + ex.toString() + " with content type: " + ex.response.contentType
+			//println 'Stack Trace: ' + ex.printStackTrace()
 			return []
 		}
 		return result
