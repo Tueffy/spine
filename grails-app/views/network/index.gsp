@@ -91,7 +91,7 @@
 	      	<li><a href="#">How it works</a></li>
 	      	<li><a href="#">Terms and conditions</a></li>
 	      	<li><a href="#">Disclaimer</a></li>
-	        <li><a href="/spine/user/logout">Logout</a></li>
+	        <li><g:link controller="user"  action="doLogout">Logout</g:link ></li>
 	      </ul>
     	     
       <p class="news">
