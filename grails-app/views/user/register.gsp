@@ -15,7 +15,7 @@
     
       <ul class="links">
       	<li><a href="#">About</a></li>
-        <li><a href="#">Log in</a></li>
+        <li><a href="/spine/user/login">Log in</a></li>
       </ul>
     </div>
   </div>
@@ -30,7 +30,6 @@
 		</g:if>
 		<g:form action="doRegister" method="post">
 			<div class="dialog">
-				<p>Enter your details below:</p>
 				<table class="userForm">
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'>
