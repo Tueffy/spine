@@ -1,18 +1,31 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="layout" content="main" />
-<title>User Login</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Login</title>
+  <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
+  <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
+  <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
+  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
-
-	<div class="body">
-
-	<g:link action="about" controller="home">About spine</g:link> . 
-	<g:link action="contact" controller="home">Contact us</g:link> . 
-    <h1>spine. the backbone of your knowledge organisation</h1>
-
-		<g:if test="flash['message']">
+  <div id="header">
+    <div class="container_24">
+      <img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
+    
+      <ul class="links">
+      	<li><a href="#">About</a></li>
+        <li><a href="/user/login">Log in</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- BEGIN : container -->
+  <div id="container" class="container_24">
+  	<div class="grid_14 alpha landing">
+    	<h2>Connect with your co-workers</h2>
+        <p class="subtitle">Login and do not loose time connecting...</p>
+        <g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
 		<g:form action="doLogin" method="post">
@@ -43,6 +56,10 @@
 				</span>
 			</div>
 		</g:form>
-	</div>
+    </div>
+    <div class="grid_10 omega knowledge"><img src="${resource(dir:'images/home',file:'knowledge.png')}" width="399" height="299" alt="Knowledge"></div>
+  </div>
+  <!-- END : container -->
+  
 </body>
 </html>
