@@ -15,7 +15,7 @@
     
       <ul class="links">
       	<li><a href="#">About</a></li>
-        <li><a href="/user/login">Log in</a></li>
+        <li><a href="/spine/user/login">Log in</a></li>
       </ul>
     </div>
   </div>
@@ -23,7 +23,7 @@
   <!-- BEGIN : container -->
   <div id="container" class="container_24">
   	<div class="grid_14 alpha landing">
-    	<h2>Connect with your coworkers</h2>
+    	<h2>Connect with your co-workers</h2>
         <p class="subtitle">Spine is the <strong>free</strong> private social network for your company</p>
         <g:form method="post" action="doSignup" class="registration" controller="home">
           <input type="text" name="email" value="${home?.email}" />
