@@ -11,22 +11,126 @@ class NetworkService {
     static transactional = false
 	def http = new RESTClient( 'http://localhost:7474' )
 	def graphcomm = new GraphCommunicatorService()
+	
 	//def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
+	
+	/**
+	 * uses the cypher plugin to retrieve the neighbours using offset and limit
+	 * 
+	 * @param email
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	def readNodeViaCypher(String email, int offset, int limit) {
 
-	def getProps() { // not used
-		def postBody = [script : "neo4j = g.getRawGraph().toString()"]	
-		/*
-		 * 
-		 *import org.neo4j.graphdb.index.*
-import org.neo4j.index.lucene.*
-import org.apache.lucene.search.*
-def index = g.getRawGraph().index().forRelationships().
-		 *	
-		 */
-		def json = graphcomm.neoPost('/db/data/ext/GremlinPlugin/graphdb/execute_script', postBody)
-		println json
-		return json
+		def json = graphcomm.neoPost('/db/data/ext/CypherPlugin/graphdb/execute_query', '{"query": "start n=node:names(email={SP_user}) match (n)-[:connect*1..5]->(x) return x skip '+offset+' limit '+limit+'","params": {"SP_user":"'+email+'"}}')
+		def resultNodes = []
+		json.data.each {
+			//println "Elem: "+it[0].data
+			resultNodes.add(it[0].data)
+		}
+
+		return resultNodes
 	}
+	
+	/*
+	 * 
+	 * Network service to provide access to nodes, relationships and properties.
+	 * The naming convention is CRUD - Create, Read, Update, Delete, Exists 
+	 * 
+	 */
+	
+	//Provides all data for a user
+	def readNode(String email) {
+		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : '"'+email+'"'])
+		return json.data[0]
+	}
+	
+	def createNode(Map props) {
+		//TODO: check if node exists already via readNode
+		def newNodeRef = graphcomm.neoPost('/db/data/node', props)
+		addNodeIndex(newNodeRef.self,props)
+		return newNodeRef
+	}
+	
+	def updateNode(String email, Map props) {
+		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : '"'+email+'"'])
+		//node URL is self
+		def newProperties = json.data[0]
+		//replace only the properties that are passed, but neo always requires all properties to be passed as PUT
+		props.each {
+			println it
+			newProperties.(it.getKey()) = it.getValue()
+		}
+		//remove all old index entries
+		removeNodeIndex(json.self[0])
+		//add new properties to node
+		graphcomm.neoPut(json.self[0]+'/properties',  newProperties)
+		//add new index entries
+		addNodeIndex(json.self[0], newProperties)
+	}
+	
+	def deleteNode(String email) {
+		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : '"'+email+'"'])
+		def nodeURL = json.self[0]
+		//TODO: delete all relationships related to node before deleting node
+		//remove node from index
+		removeNodeIndex(email)
+		//remove node itself
+		graphcomm.neoDelete(nodeURL)
+	}
+	
+	def existNode(String email) {
+		
+	}
+	
+	/**
+	 * 
+	 * @param queryObject: Pass a map with the properties.
+	 * key: email, value: expression to filter for nodes, e.g. j* would result in all emails starting with j* 
+	 * @return
+	 */
+	def queryNode(Map queryObject) {
+		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : queryObject.email])
+		def resultEmails = []
+		json.each {
+			resultEmails.add(it.data.email)
+		}
+		return resultEmails
+	}
+	
+	def addNodeIndex(String nodeRef, Map props) {
+		def indexPath = '/db/data/index/node/names/'
+		def postBody = []
+		//put last name into index
+		postBody = ['value' : props.lastName, 'key' : 'lastName', 'uri' : nodeRef]
+		graphcomm.neoPost(indexPath, postBody)
+		
+		//put first name into index
+		postBody = ['value' : props.firstName, 'key' : 'firstName', 'uri' : nodeRef]
+		graphcomm.neoPost(indexPath, postBody)
+		
+		//put email into index
+		postBody = ['value' : props.email, 'key' : 'email', 'uri' : nodeRef]
+		graphcomm.neoPost(indexPath, postBody)
+		
+		//put country into index
+		postBody = ['value' : props.email, 'key' : 'country', 'uri' : nodeRef]
+		graphcomm.neoPost(indexPath, postBody)
+		
+		//put city into index
+		postBody = ['value' : props.email, 'key' : 'city', 'uri' : nodeRef]
+		graphcomm.neoPost(indexPath, postBody)
+	}
+	
+	def removeNodeIndex(String email) {
+		//DELETE /index/node/my_nodes/123
+		def indexPath = '/db/data/index/node/names/'+email
+		graphcomm.neoDelete(indexPath)
+		
+	}
+	
 	
 	def getProperties(String filter) {
 		def Set props = []
@@ -48,29 +152,34 @@ def index = g.getRawGraph().index().forRelationships().
 		return nodes
 	}
 	
-	def findNodeByName(String name) {
+	/* merged, deprecated
+	 * def findNodeByName(String name) {
 		def json = graphcomm.neoGet('/db/data/index/node/names/name', ['query' : '"'+name+'"'])
 		return json.self
 	}
+	*/
 	
-	def findNodeByEmail(String email) {
+	/* merged, deprecated
+	 * def findNodeByEmail(String email) {
 		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : '"'+email+'"'])
 		return json.self
-	}
+	}*/
 	
+	/* merged, deprecated
 	def getPropertiesByEmail(String email) {
 		println 'Searching node by email..'
 		def node = findNodeByEmail(email)
 		def json = graphcomm.neoGet(node)
 		println json.data
 		return json.data
-		
 	}
+	*/
 	
+	/* merged, deprecated
 	def getAllNodes() {
 		def json = graphcomm.neoGet('/db/data/index/node/names/name', ['query' : '*'])
 		return json.self
-	}
+	}*/
 	
 	def getAllEdges(String source, String target){
 		// Source and target are node addresses
@@ -133,17 +242,17 @@ def index = g.getRawGraph().index().forRelationships().
 		return resultingEdges
 		}
 	
+	/*
 	def findNameByNode(String node) {
 		def json = graphcomm.neoGet(node)
 		return json.data.email
-	}
-	
+	}*/
+/*
 	def getTargets(String node) {
 		def json = graphcomm.neoGet(node+'/relationships/out')
 		return json.end
-	}
+	}*/
 	
-
 	
 	def getNeighbours(HashMap parameters) {
 		//parameters contain user session, and others
@@ -187,6 +296,8 @@ def index = g.getRawGraph().index().forRelationships().
 		
 	}
 	
+	/*
+	
 	def exists(String nameUser)
 	{
 		List result = findNodeByName(nameUser)
@@ -195,8 +306,9 @@ def index = g.getRawGraph().index().forRelationships().
 		} else {
 			return true
 		}
-	}
+	}*/
 	
+	/*
 	def createNode(HashMap props) {		
 		def newNodeRef = graphcomm.neoPost('/db/data/node', props)
 		//put name into index
@@ -208,7 +320,7 @@ def index = g.getRawGraph().index().forRelationships().
 		//put email into index
 		postBody = ['value' : props.email, 'key' : 'email', 'uri' : newNodeRef.self]
 		graphcomm.neoPost(indexPath, postBody)
-	}
+	}*/
 	
 	def createEdge (List edgeProperties) { 
 		String node1 = findNodeByEmail(edgeProperties[0])[0]
@@ -287,11 +399,11 @@ def index = g.getRawGraph().index().forRelationships().
 	return converter
 	}
 	
-	def getGraphJSON(List allEdges, String username) {
-		/*TODO
-		 * for each edge, extract nodes (they should not be counted twice)
-		 * then create links in JSON, based on edges list and link to extracted nodes
-		 */
+	/*
+	 * not needed anymore, was used for exporting the whole graph
+	 * 
+	 
+	 def getGraphJSON(List allEdges, String username) {
 		
 		//println 'Render graph from filtered edges..'
 		//format sample: '{"nodes":[{"name":"Myriel","group":1},{"name":"Napoleon","group":1},{"name":"Mlle.Baptistine","group":1},{"name":"Mme.Magloire","group":1{"name":"Brujon","group":4},{"name":"Mme.Hucheloup","group":8}],"links"[{"source":1,"target":0,"value":1},{"source":2,"target":0,"value":8},{"source":3,"target":0,"value":10},{"source":3,"target":2,"value":6},{"source":4,"target":0,"value":1},{"source":5,"target":0,"value":1]}'
@@ -334,5 +446,5 @@ def index = g.getRawGraph().index().forRelationships().
 		def converter = jsongraph as grails.converters.JSON
 		println converter
 		return converter
-	}	
+	}	*/
 }

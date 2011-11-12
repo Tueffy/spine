@@ -36,5 +36,14 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		def notexist = s.loginUser('christian.tueffers@techbank.com', 'password')
 		assert notexist == null
 	}
+	
 
+	void testGetUserNetwork1() {
+		def user = new User()
+		user.email = 'christian.tueffers@techbank.com'
+		def result = s.getUserNetwork(user, null, 0, null)
+		
+		assert result != null
+	}
+	
 }

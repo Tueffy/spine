@@ -53,13 +53,12 @@ class SpineService {
 	 * @param orderType
 	 * @return
 	 */
-	def getUserNetwork(User contextUser, String filter, String offset, String orderType) {
+	def getUserNetwork(User contextUser, String filter, int offset, String orderType) {
 
-		def userList = new HashMap()
-		// search full network, using offset, orderType
-		// loop over list and get all tags and all badges
-		
-		// (user: UserObject, tags: taglist (unique incl. ount), badgelist, distance : distance)
+		// this is the branch if there is no filter
+		def userList = networkService.readNodeViaCypher(contextUser.email, offset, 20)
+
+		//println userList		
 		
 		return userList
     }
