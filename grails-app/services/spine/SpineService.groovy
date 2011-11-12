@@ -4,7 +4,8 @@ class SpineService {
 
     static transactional = false
 	def networkService = new NetworkService()
-
+	def badgeService = new BadgeService()
+	
 	/**
 	 * take the email address and the password and verify, if exist in database and correct
 	 * if yes then instantiate the loggedInUser object, if not, return null
@@ -38,7 +39,7 @@ class SpineService {
 				loggedInUser.freetext = "Free Text"
 				
 			}
-		
+			
 		//returns either the loggedInUser or null, if login was not successful
 		return loggedInUser
 	}
@@ -92,10 +93,49 @@ class SpineService {
 	def createNewUser(HashMap userparams, List tags) {
 		
 		def newUser = new User()
-		def success = new Boolean()
-		
-		// create a new node in the database and add a relationship from loggedInUser to it
+		def success = false
 
+		// copy over the values from the hash map into the user object to trigger validation
+		newUser.firstname = userparams.firstName
+		newUser.lastname = userparams.lastName
+		newUser.password = userparams.password
+		newUser.email = userparams.email
+		newUser.city = userparams.city
+		newUser.country = userparams.country
+		newUser.imagepath = userparams.image
+		newUser.freetext = "Free Text"
+		
+		// set over into map for call
+		def userProps = ['firstName' : newUser.firstname,
+							'lastName' : newUser.lastname, 
+							'city' : newUser.city,
+							'country' : newUser.country,
+							'email' : newUser.email,
+							'password' : newUser.password,
+							'image' : newUser.imagepath]
+		
+		// verify if node with same email does not exist already
+		if (networkService.readNode(newUser.email) != null)
+			success = false
+		else {
+		
+			// create the node
+			def userNode = networkService.createNode(userProps)
+			println userNode
+			
+			// create the node
+			if (userNode != null) {
+				
+				// if a tag list has been provided, this means that a relationship should be created with these tags
+				if (tags != null) {
+					def currentUser = session.user
+					success = setTag(currentUser, newUser, tags)
+				}
+				
+				success = true
+			}
+		}
+		
 		return success
 	}
 	
@@ -157,9 +197,9 @@ class SpineService {
 	 * @param user
 	 * @return badgeList
 	 */
-	def getBadges(User user) {
+	def getBadges(TreeMap tags) {
 		
-		def badgeList = []
+		def badgeList = ['javahero', 'godofhtml']
 		
 		// retrieve list of badges, actually just a list of imagepaths
 		
