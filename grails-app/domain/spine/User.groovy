@@ -4,22 +4,22 @@ class User {
 
 	Long id
 	Long version
-	String lastname
-	String firstname
+	String lastName
+	String firstName
 	String email
 	String company
 	String password
 	String country
 	String city
-	String imagepath
-	String freetext
+	String imagePath
+	String freeText
 	String toString()
 	{ "$email" }
 	def constraints =
 	{
 		email(email:true)
-		lastname(blank:false)
-		firstname(blank:false)
+		lastName(blank:false)
+		firstName(blank:false)
 		password(blank:false, password:true)
 	}
 }

@@ -1,10 +1,12 @@
 package spine
 
+import grails.converters.JSON
+
 
 class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
-	def networkService
+	def spineService
 
 	def ajaxAutoComplete = {
 		println "test.."
@@ -12,7 +14,7 @@ class NetworkController {
 		//println "New props function: " + test
 		println "auto complete executed with: " + params.filter
 		def inputText = params.filter
-		def allProperties = networkService.getProperties('*')
+		def allProperties = spineService.getProperties('*')
 		//lookup properties with filter
 		def choices = '<ul>' //ajax list
 		allProperties.each {
@@ -28,35 +30,40 @@ class NetworkController {
 	}
 			
 	def index = {
+		
+		
+		def n  = spineService.getUserNetwork(session.user, null, 0, null)
+		
+		/*
 		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
-		def n  = networkService.getNeighbours(neighbourParameters)
+		def n  = spineService.getNeighbours(neighbourParameters)
 		
 		def allusers = []
 		n.each {
-			def neighbour = networkService.getPropertiesByEmail(it.key)
+			def neighbour = spineService.getPropertiesByEmail(it.key)
 			neighbour["distance"] = it.value
 			allusers.add(neighbour)
 		}
-		
+		*/
 		//println allusers
-		[param : params.filter, user : session.user, neighbours : allusers]
+		[param : params.filter, user : session.user, neighbours : n]
+		//[param : params.filter, user : session.user]
 	}
 	
 	def linkProperties = {
-		def allProperties = networkService.getProperties('*')
+		def allProperties = spineService.getProperties('*')
 		[param : allProperties, user : session.user]
 	}
 	
 	def connectPeople = {
 		println "Connect: " + params
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
-			def result = networkService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
+			def result = spineService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
 			[param : 'Successfully connected', user : session.user]
-		}
-		else if ((params.sourcePerson2 != null) &&  (params.targetPerson2 != null)){
-			def result = networkService.disconnectPeople(params.sourcePerson2, params.targetPerson2)
+		}else if ((params.sourcePerson2 != null) &&  (params.targetPerson2 != null)){
+			def result = spineService.disconnectPeople(params.sourcePerson2, params.targetPerson2)
 			[param : result, user : session.user]
-			}
+		}
 	}
 	
 	def filterGraph = {
@@ -67,21 +74,21 @@ class NetworkController {
 	def graphJSON = { //callback used by visualisation
 		//TODO Jure, merge filter and properties
 		println "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
-		def edges = networkService.getUserEdges(params.userID.toString(), params.filter.toString().tokenize(','), 2)
-		render (text:networkService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
+		def edges = spineService.getUserEdges(params.userID.toString(), params.filter.toString().tokenize(','), 2)
+		render (text:spineService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
 	}
 	
 	def graphEdgesJSON = {
 		println params.source + params.target
 		
-		def sourceNode = networkService.findNodeByName(params.source)
-		def targetNode = networkService.findNodeByName(params.target)
+		def sourceNode = spineService.findNodeByName(params.source)
+		def targetNode = spineService.findNodeByName(params.target)
 		println "Source1 " + sourceNode
 		println "Source1 " + targetNode
-		def edges = networkService.getAllEdges(sourceNode[0],targetNode[0])
+		def edges = spineService.getAllEdges(sourceNode[0],targetNode[0])
 		println edges
 		//edges = ["Test","test"]
-		render (text:networkService.getGraphEdgesJSON(edges), contentType:"application/json", encoding:"UTF-8")
+		render (text:spineService.getGraphEdgesJSON(edges), contentType:"application/json", encoding:"UTF-8")
 		
 	}
 	
@@ -90,12 +97,12 @@ class NetworkController {
 		if (params.edgesFile != null) {
 			println "Loading Edges file now.."
 			def f = request.getFile('edgesFile')
-			networkService.importEdges(f.getFileItem().getString())
+			spineService.importEdges(f.getFileItem().getString())
 		}
 		if (params.nodesFile != null) {
 			println "Loading Nodes file now.."
 			def f = request.getFile('nodesFile')
-			networkService.importNodes(f.getFileItem().getString())
+			spineService.importNodes(f.getFileItem().getString())
 		}
 		redirect(controller:'network', action:'index')
 	}
@@ -108,4 +115,25 @@ class NetworkController {
 			return false
 		}
 	}
+	
+	
+	def getUser  = {
+		def user = new User()
+		user.email = params.id
+		render user as JSON
+	}
+	
+	
+	def removeTag = {
+		def user = new User()
+		user.email ="test@test.com"
+		render user as JSON
+	}
+	
+	def setTag = {
+		def user = new User()
+		user.email ="test@test.com"
+		render user as JSON
+	}
+
 }

@@ -1,0 +1,77 @@
+felix.klamm@techbank.com	jure.zakotnik@techbank.com	Agile
+joseph.backerman@techbank.com	jure.zakotnik@techbank.com	Agile;Java;IT
+alice.weisse@techbank.com	jure.zakotnik@techbank.com	Agile;Bielefeld;Soccer
+dirk.bekkenberg@techbank.com	jure.zakotnik@techbank.com	Spring;Java
+angela.merkmal@techbank.com	jure.zakotnik@techbank.com	Bielefeld;Wine
+monika.hoppe@techbank.com	jure.zakotnik@techbank.com	Agile;Jax Munich 2011
+christian.tueffers@techbank.com	jure.zakotnik@techbank.com	Agile;Spring;Java;SSL;IT;Bielefeld;Jax Munich 2011;RPG;Warhammer
+markus.long@techbank.com	jure.zakotnik@techbank.com	Bielefeld;IT
+thomas.zapfen@techbank.com	jure.zakotnik@techbank.com	Operations;IT;Agile
+ingmar.mueller@techbank.com	jure.zakotnik@techbank.com	Agile;IT
+arnaud.dolignan@techbank.com	jure.zakotnik@techbank.com	Agile;Java;Development
+beathe.ohse@techbank.com	jure.zakotnik@techbank.com	Bielefeld
+sebastian.vittel@techbank.com	jure.zakotnik@techbank.com	Agile;Java;Operations;IT
+anastasia.gross@techbank.com	jure.zakotnik@techbank.com	Agile;RPG;IT
+matthias.zugler@techbank.com	jure.zakotnik@techbank.com	Java;BPM;Cloud
+vera.rath@techbank.com	jure.zakotnik@techbank.com	Agile;IT;Java
+frank.fesselbrand@techbank.com	jure.zakotnik@techbank.com	Spring;IT
+fero.bacak@techbank.com	jure.zakotnik@techbank.com	Spring;Java
+emmanuelle.bart@techbank.com	manuel.neiner@techbank.com	Beethoven;Violin
+frank.sattler@techbank.com	emmanuelle.bart@techbank.com	Beethoven
+emmanuelle.bart@techbank.com	frank.sattler@techbank.com	Beethoven;Violin
+emmanuelle.bart@techbank.com	matthias.ossler@techbank.com	Beethoven;Violin
+matthias.miller@techbank.com	brigitte.prinz@techbank.com	Market Risk;Front Office;Trading
+michaela.pfeffer@techbank.com	brigitte.prinz@techbank.com	Market Risk;Trading;Swaps
+dirk.bekkenberg@techbank.com	brigitte.prinz@techbank.com	Tradings;Swaps;Stocks;Bonds
+anne.brown@techbank.com	brigitte.prinz@techbank.com	Swaps;Bonds;Derivates
+petra.gerste@techbank.com	brigitte.prinz@techbank.com	Swaps;Trading;Front Office
+brigitte.prinz@techbank.com	petra.gerste@techbank.com	Front Office;Trading;Cash Products
+michaela.pfeffer@techbank.com	petra.gerste@techbank.com	Trading;Cash Products
+jure.zakotnik@techbank.com	petra.gerste@techbank.com	Trading;Cash Products
+markus.long@techbank.com	petra.gerste@techbank.com	Front Office;Trading
+petra.gerste@techbank.com	anne.brown@techbank.com	Front Office;Bonds
+alice.weisse@techbank.com	anne.brown@techbank.com	Front Office;Warrants
+jure.zakotnik@techbank.com	anne.brown@techbank.com	Front Office;Trading;Bonds
+tanja.kopatz@techbank.com	anne.brown@techbank.com	Front Office;Trading;Bonds
+petra.gerste@techbank.com	gundula.geise@techbank.com	Front Office;Warrants
+costanze.kirre@techbank.com	gundula.geise@techbank.com	Front Office;Trading;Warrants
+rudi.korell@techbank.com	gundula.geise@techbank.com	Front Office;OTC
+jure.zakotnik@techbank.com	markus.long@techbank.com	Operations;ITIL;Help Desk
+christian.tueffers@techbank.com	markus.long@techbank.com	Operations;IT
+petra.gerste@techbank.com	markus.long@techbank.com	Help Desk;Operations;IT
+ingmar.mueller@techbank.com	markus.long@techbank.com	ITIL;Operations;IT
+matthias.miller@techbank.com	markus.long@techbank.com	ITIL
+anne.brown@techbank.com	markus.long@techbank.com	Help Desk;Operations
+arnaud.dolignan@techbank.com	markus.long@techbank.com	ITIL
+markus.long@techbank.com	matthias.zugler@techbank.com	Development;Innovation
+monika.hoppe@techbank.com	matthias.zugler@techbank.com	Innovation;IT
+tanja.kopatz@techbank.com	matthias.zugler@techbank.com	Innovation;Cloud
+christian.tueffers@techbank.com	matthias.zugler@techbank.com	Cloud;Innovation
+arnaud.dolignan@techbank.com	matthias.zugler@techbank.com	Innovation
+jure.zakotnik@techbank.com	fero.bacak@techbank.com	Java;HTML;Spring;SSL;SQL
+markus.long@techbank.com	fero.bacak@techbank.com	Spring;Java;HTML
+matthias.miller@techbank.com	fero.bacak@techbank.com	Java;SQL
+thomas.zapfen@techbank.com	fero.bacak@techbank.com	Java;Spring
+matthias.zugler@techbank.com	fero.bacak@techbank.com	Java;Development;Spring;HTML
+christian.tueffers@techbank.com	fero.bacak@techbank.com	Java;Spring
+alice.weisse@techbank.com	fero.bacak@techbank.com	IT;Development;Java
+melanie.murrende@techbank.com	fero.bacak@techbank.com	Java;Spring
+dirk.bekkenberg@techbank.com	fero.bacak@techbank.com	Java;Spring
+frank.fesselbrand@techbank.com	lucien.fivre@techbank.com	Frankfurt;Soccer
+frank.fesselbrand@techbank.com	steve.jabs@techbank.com	Frankfurt;Soccer
+lucien.fivre@techbank.com	frank.fesselbrand@techbank.com	Frankfurt;Soccer
+steve.jabs@techbank.com	lucien.fivre@techbank.com	Frankfurt;Soccer
+lucien.fivre@techbank.com	steve.jabs@techbank.com	Frankfurt;Soccer
+matthias.miller@techbank.com	dietmar.bur@techbank.com	ISO20000
+anastasia.gross@techbank.com	dietmar.bur@techbank.com	ISO20000
+fero.bacak@techbank.com	jonas.jux@techbank.com	Java;HTML
+jonas.jux@techbank.com	falk.seibild@techbank.com	Accounting
+anne.brown@techbank.com	falk.seibild@techbank.com	Accounting
+costanze.kirre@techbank.com	falk.seibild@techbank.com	Accounting
+beathe.ohse@techbank.com	falk.seibild@techbank.com	Accounting
+christian.tueffers@techbank.com	falk.seibild@techbank.com	Accounting
+karina.wocek@techbank.com	vera.rath@techbank.com	Chinese;Innovation
+terence.highgrove@techbank.com	vera.rath@techbank.com	Chinese;Sales Business
+alice.weisse@techbank.com	vera.rath@techbank.com	Switzerland;Chinese
+ingmar.mueller@techbank.com	vera.rath@techbank.com	Sales Business;Chinese
+hope.soli@techbank.com	vera.rath@techbank.com	London;Chinese

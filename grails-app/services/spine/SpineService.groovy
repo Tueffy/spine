@@ -30,13 +30,13 @@ class SpineService {
 				loggedInUser = new User()
 				
 				// copy over the values from the hash map into the user object
-				loggedInUser.firstname = userNode.firstName
-				loggedInUser.lastname = userNode.lastName
+				loggedInUser.firstName = userNode.firstName
+				loggedInUser.lastName = userNode.lastName
 				loggedInUser.email = userNode.email
 				loggedInUser.city = userNode.city
 				loggedInUser.country = userNode.country
-				loggedInUser.imagepath = userNode.image
-				loggedInUser.freetext = "Free Text"
+				loggedInUser.imagePath = userNode.image
+				loggedInUser.freeText = "Free Text"
 				
 			}
 			
@@ -55,10 +55,15 @@ class SpineService {
 	 */
 	def getUserNetwork(User contextUser, String filter, int offset, String orderType) {
 
+		//def userList = new HashMap()
+		// search full network, using offset, orderType
+		// loop over list and get all tags and all badges
+		
+		// (user: UserObject, tags: taglist (unique incl. ount), badgelist, distance : distance)
+		
 		// this is the branch if there is no filter
 		def userList = networkService.readNodeViaCypher(contextUser.email, offset, 20)
 
-		//println userList		
 		
 		return userList
     }
@@ -70,16 +75,19 @@ class SpineService {
 	 * @param amount
 	 * @return userTagList
 	 */
-	def getUserTags(User user, int amount) {
-		
-		def userTagList = new TreeMap()
-		
+	def getUserTags(User user, int maxAmount) {
 		// getRelationships for one user and then getProperties per Relationship;
-		// loop over Properies ad build the userTagList, with one entry per property and the count
-		// use amount to limit what comes 
+		// loop over Properies and build the userTagList, with one entry per property and the count
+		// use amount to limit what comes
+
+		if (maxAmount == null) maxAmount = 50
+		def userTagMap = [:]
+		userTagMap = networkService.getIncomingTagsForNode(user.email)
 		
-		return userTagList
-		
+		// sort hashmap by count of tags
+		def sortedTagMap = userTagMap.sort { a, b -> a.value <=> b.value }
+		def returnMap = sortedTagMap.take[maxAmount]
+		return returnMap
 	}
 	
 	/**
@@ -89,29 +97,29 @@ class SpineService {
 	 * @param tags
 	 * @return success or fail
 	 */
-	def createNewUser(HashMap userparams, List tags) {
+	def createNewUser(HashMap userParams, List tags) {
 		
 		def newUser = new User()
 		def success = false
 
 		// copy over the values from the hash map into the user object to trigger validation
-		newUser.firstname = userparams.firstName
-		newUser.lastname = userparams.lastName
+		newUser.firstName = userparams.firstName
+		newUser.lastName = userparams.lastName
 		newUser.password = userparams.password
 		newUser.email = userparams.email
 		newUser.city = userparams.city
 		newUser.country = userparams.country
-		newUser.imagepath = userparams.image
-		newUser.freetext = "Free Text"
+		newUser.imagePath = userparams.image
+		newUser.freeText = "Free Text"
 		
 		// set over into map for call
-		def userProps = ['firstName' : newUser.firstname,
-							'lastName' : newUser.lastname, 
+		def userProps = ['firstName' : newUser.firstName,
+							'lastName' : newUser.lastName, 
 							'city' : newUser.city,
 							'country' : newUser.country,
 							'email' : newUser.email,
 							'password' : newUser.password,
-							'image' : newUser.imagepath]
+							'image' : newUser.imagePath]
 		
 		// verify if node with same email does not exist already
 		if (networkService.readNode(newUser.email) != null)
@@ -159,17 +167,29 @@ class SpineService {
 	/**
 	 * Add a tag to an existing relationship or create a new one
 	 * 
-	 * @param loggedInUser
-	 * @param targetUser
-	 * @param taglist
+	 * @param loggedInUser = User
+	 * @param targetUser = Email
+	 * @param taglist = space , ; separated list
 	 * @return success
 	 */
-	def setTag(User loggedInUser, User targetUser, String taglist) {
+	def addTag(User loggedInUser, String targetUser, String tags) {
 		
-		def success = new Boolean()
 		// tokenize taglist, then check, if relationship exists, if yes then update, if not then create new one
 		
-		return success
+		def success = new Boolean()
+		def parameters = new HashMap()
+		
+		parameters.put('startNode',loggedInUser.email)
+		parameters.put('endNode',targetUser)
+		parameters.put('tags',tags)
+		
+		//Todo: Relationship exists?
+		if (networkService.readRelationship() == null){
+			networkService.createRelationship(parameters)
+		}
+		networkService.setProperty(parameters)
+		
+		return success=true
 	}
 	
 	/**
@@ -180,11 +200,19 @@ class SpineService {
 	 * @param taglist
 	 * @return sucess
 	 */
-	def removeTag(User loggedInUser, User targetUser, String taglist) {
-		
-		def success = new Boolean()
+	def removeTag(User loggedInUser, User targetUser, String tag) {
 		
 		// remove tag from relationship properties; if no property left, delete relationship
+		
+		def success = new Boolean()
+		def parameters = new HashMap()
+		
+		parameters.put('startNode',loggedInUser)
+		parameters.put('endNode',targetUser)
+		parameters.put('tag',tag)
+		
+		success = networkService.deleteProperty(parameters)
+		
 		
 		return success
 	}

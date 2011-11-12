@@ -11,14 +11,12 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         super.tearDown()
     }
 
-
-	void testReadNodeViaCypher() {
+	void testGetIncomingTagsForNode() {
 		def n = new NetworkService()
-		def result = n.readNodeViaCypher('christian.tueffers@techbank.com', 0, 5)
-		assert n != null
+		def output = n.getIncomingTagsForNode('markus.long@techbank.com')
+		assert output == ['ITIL':3, 'Help':1, 'Operations':3, 'Desk':1, 'IT':2]
 	}
-
-		
+	
 	void testCreateAndDeleteNode(){
 		def n = new NetworkService()
 		def r = ''
@@ -68,7 +66,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		assert data == null
 	}
 
-	void testQueryNode()
+	void testQueryNodeWithSingleParameter()
 	{
 		def n = new NetworkService()
 		def queryObject = [email : 'm*']
@@ -91,5 +89,61 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 			'manuel.neiner@techbank.com', 
 			'matthias.ossler@techbank.com']
 	}
+	void testQueryNodeWithManyParametersOneResult()
+	{
+		def n = new NetworkService()
+		def queryObject = [email : 'm*', lastName : 'Miller']
+		def data = n.queryNode(queryObject)
+		println data
+		assert data == ['matthias.miller@techbank.com'] 
+	}
+	
+	void testQueryNodeWithManyParametersNoResult()
+	{
+		def n = new NetworkService()
+		def queryObject = [email : 'm*', firstName : 'Zakotnik']
+		def data = n.queryNode(queryObject)
+		println data
+		assert data == []
+	}
+	
+	void testCreateRelationship()
+	{
+		def n = new NetworkService()
+		def data = n.createRelationship(['startNode':'jure.zakotnik@techbank.com','endNode':'ingmar.mueller@techbank.com','tags':'zCloud zJava'])
+		println data
+		assert data == "http://localhost:7474/db/data/relationship/9"
+	}
+	
+	void testReadRelationship()
+	{
+		def props = ['startNode':'jure.zakotnik@techbank.com','endNode':'ingmar.mueller@techbank.com']
+		def n = new NetworkService()
+		def json = n.readRelationship(props)
+		println json
+		assert json == 'http://localhost:7474/db/data/relationship/9'
+	}
 
+	void testSetProperty()
+	{
+		def n = new NetworkService()
+		def data = n.setProperty(['startNode':'jure.zakotnik@techbank.com','endNode':'ingmar.mueller@techbank.com','tags':'zCloud zJava'])
+		println data
+		assert data
+
+	}
+	
+	void testCreateDatabase() //use this only with an empty database
+	{
+		def n = new ImportDataService()
+		//read nodes file
+		def nodesInput = new File('.\\test\\unit\\spine\\nodes.txt')
+		//println nodesInput.text
+		//n.importNodes(nodesInput.text)
+		def edgesInput = new File('.\\test\\unit\\spine\\edges.txt')
+		//println edgesInput.text
+		//n.importEdges(edgesInput.text)
+		
+		assert true
+	}
 }

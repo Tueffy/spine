@@ -35,8 +35,8 @@ class UserController {
 		if (loggedInUser != null) {
 			session.user = loggedInUser
 			
-			[user : loggedInUser as JSON]
-			println user
+			//[user : loggedInUser as JSON]
+			//println user
 			redirect(controller:'network',action:'index')
 		}
 		else {
@@ -52,7 +52,7 @@ class UserController {
 	def doRegister = {	
 		
 		// create map with parameters
-		def userparams = ['firstName' : params.firstname, 'lastName' : params.lastname, 'city' : params.city, 'country' : params.country, 'email' : params.email, 'password' : params.password, 'image' : params.email+".jpg"]
+		def userparams = ['firstName' : params.firstName, 'lastName' : params.lastName, 'city' : params.city, 'country' : params.country, 'email' : params.email, 'password' : params.password, 'image' : params.email+".jpg"]
 		
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {

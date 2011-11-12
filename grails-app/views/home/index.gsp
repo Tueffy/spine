@@ -1,40 +1,45 @@
 <html>
- <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta name="layout" content="main" />
-<title>Social Graph</title>
-<g:javascript src="d3.js" />
-<g:javascript src="d3.geom.js" />
-<g:javascript src="d3.layout.js" />
-
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Spine Landing</title>
+  <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
+  <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
+  <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
+  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-<div class="body">
-
-	<g:link action="about" controller="home">About spine</g:link> . 
-	<g:link action="contact" controller="home">Contact us</g:link> . 
-	<g:link action="login" controller="user">Login</g:link><br>
-    <h1>spine. the backbone of your knowledge organisation</h1>
-
-		<g:form action="doSignup" method="post" controller="home">
-			<div class="dialog">
-				<p>Provide organisational email address for signing up to spine:</p>
-				<table class="userForm">
-					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='email'>Email:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input
-							id="email" type='text' name='email' value='${home?.email}' /></td>
-					</tr>
-				</table>
-			</div>
-			<div class="buttons">
-				<span class="formButton"> <input type="submit"
-					value="Sign Up"></input> </span>
-			</div>
-		</g:form>
-
-</div>
+  <div id="header">
+    <div class="container_24">
+      <img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
+    
+      <ul class="links">
+      	<li><a href="#">About Spine</a></li>
+      	<li><a href="#">How it works</a></li>
+      	<li><a href="#">Terms and conditions</a></li>
+      	<li><a href="#">Disclaimer</a></li>
+        <li><a href="/spine/user/login">Log in</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- BEGIN : container -->
+  <div id="container" class="container_24">
+  	<div class="grid_14 alpha landing">
+    	<h2>Connect with your co-workers</h2>
+        <p class="subtitle">Spine is the <strong>free</strong> private social network for your company</p>
+        <g:form method="post" action="doSignup" class="registration" controller="home">
+          <input type="text" name="email" value="${home?.email}" />
+          <input type="submit" value="Sign up" />
+        </g:form>
+    </div>
+    <div class="grid_10 omega knowledge"><img src="${resource(dir:'images/home',file:'knowledge.png')}" width="399" height="299" alt="Knowledge"></div>
+  
+    
+  	
+  </div>
+  
+  <!-- END : container -->
+  
 </body>
 </html>
