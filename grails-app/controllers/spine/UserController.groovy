@@ -1,29 +1,42 @@
 package spine
 
+import grails.converters.JSON
+
 class UserController {
 
-	def networkService
+	def spineService
 
-	// for the login gsp
+	/**
+	 * nothing displayed in case of login
+	 */
 	def login = {
 	}
+
 	
-	// for the register gsp
+	/**
+	 * in case of registration, pre-fill email address
+	 */
 	def register = {
+		
+		//to do: delete email via session, but to differently
 		[tmp_email : session.email]
 	}
 
-	// login user
-	def doLogin = {
 
-		// get json with user information
-		def user = networkService.getPropertiesByEmail(params.email)
-		println 'Login service, recognized user: ' + user
-		// validate, if password is correct, then switch to network view, 
-		//otherwise remain on the site
-		if (user.password == params['password']) {
-			session.user = user
-			session.username = user.email
+	/**
+	 * login user and create the user object for the logged in user
+	 */
+	def doLogin = {
+		
+		// call the spine service to validate login
+		def loggedInUser = spineService.loginUser(params.email, params.password)
+		
+		// if login successful then send JSON user to page, otherwise show error message
+		if (loggedInUser != null) {
+			session.user = loggedInUser
+			
+			//[user : loggedInUser as JSON]
+			//println user
 			redirect(controller:'network',action:'index')
 		}
 		else {
@@ -32,34 +45,33 @@ class UserController {
 		}
 	}
 
-	//register a new user
+	
+	/**
+	 * register user calls spine service to create a user without any tag yet
+	 */
 	def doRegister = {	
 		
-		//validate, if email already existing
-		List result = networkService.findNodeByEmail(params.email)
-
-		//either refuse (message is not properly shown), or create the new user	
-		if (result.size() > 0) {
-			flash['message'] = "User already existing"
-			redirect(controller:'user', action:'register')
-		} 
-		else {
-			//TODO the service below needs to be updated to the current property structure
-			networkService.createNode(['lastName' : params.lastname, 
-					'firstName' : params.firstname, 
-					'email' : params.email, 
-					'city' : params.city, 
-					'country' : params.country,
-					 'image' : params.email+".jpg",
-					  'password' : params.password])
+		// create map with parameters
+		def userparams = ['firstName' : params.firstName, 'lastName' : params.lastName, 'city' : params.city, 'country' : params.country, 'email' : params.email, 'password' : params.password, 'image' : params.email+".jpg"]
+		
+		// call the spine service and depending on success either forward to login page or keep on register page
+		if (spineService.createNewUser(userparams, null) != null) {
+			flash['message'] = "New user has been created"
 			redirect(controller:'user', action:'login')
 		}
+		else {
+			// TO DO: better error handling, detailed information on what has failed
+			flash['message'] = "User creation failed"
+			redirect(controller:'user', action:'register')
+		}
 	}
+
 	
-	// delete the user session object
+	/**
+	 * logout deletes the session object and redirects to the login page
+	 */
 	def doLogout = 	{
 		session.user = null
-		session.username = null
 		redirect(controller:'user', action:'login')
 	}
 }
