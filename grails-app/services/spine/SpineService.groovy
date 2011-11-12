@@ -11,17 +11,39 @@ class SpineService {
 	 * 
 	 * @param email
 	 * @param password
-	 * @return loggedInUser
+	 * @return success
 	 */
 	def loginUser(String email, String password) {
 
-		def loggedInUser = new User()
+		def loggedInUser
+		def success
+
+		// retrieve the node via email address
+		def userNode = networkService.readNode(email)
+
+		// verify if user exists and if passwords are identical
+		if (userNode != null)
+			if (userNode.password == password) {
+				
+				//create an instance of the user
+				loggedInUser = new User()
+				
+				// copy over the values from the hash map into the user object
+				loggedInUser.firstname = userNode.firstName
+				loggedInUser.lastname = userNode.lastName
+				loggedInUser.email = userNode.email
+				loggedInUser.city = userNode.city
+				loggedInUser.country = userNode.country
+				loggedInUser.imagepath = userNode.image
+				loggedInUser.freetext = "Free Text"
+				
+			}
 		
-		// use readNode service
-		
+		//returns either the loggedInUser or null, if login was not successful
 		return loggedInUser
 	}
-		
+
+	
 	/**
 	 * 
 	 * @param contextUser
