@@ -1,5 +1,5 @@
 body { padding: 0; margin: 0; font-family:Tahoma, Geneva, sans-serif; font-size:14px; background:#f0ebd5;}
-
+body, a, div, span, ul, il {}
 a { color:#958e73; }
 a:hover { color:#67624e; }
 
@@ -24,10 +24,11 @@ a:hover { color:#67624e; }
 
 #nav { background:#a0dded; height: 30px; }
 #nav ul { list-style: none; margin:0; padding:0; text-align:right; color:white; font-size:1.08em; line-height: 30px; }
-#nav img.hot_tags { vertical-align:-17%; }
 #nav ul li { display: inline-block; vertical-align:middle; padding-left: 10px; }
-#nav ul li a { color: #4b6e77; text-decoration: none; font-family:"HelveticaRounded Bold"; padding: 3px; border-radius:5px; }
+#nav ul li a { color: #4b6e77; text-decoration: none; padding: 3px; border-radius:5px; }
 #nav ul li a:hover { background: white; }
+#nav #hot_tags { font-size:8pt; font-weight:bold; font-family:sans-serif;}
+#nav #hot_tags img { vertical-align:-17%; }
 
 #container { padding-top: 15px; }
 
@@ -77,16 +78,16 @@ a:hover { color:#67624e; }
 #right .feed .contact .description {  }
 #right .feed .contact .description ul.badges { text-align:right; float:right; padding-right: 15px;}
 #right .feed .contact .description ul.badges li { display: inline; }
-#right .feed .contact .description h3 { color:#67624e; font-family:"HelveticaRounded Bold"; font-size:18px; font-weight:normal; }
+#right .feed .contact .description h3 { color:#67624e; font-size:14px; font-weight:bold; }
 #right .feed .contact .description p.company { color:#958e73; font-size:11px; font-weight:bold; }
 #right .feed .contact .quote { font-family:"HelveticaRounded Bold"; font-size:13px; color:#c9c5b8; margin-top: -22px; margin-bottom: 5px;}
 #right .feed .contact .quote span { font-size: 40px; display:inline-block; vertical-align:sub; }
 #right .feed .contact .quote span:first-child { vertical-align:super; }
-#right .feed .contact ul.tags { list-style:none; }
+#right .feed .contact ul.tags { list-style:none; font-size: 9pt; font-weight:bold}
 #right .feed .contact ul.tags li { display:inline-block; margin-right: 11px;}
-#right .feed .contact ul.tags li a { font-family:"HelveticaRounded Bold"; padding: 3px; border-radius:5px; color:#4b6e77; text-decoration:none; }
+#right .feed .contact ul.tags li a {  padding: 3px; border-radius:5px; text-decoration:none; }
 #right .feed .contact ul.tags li a:hover { background:#c9c5b8; }
-#right .feed .contact .distance { font-family:"HelveticaRounded Bold"; font-size:40px; margin-top:5px; margin-left:35px; border-radius:15px; background:#c9c5b8; padding:4px; text-align:center; width:50px; color:#FFFFFF;}
+#right .feed .contact .distance { font-size:28px; width:40px; height:40px; margin:5px; margin-left:35px; border-radius:10px; background:#c9c5b8; padding:4px; text-align:center; width:50px; color:#FFFFFF;}
 #right .feed .contact .distance_arrows { width:33px; height:24px; background:url(../images/distance_arrows.png) no-repeat; margin-top:-15px; margin-left:20px;}
 #right .feed .separator { border-bottom:1px dotted #958e73; margin-left: 2%; margin-top: 15px; margin-bottom:5px; width:89% }
 
