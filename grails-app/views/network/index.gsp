@@ -14,9 +14,11 @@
         	}
         	
         	function updateSelectedUser(e) {
+        		//alert(e);
         		 // evaluate the JSON
     			var user = eval("("+e.responseText+")");
-    			$("selectedUserName").innerHTML = user.email
+    			$("selectedUserName").innerHTML = user.email;
+    			$("selectedImage").src = "/spine/images/profiles/"+ user.email + ".jpg"
     			//alert(user.email);
 			}
 			
@@ -56,17 +58,22 @@
 <body>
   <div id="header">
   	<div class="container_24">
-      <img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
-    
-      <ul class="links">
-      	<li><a href="#">About</a></li>
-        <li><a href="/spine/user/logout">Logout</a></li>
-      </ul>
-    
-      <form method="post">
-        <input type="text" value="Search Spine" class="search" default="Search Spine" />
-      </form>
-    
+      <span>
+      		<img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
+      </span>
+      <span>
+	      <ul class="links">
+	      	<li><a href="#">About Spine</a></li>
+	      	<li><a href="#">How it works</a></li>
+	      	<li><a href="#">Terms and conditions</a></li>
+	      	<li><a href="#">Disclaimer</a></li>
+	        <li><a href="/spine/user/logout">Logout</a></li>
+	      </ul>
+    	     
+      <p class="news">
+          <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
+          You've got 7 new tags and 1 new badge.
+      </p>       
     </div>
   </div>
   
@@ -96,6 +103,17 @@
           <li class="city">${user.country}</li>
 	  </ul>
       
+      <div class="grid_8 omega badges">
+        <ul>
+          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+        </ul>
+      </div>
+      <br/>
       <ul class="menu">
         <li><a href="#"><span>13</span> Badges</a></li>
         <li><a href="#"><span>146</span> Tags</a></li>
@@ -111,30 +129,17 @@
     <!-- BEGIN : RIGHT column -->
     <div class="grid_20" id="right">
     
-      <!-- BEGIN : Messages & Badges -->
+      <!-- BEGIN : Messages -->
       <div class="grid_12 alpha header">
-        <h2>${user.firstName}'s Spine</h2>
+        <!--  
         <p class="news">
-          <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
-          You've got 7 new tags and 1 new badge.
-        </p>
-        <br/>
-        <div id="message"></div>
-        <div id="error"></div>
+          Happening now: <span id="message"></span><span id="error"></span>
+        </p>       
+      -->
       </div>
       
-      <div class="grid_8 omega badges">
-        <ul>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-        </ul>
-        <p class="all"><a href="">All ${user.firstName}'s Badges</a></p>
-      </div>
-      <!-- END : Messages & Badges -->
+    
+      <!-- END : Messages -->
     
       <!-- BEGIN : Feed & Details blocks -->
       <div class="grid_20 feed_and_details">
@@ -145,7 +150,7 @@
           <div class="grid_10 alpha filter">
                     
             <g:form name="filterByTag" method="post" action="index">
-              <input type="text" name="filter" id="autocomplete" value="Filter ${user.firstName}'s spine" default="Filter Christian‘s spine" />
+              <input type="text" name="filter" id="autocomplete" value="Filter ${user.firstName}'s spine" default="Filter Christian‘s spine" onClick="javascript:this.value='';" />
               <div id="autocomplete_choices" class="autocomplete"></div>              
               <ul class="filter_list">
                 <li>Filter by</li>
@@ -165,14 +170,14 @@
           <g:each in="${neighbours}" var="n">
 	          <!-- BEGIN : 1 person -->
 	          <div class="grid_14 alpha omega contact">
-	          	<div class="grid_3 alpha picture"><img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" /></div>
+	          	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
 	            <div class="grid_10 description omega">
 	              <ul class="badges">
 	                <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
-	                 <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
+	                <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
 	              </ul>
 	             
-	              <h3><g:remoteLink action="getUser" id="1" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>
+	              <h3><g:remoteLink action="getUser" id="${n.email}" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>
 	              <p class="company">Accenture GmbH, ${user.city}, ${user.country}<br> </p>
 	              
 	              <div class="grid_7 alpha">
@@ -230,13 +235,13 @@
           
           <!-- <img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" />  -->
           
-          <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" />
+          <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" id="selectedImage"/>
      
           
           <ul class="description">
             <li class="name" id="selectedUserName">Alewxander Niemz</li>
-            <li class="company">Accenture GmbH</li>
-            <li class="city">Wien</li>
+            <li class="company" id="selectedCompany">Accenture GmbH</li>
+            <li class="city" id="selectedCity">Wien</li>
           </ul>
           
           <ul class="tags">
@@ -267,6 +272,7 @@
       <!-- END : Feed & Details blocks -->
       
       <!-- BEGIN : Footer -->
+      <!--  
       <div class="grid_20 alpha omega footer">
         <div class="grid_5 alpha logo"><img src="/spine/images/logo.png" alt="Spine" width="123" height="34" class="logo" /></div>
         <div class="grid_15 omega links">
@@ -280,12 +286,17 @@
           </ul>
         </div>
       </div>
+      -->
       <!-- END : Footer -->
       
+      <div class="grid_20 alpha omega close">
+        &nbsp;
+      </div>
+      
       <!-- BEGIN : Copyright -->
+      <!-- > -->
       <div class="grid_20 alpha omega copyright">
-        <div class="grid_15 alpha"><a href="#">Disclaimer</a>   | <a href="#">Terms of Service</a></div>
-        <div class="grid_5 omega">All Rights Reserved - Spine 2011</div>
+        <div class="grid_5 omega">&copy; Spine 2011 - All rights reserved</div>
       </div>
       <!-- END : Copyright -->
       
