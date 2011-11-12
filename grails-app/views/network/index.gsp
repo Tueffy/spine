@@ -18,8 +18,32 @@
         		 // evaluate the JSON
     			var user = eval("("+e.responseText+")");
     			$("selectedUserName").innerHTML = user.email;
-    			$("selectedImage").src = "/spine/images/profiles/"+ user.email + ".jpg"
-    			//alert(user.email);
+    			//$("selectedCity").innerHTML = user.email;
+    			//$("selectedCountry").innerHTML = user.email;
+    			
+    			$("selectedImage").src = "/spine/images/profiles/"+ user.email + ".jpg";
+    			
+    			var container = $("selectedTags");
+							
+				var liList = container.childNodes;
+				
+				
+				for(var i = 0;i < liList.length;i++){	
+					//alert (liList[i+1].nodeName);	
+					var li = liList[i]
+					if(li.nodeName == "LI"){
+						$(li).fade();
+					}
+    			}
+				
+				for(var i = 0;i<10;i++){				
+					var new_element = document.createElement('li');
+					new_element.innerHTML = "#" + "test";	
+					container.insertBefore(new_element, container.firstchild);
+	    			$(new_element).grow();
+    			}
+    			
+    			
 			}
 			
 			
@@ -72,7 +96,7 @@
     	     
       <p class="news">
           <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
-          You've got 7 new tags and 1 new badge.
+          <span id="message">You've got 7 new tags and 1 new badge.</span>
       </p>       
     </div>
   </div>
@@ -244,7 +268,7 @@
             <li class="city" id="selectedCity">Wien</li>
           </ul>
           
-          <ul class="tags">
+          <ul class="tags" id="selectedTags">
             <li><a href="#">#html</a></li>
             <li><a href="#">#vienna</a></li>
             <li><a href="#">#jazz</a></li>
@@ -265,7 +289,7 @@
             <li><a href="#">#testing</a></li>
           </ul>
           
-          <p class="all_tags"><a href="#">All Alexander's tags</a></p>
+          <p class="all_tags"><a href="#">All tags</a></p>
         </div> 
         <!-- END : Details block -->
       </div>
