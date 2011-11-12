@@ -1,4 +1,3 @@
-
 class UrlMappings {
 
 	static mappings = {
@@ -6,7 +5,6 @@ class UrlMappings {
 			constraints {
 				// apply constraints here
 			}
-			
 		}
 
 		"/"(view:"/home/index")
