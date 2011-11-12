@@ -1,5 +1,7 @@
 package spine
 
+import grails.converters.JSON
+
 
 class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
@@ -107,5 +109,12 @@ class NetworkController {
 			redirect(controller:'user',action:'login')
 			return false
 		}
+	}
+	
+	
+	def getUser = {
+		def user = new User()
+		user.email ="test@test.com"
+		render user as JSON
 	}
 }
