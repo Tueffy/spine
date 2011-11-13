@@ -11,10 +11,13 @@
 <body>
   <div id="header">
     <div class="container_24">
-      <img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
+      <img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
     
       <ul class="links">
-      	<li><a href="#">About</a></li>
+      	<li><a href="#">About Spine</a></li>
+      	<li><a href="#">How it works</a></li>
+      	<li><a href="#">Terms and conditions</a></li>
+      	<li><a href="#">Disclaimer</a></li>
         <li><a href="/spine/user/login">Log in</a></li>
       </ul>
     </div>
