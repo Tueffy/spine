@@ -75,16 +75,20 @@ class SpineService {
 	 * @param amount
 	 * @return userTagList
 	 */
-	def getUserTags(User user, int amount) {
-		
-		def userTagList = new TreeMap()
-		
+	def getUserTags(User user, int maxAmount) {
 		// getRelationships for one user and then getProperties per Relationship;
-		// loop over Properies ad build the userTagList, with one entry per property and the count
-		// use amount to limit what comes 
+		// loop over Properies and build the userTagList, with one entry per property and the count
+		// use amount to limit what comes
+
+		if (maxAmount == null) maxAmount = 50
+		def userTagMap = [:]
+		userTagMap = networkService.getIncomingTagsForNode(user.email)
 		
-		return userTagList
-		
+		// sort hashmap by count of tags
+		def sortedTagMap = userTagMap.sort { a, b -> a.value <=> b.value }
+		//@TODO: Fix take subset
+		def returnMap = sortedTagMap//.take[maxAmount]
+		return returnMap
 	}
 	
 	/**

@@ -161,6 +161,10 @@ class NetworkService {
 		def tagMap = [:]
 		def json = graphcomm.neoGet('/db/data/index/node/names/email', ['query' : '"'+email+'"'])
 		//get incoming relationships from incoming_relationships
+		println json
+		if (json.size() == 0) {
+			return tagMap
+		}
 		json = graphcomm.neoGet(json.incoming_relationships[0])
 		json.each {
 			def allTagsForRelationship = it.data //this could be [Operations:1, Help Desk:1]
@@ -295,7 +299,7 @@ class NetworkService {
 	
 	/**
 	 * Get properties for a list of relationships
-	 * @param relationships
+	 * @param relationships URIs (you can get these from readRelationship)
 	 * @return list of properties for these 
 	 */
 	def getProperty (List relationships) {
@@ -315,7 +319,6 @@ class NetworkService {
 	 */
 	def deleteRelationship(Map props){
 		def result = ''
-
 		def from = readNode(props.startNode)
 		def to = readNode(props.endNode)
 		println ('Nodes to disconnect are: ' + from.self + ' -> ' + to.self)
@@ -347,7 +350,7 @@ class NetworkService {
 	}
 
 
-	// *********************** old code ***************************/
+	// *********************** old code starts here ***************************/
 	// *********************** old code ***************************/
 	// *********************** old code ***************************/
 	// *********************** old code ***************************/
