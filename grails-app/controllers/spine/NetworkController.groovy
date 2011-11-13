@@ -29,11 +29,22 @@ class NetworkController {
 		render choices
 	}
 			
+	
+	
 	def index = {
 		
+		def n = null
 		
-		def n  = spineService.getUserNetwork(session.user, null, 0, null)
+		User user = new User()
 		
+		if(params.user !=null)
+			user.email = params.user			
+		else
+			user.email = session.user
+			
+		n  = spineService.getUserNetwork(user, null, 0, null)
+		
+		//println params.user
 		/*
 		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
 		def n  = spineService.getNeighbours(neighbourParameters)
@@ -46,7 +57,7 @@ class NetworkController {
 		}
 		*/
 		//println allusers
-		[param : params.filter, user : session.user, neighbours : n]
+		[param : params.filter, user : user, neighbours : n]
 		//[param : params.filter, user : session.user]
 	}
 	

@@ -10,8 +10,19 @@
   	<g:javascript library='scriptaculous' />
   		<g:javascript>
   			window.onload = function(){
+                
                   new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "/spine/network/ajaxAutoComplete",{});
-        	}
+                  
+                  Droppables.add('left', { 
+				    accept: 'contact',
+				    hoverclass: 'hover',
+				    onDrop: function(e) { 
+				    			//alert(e.id);				    
+				    			window.location = "index?user="+e.id;
+				    			
+				   			}
+				  });
+			}
         	
         	function updateSelectedUser(e) {
         		//alert(e);
@@ -74,6 +85,9 @@
 				$('minus').fade();
 				return false;
 			}
+			
+			
+			
 			
     </g:javascript>
   
@@ -191,9 +205,10 @@
            <!-- END : filter & my updates -->
           
          
-          <g:each in="${neighbours}" var="n">
+          <g:each in="${neighbours}" var="n">          	  
 	          <!-- BEGIN : 1 person -->
-	          <div class="grid_14 alpha omega contact">
+	          <div class="grid_14 alpha omega contact" id="${n.email}" >
+	          <script>var mydrag = new Draggable('${n.email}', { revert: true });</script>
 	          	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
 	            <div class="grid_10 description omega">
 	              <ul class="badges">
