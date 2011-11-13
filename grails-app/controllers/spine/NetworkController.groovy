@@ -29,11 +29,31 @@ class NetworkController {
 		render choices
 	}
 			
+	
+	
 	def index = {
 		
+		def n = null
 		
-		def n  = spineService.getUserNetwork(session.user, null, 0, null)
+		User user = new User()
 		
+		if(params.user !=null)
+			user.email = params.user			
+		else
+			user.email = session.user
+			
+		n  = spineService.getUserNetwork(user, null, 0, null)
+		
+		for ( i in n ) {
+				def userFromList = new User()
+				userFromList.email = i.email
+				def tags = spineService.getUserTags(userFromList, 3)
+				i.tags = tags
+				println i
+		}
+		
+		
+		//println params.user
 		/*
 		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
 		def n  = spineService.getNeighbours(neighbourParameters)
@@ -46,7 +66,7 @@ class NetworkController {
 		}
 		*/
 		//println allusers
-		[param : params.filter, user : session.user, neighbours : n]
+		[param : params.filter, user : user, neighbours : n]
 		//[param : params.filter, user : session.user]
 	}
 	
@@ -123,6 +143,13 @@ class NetworkController {
 		render user as JSON
 	}
 	
+	def getTags = {
+		def user = new User()
+		user.email =params.id		
+		def tags = spineService.getUserTags(user, 5)
+		println tags
+		render tags as JSON
+	}	
 	
 	def removeTag = {
 		def user = new User()
@@ -133,6 +160,14 @@ class NetworkController {
 	def setTag = {
 		def user = new User()
 		user.email ="test@test.com"
+		render user as JSON
+	}
+	
+	def addTag = {
+		
+		def user = new User()
+	
+		//spineService.addTag(session.user, params.id	, params.e)
 		render user as JSON
 	}
 

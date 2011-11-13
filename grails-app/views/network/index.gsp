@@ -10,8 +10,21 @@
   	<g:javascript library='scriptaculous' />
   		<g:javascript>
   			window.onload = function(){
+                
                   new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "/spine/network/ajaxAutoComplete",{});
-        	}
+                  
+                  Droppables.add('left', { 
+				    accept: 'contact',
+				    hoverclass: 'hover',
+				    onDrop: function(e) { 
+				    			//alert(e.id);				    
+				    			window.location = "index?user="+e.id;
+				    			
+				   			}
+				  });
+				  
+				
+			}
         	
         	function updateSelectedUser(e) {
         		//alert(e);
@@ -75,6 +88,9 @@
 				return false;
 			}
 			
+			
+			
+			
     </g:javascript>
   
 </head>
@@ -83,7 +99,7 @@
   <div id="header">
   	<div class="container_24">
       <span>
-      		<img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
+      		<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
       </span>
       <span>
 	      <ul class="links">
@@ -103,14 +119,16 @@
   
   <div id="nav">
     <div class="container_24" id="hot_tags">
-      <ul>
+    
+      <ul >
         <li><img src="/spine/images/home/hot_tags.png" width="75" height="23" alt="Hot Tags" ></li>
-        <li><a href="#">#soap</a></li>
+        <li class="hot_tags" id="hot_tags_soap"><a href="#">#soap</a></li>
         <li><a href="#">#cloud</a></li>
         <li><a href="#">#html</a></li>
         <li><a href="#">#xhtml</a></li>
         <li><a href="#">#java</a></li>
       </ul>
+      <script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
     </div>
   </div>
   
@@ -188,12 +206,28 @@
             <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
             <p><a href="#">My Spine Updates</a></p>
           </div>
-           <!-- END : filter & my updates -->
-          
+           <!-- END : filter & my updates -->          
          
-          <g:each in="${neighbours}" var="n">
+          <g:each in="${neighbours}" var="n">          	  
 	          <!-- BEGIN : 1 person -->
-	          <div class="grid_14 alpha omega contact">
+	          <div class="grid_14 alpha omega contact" id="${n.email}" >
+	          <script>
+
+	          	var mydrag = new Draggable('${n.email}', { revert: true });
+
+		        Droppables.add('${n.email}', { 
+				    accept: 'hot_tags',
+				    hoverclass: 'hover',
+				    onDrop: function(dragged, dropped, event) { 
+				    			//alert('Dragged: ' + dragged.id);
+				    		    //alert('Dropped onto: ' + dropped.id);
+				    		    //alert('Held ctrl key: ' + event.ctrlKey);			    
+				    			
+				    			new Ajax.Request('/spine/network/addTag/'+dropped.id, {asynchronous:true,evalScripts:true,parameters:'e='+dragged.id});
+					    	
+				   			}
+				});
+	          </script>
 	          	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
 	            <div class="grid_10 description omega">
 	              <ul class="badges">
@@ -206,16 +240,19 @@
 	              
 	              <div class="grid_7 alpha">
 	              	<p class="quote"><span>„</span>Looking forward to new challenges<span>„</span></p>
-	                <ul class="tags">
-	                    <li>	                    
-		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver();" onmouseout="javascript:tagsMinusOnMouseOut();">#soap</a>
-		                    <span id="minus" style="{display: none;}">
-		                    	<g:remoteLink action="removeTag" id="1" update="[success:'message',failure:'error']">-</g:remoteLink>
-		                    </span>
-	                    </li>
+	                <ul class="tags">           		
+	                		
+		               		<g:each in="${n.tags}" var="t">    	        	  
+			                    <li>	                    
+				                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver();" onmouseout="javascript:tagsMinusOnMouseOut();">${t.key}</a>
+				                    <span id="minus" style="{display: none;}">
+				                    	<g:remoteLink action="removeTag" id="1" update="[success:'message',failure:'error']">-</g:remoteLink>
+				                    </span>
+			                    </li>
+		                   	</g:each>
+	                  
 	                    <li>&nbsp;</li>
-	                    <li> 
-	                    	
+	                    <li> 	                    	
 		                    <span class="plus">
 		                    	<g:remoteLink action="setTag" id="1" update="[success:'message',failure:'error']">+</g:remoteLink>
 		                    </span>
