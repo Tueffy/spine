@@ -62,7 +62,7 @@ class SpineService {
 		// (user: UserObject, tags: taglist (unique incl. ount), badgelist, distance : distance)
 		
 		// this is the branch if there is no filter
-		def userList = networkService.readNodeViaCypher(contextUser.email, offset, 20)
+		def userList = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
 
 		
 		return userList
