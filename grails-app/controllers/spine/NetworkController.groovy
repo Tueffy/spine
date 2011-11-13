@@ -2,19 +2,34 @@ package spine
 
 import grails.converters.JSON
 
-
+/**
+ * 
+ * 
+ * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+ *
+ */
 class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
 	def spineService
+	def networkService
 
+	/**
+	 * 
+	 *  
+	 *  
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 * 
+	 */
 	def ajaxAutoComplete = {
 		println "test.."
 		//def test = networkService.getProps()
 		//println "New props function: " + test
 		println "auto complete executed with: " + params.filter
 		def inputText = params.filter
-		def allProperties = spineService.getProperties('*')
+		
+		//@TODO Change to Spine Service instead of Network Service
+		def allProperties = networkService.getProperties('*')
 		//lookup properties with filter
 		def choices = '<ul>' //ajax list
 		allProperties.each {
@@ -30,7 +45,11 @@ class NetworkController {
 	}
 			
 	
-	
+	/**
+	 * Runs as soon as the index page of the network view is executed
+	 * 
+	 * 
+	 */
 	def index = {
 		
 		def n = null
@@ -53,28 +72,24 @@ class NetworkController {
 		}
 		
 		
-		//println params.user
-		/*
-		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
-		def n  = spineService.getNeighbours(neighbourParameters)
-		
-		def allusers = []
-		n.each {
-			def neighbour = spineService.getPropertiesByEmail(it.key)
-			neighbour["distance"] = it.value
-			allusers.add(neighbour)
-		}
-		*/
 		//println allusers
 		[param : params.filter, user : user, neighbours : n]
 		//[param : params.filter, user : session.user]
 	}
 	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def linkProperties = {
 		def allProperties = spineService.getProperties('*')
 		[param : allProperties, user : session.user]
 	}
 	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */	
 	def connectPeople = {
 		println "Connect: " + params
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
@@ -86,11 +101,21 @@ class NetworkController {
 		}
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def filterGraph = {
 		//println params.filterProperty
 		redirect(controller:'network', action:'index', params : ['filter':params.filterProperty])
 	} 
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def graphJSON = { //callback used by visualisation
 		//TODO Jure, merge filter and properties
 		println "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
@@ -98,6 +123,10 @@ class NetworkController {
 		render (text:spineService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
 	}
 	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def graphEdgesJSON = {
 		println params.source + params.target
 		
@@ -112,6 +141,11 @@ class NetworkController {
 		
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def importGraph = {
 		def String fileContent
 		if (params.edgesFile != null) {
@@ -127,7 +161,14 @@ class NetworkController {
 		redirect(controller:'network', action:'index')
 	}
 
-	// need to be shifted to the user service
+	/**
+	 * 
+	 * 
+	 * 
+	 * @return
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def checkUser() {
 		if(!session.user) {
 			// i.e. user not logged in
@@ -136,13 +177,20 @@ class NetworkController {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def getUser  = {
 		def user = new User()
 		user.email = params.id
 		render user as JSON
 	}
 	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def getTags = {
 		def user = new User()
 		user.email =params.id		
@@ -151,18 +199,33 @@ class NetworkController {
 		render tags as JSON
 	}	
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def removeTag = {
 		def user = new User()
 		user.email ="test@test.com"
 		render user as JSON
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def setTag = {
 		def user = new User()
 		user.email ="test@test.com"
 		render user as JSON
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def addTag = {
 		
 		def user = new User()
