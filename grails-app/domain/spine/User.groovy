@@ -13,6 +13,9 @@ class User {
 	String city
 	String imagePath
 	String freeText
+	//@TODO: Temporary solution to iterate tags 
+	String tags
+	
 	String toString()
 	{ "$email" }
 	def constraints =
