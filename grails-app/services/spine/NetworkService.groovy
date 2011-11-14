@@ -141,11 +141,16 @@ class NetworkService {
 	*/
    def queryForNeighbourNodes(String email, int offset, int limit) {
 
-	   def json = graphcomm.neoPost('/db/data/ext/CypherPlugin/graphdb/execute_query', '{"query": "start n=node:names(email={SP_user}) match (n)-[:connect*1..5]->(x) return x skip '+offset+' limit '+limit+'","params": {"SP_user":"'+email+'"}}')
+	   def json = graphcomm.neoPost('/db/data/ext/CypherPlugin/graphdb/execute_query', '{"query": "start n=node:names(email={SP_user}) match p=n-[:connect*1..5]->(x) return distinct x, min(length(p)) order by min(length(p)) skip '+offset+' limit '+limit+'","params": {"SP_user":"'+email+'"}}')
 	   def resultNodes = []
+	   def neighbour = [:]
 	   json.data.each {
-		   //println "Elem: "+it[0].data
-		   resultNodes.add(it[0].data)
+		   
+		   neighbour = it[0].data
+		   neighbour['distance'] = it[1]
+		   println "Elem: "+neighbour
+		   
+		   resultNodes.add(neighbour)
 	   }
 	   return resultNodes
    }
@@ -235,7 +240,7 @@ class NetworkService {
 		def from = getNodeURIFromEmail(props.startNode)
 		def to = getNodeURIFromEmail(props.endNode)
 		def relationship = readRelationship(props)
-		//println 'relationship to be created is:' + from + ' -> ' + to
+		println 'relationship to be created is:' + from + ' -> ' + to
 		def createdRelationship
 		if (relationship.size() == 0) {
 			createdRelationship = graphcomm.neoPost(from+'/relationships', ['to' : to, 'type': 'connect']).self[0]
@@ -306,9 +311,43 @@ class NetworkService {
 		def props = []
 		relationships.each {
 			def json = graphcomm.neoGet(it + '/properties')
+			//TODO include error handling for empty properties?
 			json.each { props.add(it.key) }
 		}
 		return props
+	}
+	
+	def deleteProperty(Map props) {
+		//TODO: implement this, remove property from index and relationship!
+		//delete prop on relationship and on index
+		def rel = readRelationship(props)
+		
+	}
+
+	
+	/**
+	* Returns a list of all existing properties on relationships and their number
+	* 
+	* @return Hashmap of [property : number]
+	*/
+	def getAllProperties() {
+		//TODO go through index of edges and collect all properties. Cache this later.
+		def props = [:]
+		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : '*:*'])
+		//TODO: not optimal solution, because there are too many edges returned. moreover, this can be done better using groovy magic
+		json.data.each {
+			def edge = it
+			edge.each {
+				def tag = it.key
+				if (props[tag] == null) {
+					props[tag] = 1
+				} else {
+					props[tag] = props[tag] +1
+				}
+			}
+		}
+		return props
+		//println 'All tags: ' + props			
 	}
 
 
@@ -319,35 +358,18 @@ class NetworkService {
 	 */
 	def deleteRelationship(Map props){
 		def result = ''
-		def from = readNode(props.startNode)
-		def to = readNode(props.endNode)
-		println ('Nodes to disconnect are: ' + from.self + ' -> ' + to.self)
-		def allEdges = graphcomm.neoPost(from.self + '/paths', ['to' : to.self,'direction':'out','max_depth': 1])
-
-		if (allEdges.size() != 0){
-			def rels = allEdges.relationships
-			// das muss doch besser gehen
-			rels.each(){ json ->
-				json.each(){ json2 ->
-					graphcomm.neoDelete(json2)
-				}
-			}
-			result = 'Disconnected'
-		}
-		else {result = 'Nothing to disconnect'}
+		def from = getNodeURIFromEmail(props.startNode)
+		def to = getNodeURIFromEmail(props.endNode)
+		def rel = readRelationship(props)[0]
+		println ('Nodes to disconnect are: ' + from + ' -> ' + to + ', it is relationship with URI: ' + rel)
+		//TODO first remove all properties for this relationship from the index!
+		//remove from graph
+		graphcomm.neoDelete(rel)
+		//assert that rel does not exist
+		println graphcomm.neoGet(rel)
 	}
 
-	def addRelationshipIndex(String relationship){
 
-	}
-
-	def removeRelationshipIndex(String relationship){
-
-	}
-
-	def deleteProperty(Map props) {
-		//delete prop on relationship and on index
-	}
 
 
 	// *********************** old code starts here ***************************/
@@ -355,6 +377,7 @@ class NetworkService {
 	// *********************** old code ***************************/
 	// *********************** old code ***************************/
 	// *********************** old code ***************************/
+	/*
 	def getProperties(String filter) {
 		def Set props = []
 		def json = graphcomm.neoGet('/db/data/index/relationship/edges',['query' : '*:'+filter])
