@@ -141,11 +141,16 @@ class NetworkService {
 	*/
    def queryForNeighbourNodes(String email, int offset, int limit) {
 
-	   def json = graphcomm.neoPost('/db/data/ext/CypherPlugin/graphdb/execute_query', '{"query": "start n=node:names(email={SP_user}) match (n)-[:connect*1..5]->(x) return x skip '+offset+' limit '+limit+'","params": {"SP_user":"'+email+'"}}')
+	   def json = graphcomm.neoPost('/db/data/ext/CypherPlugin/graphdb/execute_query', '{"query": "start n=node:names(email={SP_user}) match p=n-[:connect*1..5]->(x) return distinct x, min(length(p)) order by min(length(p)) skip '+offset+' limit '+limit+'","params": {"SP_user":"'+email+'"}}')
 	   def resultNodes = []
+	   def neighbour = [:]
 	   json.data.each {
-		   //println "Elem: "+it[0].data
-		   resultNodes.add(it[0].data)
+		   
+		   neighbour = it[0].data
+		   neighbour['distance'] = it[1]
+		   println "Elem: "+neighbour
+		   
+		   resultNodes.add(neighbour)
 	   }
 	   return resultNodes
    }
