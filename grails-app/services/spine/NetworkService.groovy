@@ -148,7 +148,7 @@ class NetworkService {
 		   
 		   neighbour = it[0].data
 		   neighbour['distance'] = it[1]
-		   println "Elem: "+neighbour
+		   //println "Elem: "+neighbour
 		   
 		   resultNodes.add(neighbour)
 	   }
@@ -182,7 +182,11 @@ class NetworkService {
 				}
 			}
 		}
-		return tagMap
+
+		// sort the map
+		def sortedTagMap = tagMap.sort { a, b -> a.value <=> b.value }
+		
+		return sortedTagMap
 	}
 
 	/**

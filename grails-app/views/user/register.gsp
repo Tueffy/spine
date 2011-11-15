@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Spine Landing</title>
+  <title>Login</title>
   <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
   <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
   <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
@@ -11,10 +11,13 @@
 <body>
   <div id="header">
     <div class="container_24">
-      <img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
+      <img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
     
       <ul class="links">
-      	<li><a href="#">About</a></li>
+      	<li><a href="#">About Spine</a></li>
+      	<li><a href="#">How it works</a></li>
+      	<li><a href="#">Terms and conditions</a></li>
+      	<li><a href="#">Disclaimer</a></li>
         <li><a href="/spine/user/login">Log in</a></li>
       </ul>
     </div>
@@ -33,18 +36,18 @@
 				<table class="userForm">
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'>
-							<label for='lastname'>Last Name:</label>
+							<label for='lastName'>Last Name:</label>
 						</td>
 						<td valign='top' style='text-align: left;' width='80%'>
-							<input id="lastname" type='text' name='lastname' value='${user?.lastname}' />
+							<input id="lastName" type='text' name='lastName' value='${user?.lastName}' />
 						</td>
 					</tr>
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'>
-							<label for='firstname'>First Name:</label>
+							<label for='firstName'>First Name:</label>
 						</td>
 						<td valign='top' style='text-align: left;' width='80%'>
-							<input id="firstname" type='text' name='firstname' value='${user?.firstname}' />
+							<input id="firstName" type='text' name='firstName' value='${user?.firstName}' />
 						</td>
 					</tr>
 					<tr class='prop'>

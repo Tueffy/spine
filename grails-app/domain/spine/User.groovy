@@ -14,10 +14,11 @@ class User {
 	String imagePath
 	String freeText
 	//@TODO: Temporary solution to iterate tags 
-	String tags
-	
+	HashMap tags
+
 	String toString()
 	{ "$email" }
+
 	def constraints =
 	{
 		email(email:true)

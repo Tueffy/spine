@@ -12,13 +12,12 @@ class SpineService {
 	 * 
 	 * @param email
 	 * @param password
-	 * @return success
+	 * @return user as User object
 	 */
 	def loginUser(String email, String password) {
 
-		def loggedInUser
-		def success
-
+		def user
+		
 		// retrieve the node via email address
 		def userNode = networkService.readNode(email)
 
@@ -27,21 +26,21 @@ class SpineService {
 			if (userNode.password == password) {
 				
 				//create an instance of the user
-				loggedInUser = new User()
+				user = new User()
 				
 				// copy over the values from the hash map into the user object
-				loggedInUser.firstName = userNode.firstName
-				loggedInUser.lastName = userNode.lastName
-				loggedInUser.email = userNode.email
-				loggedInUser.city = userNode.city
-				loggedInUser.country = userNode.country
-				loggedInUser.imagePath = userNode.image
-				loggedInUser.freeText = "Free Text"
-				
+				user.firstName = userNode.firstName
+				user.lastName = userNode.lastName
+				user.email = userNode.email
+				user.country = userNode.country
+				user.city = userNode.city
+				user.imagePath = userNode.image
+				user.freeText = 'My biography'
+				user.tags = networkService.getIncomingTagsForNode(userNode.email)
 			}
 			
 		//returns either the loggedInUser or null, if login was not successful
-		return loggedInUser
+		return user
 	}
 
 	
@@ -50,45 +49,95 @@ class SpineService {
 	 * @param contextUser
 	 * @param filter
 	 * @param offset
-	 * @param orderType
-	 * @return
+	 * @return userList of type User
 	 */
-	def getUserNetwork(User contextUser, String filter, int offset, String orderType) {
+	def getUserNetwork(User contextUser, String filter, int offset) {
 
-		//def userList = new HashMap()
-		// search full network, using offset, orderType
-		// loop over list and get all tags and all badges
-		
-		// (user: UserObject, tags: taglist (unique incl. ount), badgelist, distance : distance)
-		
-		// this is the branch if there is no filter
-		def userList = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+		def queryReturn
+		def userList = []
 
+		// verify if a filter has been passed
 		
+		if ((filter == null) || (filter == '')) {
+			
+			// get the neighbours in batches of 20
+			queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+
+		}
+		else {
+		
+			// first step is to tokenize the filter string
+			def tokens = " ,;"
+			def wordList = []
+			wordList = filter.tokenize(tokens)
+			
+			println "search filter: "+wordList
+			
+			// now we need to wait until the network service queryNode is ready, as this is not the case yet, use the same service as in the if
+			queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+		}
+		
+		// loop through the list and instantiate the user objects incl. tags
+		def user
+		
+		queryReturn.each {
+			user = new User()
+			user.firstName = it.firstName
+			user.lastName = it.lastName
+			user.email = it.email
+			user.country = it.country
+			user.city = it.city
+			user.imagePath = it.image
+			user.freeText = 'My biography'
+			user.tags = networkService.getIncomingTagsForNode(it.email)
+			
+			userList.add(user)
+		}
+
 		return userList
     }
-	
+
+	/**
+	 * returns a User object based on email address
+	 * 
+	 * @return
+	 */
+	def getUser(String email) {
+		
+		// instantiate return structure
+		def user = new User()
+
+		// retrieve the properties
+		def userNode = networkService.readNode(email)
+		
+		// copy over the values from the hash map into the user object
+		user.firstName = userNode.firstName
+		user.lastName = userNode.lastName
+		user.email = userNode.email
+		user.country = userNode.country
+		user.city = userNode.city
+		user.imagePath = userNode.image
+		user.freeText = 'My biography'
+		user.tags = networkService.getIncomingTagsForNode(userNode.email)
+		
+		return user
+	}
+
 	/**
 	 * retrieve the list of tags of all incoming connections to a given user, incl. amount and sorted (highest amount first)
 	 * 
 	 * @param user
 	 * @param amount
-	 * @return userTagList
+	 * @return userTagMap
 	 */
-	def getUserTags(User user, int maxAmount) {
-		// getRelationships for one user and then getProperties per Relationship;
-		// loop over Properies and build the userTagList, with one entry per property and the count
-		// use amount to limit what comes
+	def getUserTags(User user) {
 
-		if (maxAmount == null) maxAmount = 50
 		def userTagMap = [:]
+
+		// get the tags
 		userTagMap = networkService.getIncomingTagsForNode(user.email)
 		
-		// sort hashmap by count of tags
-		def sortedTagMap = userTagMap.sort { a, b -> a.value <=> b.value }
-		//@TODO: Fix take subset
-		def returnMap = sortedTagMap//.take[maxAmount]
-		return returnMap
+		return userTagMap
 	}
 	
 	/**
@@ -98,7 +147,7 @@ class SpineService {
 	 * @param tags
 	 * @return success or fail
 	 */
-	def createNewUser(HashMap userParams, List tags) {
+	def createNewUser(HashMap userparams, List tags) {
 		
 		def newUser = new User()
 		def success = false
@@ -111,7 +160,7 @@ class SpineService {
 		newUser.city = userparams.city
 		newUser.country = userparams.country
 		newUser.imagePath = userparams.image
-		newUser.freeText = "Free Text"
+		//newUser.freeText = "Free Text"
 		
 		// set over into map for call
 		def userProps = ['firstName' : newUser.firstName,
@@ -121,15 +170,14 @@ class SpineService {
 							'email' : newUser.email,
 							'password' : newUser.password,
 							'image' : newUser.imagePath]
-		
+				
 		// verify if node with same email does not exist already
 		if (networkService.readNode(newUser.email) != null)
 			success = false
 		else {
-		
+					
 			// create the node
 			def userNode = networkService.createNode(userProps)
-			println userNode
 			
 			// create the node
 			if (userNode != null) {
