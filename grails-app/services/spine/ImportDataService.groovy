@@ -31,6 +31,7 @@ class ImportDataService {
 			props['city'] = fields[4]
 			props['country'] = fields[5]
 			props['image'] = fields[6]
+			props['freeText'] = 'Madness? This is Sparta!'
 			n.createNode(props)
 		}
 		println "Nodes created!"

@@ -17,7 +17,7 @@ class User {
 	HashMap tags
 
 	String toString()
-	{ "First: $firstName Last: $lastName Email: $email Tags $tags" }
+	{ "$email" }
 
 	def constraints =
 	{
