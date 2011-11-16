@@ -37,8 +37,10 @@ class SpineService {
 				user.imagePath = userNode.image
 				user.freeText = 'My biography'
 				user.tags = networkService.getIncomingTagsForNode(userNode.email)
+				if (user.tags != null)
+					user.badges = badgeService.evaluateTags(user.tags)
 			}
-			
+	
 		//returns either the loggedInUser or null, if login was not successful
 		return user
 	}
@@ -91,6 +93,9 @@ class SpineService {
 			user.freeText = 'My biography'
 			user.tags = networkService.getIncomingTagsForNode(it.email)
 			user.distance = it.distance
+			if (user.tags != null)
+				user.badges = badgeService.evaluateTags(user.tags)
+
 			userList.add(user)
 		}
 
@@ -119,6 +124,10 @@ class SpineService {
 		user.imagePath = userNode.image
 		user.freeText = 'My biography'
 		user.tags = networkService.getIncomingTagsForNode(userNode.email)
+		if (user.tags != null)
+			user.badges = badgeService.evaluateTags(user.tags)
+
+		// add something related to distance to the current contextUser
 		
 		return user
 	}

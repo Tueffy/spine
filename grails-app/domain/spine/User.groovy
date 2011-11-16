@@ -16,6 +16,7 @@ class User {
 	//@TODO: Temporary solution to iterate tags 
 	HashMap tags
 	Long distance
+	List badges
 
 	String toString()
 	{ "$email" }

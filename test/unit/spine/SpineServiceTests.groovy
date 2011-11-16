@@ -35,7 +35,8 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		assert success.country == 'Germany'
 		assert success.city == 'Frankfurt'
 		assert success.email == 'christian.tueffers@techbank.com'
-		assert success.imagePath == 'christian.tueffers@techbank.com.jpg'		
+		assert success.imagePath == 'christian.tueffers@techbank.com.jpg'
+		assert success.badges.size() == 0
 	}
 	
 	void testLoginUser2() {
@@ -60,6 +61,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		assert success.email == 'markus.long@techbank.com'
 		assert success.imagePath == 'markus.long@techbank.com.jpg'
 		assert success.tags.size() == 5
+		assert success.badges.size() == 1
 	}
 	
 	// tests for getUserNetwork
