@@ -33,13 +33,12 @@ div.autocomplete ul li {
 	font-weight: bold;
 }
 
-span#minus {
+span.minus {
 	 background:#c9c5b8;
 	 width: 15px;
 	 border-radius:5px;
 	
 }
-
 
 span.plus {
 	 background:#c9c5b8;
