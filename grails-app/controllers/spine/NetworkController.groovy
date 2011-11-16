@@ -1,7 +1,6 @@
 package spine
 
-import grails.converters.JSON
-
+import  grails.converters.JSON
 /**
  * 
  * 
@@ -10,7 +9,7 @@ import grails.converters.JSON
  */
 class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
-
+	def n = null
 	def spineService
 	def networkService
 
@@ -52,8 +51,6 @@ class NetworkController {
 	 */
 	def index = {
 		
-		def n = null
-		
 		User user = new User()
 		
 		if(params.user !=null)
@@ -68,7 +65,7 @@ class NetworkController {
 				userFromList.email = i.email
 				def tags = spineService.getUserTags(userFromList, 3)
 				i.tags = tags
-				println i
+				//println i
 		}
 		
 		
@@ -182,9 +179,28 @@ class NetworkController {
 	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
 	 */
 	def getUser  = {
+		
 		def user = new User()
 		user.email = params.id
+		
+		//@TODO: Optimize with direct call to getUser
+		n  = spineService.getUserNetwork(user, null, 0, null)
+		
+		
+		for ( i in n ) {
+				def email1 = params.id;
+				def email2 = i.email;
+				if(email1.equalsIgnoreCase(email2)){					
+					user = i
+					break
+					
+				}
+		}
+		
+		println user
+		
 		render user as JSON
+		
 	}
 	
 	/**
@@ -192,10 +208,14 @@ class NetworkController {
 	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
 	 */
 	def getTags = {
+		
 		def user = new User()
-		user.email =params.id		
+		user.email = params.id		
+		
 		def tags = spineService.getUserTags(user, 5)
+		
 		println tags
+		
 		render tags as JSON
 	}	
 	
@@ -206,7 +226,12 @@ class NetworkController {
 	 */
 	def removeTag = {
 		def user = new User()
-		user.email ="test@test.com"
+		user.email = params.user
+		
+		//println params.user
+		//println params.tag
+		
+		def tags = spineService.removeTag(session.user, user, params.tag)
 		render user as JSON
 	}
 	
@@ -229,7 +254,7 @@ class NetworkController {
 	def addTag = {
 		
 		def user = new User()
-	
+		
 		//spineService.addTag(session.user, params.id	, params.e)
 		render user as JSON
 	}

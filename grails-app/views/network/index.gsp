@@ -8,11 +8,12 @@
   	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">
   
   	<g:javascript library='scriptaculous' />
+  	<g:javascript library="prototype" />
   		<g:javascript>
   			window.onload = function(){
                 
                   new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "/spine/network/ajaxAutoComplete",{});
-                  
+                                   
                   Droppables.add('left', { 
 				    accept: 'contact',
 				    hoverclass: 'hover',
@@ -23,66 +24,86 @@
 				   			}
 				  });
 				  
+				  $("selectedImage").puff();
 				
+			}
+			
+			var firstUser = null;
+			
+			getFirstUser = function(){
+				return firstUser;
+			}
+			
+			setFirstUser = function(user){
+				firstUser = user;
 			}
         	
         	function updateSelectedUser(e) {
         		//alert(e);
-        		 // evaluate the JSON
+        		// evaluate the JSON
     			var user = eval("("+e.responseText+")");
-    			$("selectedUserName").innerHTML = user.email;
-    			//$("selectedCity").innerHTML = user.email;
-    			//$("selectedCountry").innerHTML = user.email;
-    			
+    			$("selectUser").fade();
+    			$("selectedUserName").innerHTML = user.firstName +' ' + user.lastName;
+    			$("selectedCity").innerHTML = user.city;
+    			//$("selectedCountry").innerHTML = user.country;
+    			$("selectedImage").appear();
     			$("selectedImage").src = "/spine/images/profiles/"+ user.email + ".jpg";
-    			
+    			    			
     			var container = $("selectedTags");
 							
 				var liList = container.childNodes;
 				
-				
 				for(var i = 0;i < liList.length;i++){	
 					//alert (liList[i+1].nodeName);	
-					var li = liList[i]
+					var li = liList[i];
 					if(li.nodeName == "LI"){
 						$(li).fade();
 					}
     			}
-				
-				for(var i = 0;i<10;i++){				
-					var new_element = document.createElement('li');
-					new_element.innerHTML = "#" + "test";	
-					container.insertBefore(new_element, container.firstchild);
-	    			$(new_element).grow();
-    			}
-    			
+    			    			
+    			new Ajax.Request('/spine/network/getTags/'+ user.email, {
+    				asynchronous:true,
+    				evalScripts:true,
+    				onSuccess: function(transport) {
+   						var tagsJSON = transport.responseText;
+   						var tags = eval("("+tagsJSON+")");		
+						for (var key in tags) {						   
+						   var new_element = document.createElement('li');
+						   new_element.innerHTML = "#" + key;	
+						   container.insertBefore(new_element, container.firstchild);
+			    		   $(new_element).grow();
+				   		}
+					}
+    			});				
     			
 			}
 			
 			
-			function tagsMinusOnMouseOver(){
+			tagsMinusOnMouseOver = function(e){
 				//alert("test");
-				$('minus').appear(); 
-				
+				$(e).appear();
+				$(e).onmouseout = function(){
+					$(this).fade();
+				}
 				return false;
 			}
 			
 			
-			function tagsMinusOnMouseOut(){
+			tagsMinusOnMouseOut = function(e){
 				//alert("test");
-				$('minus').fade();
+				$(e).fade({ duration: 7.0});
 				return false;
 			}
 					
-			function tagsPlusOnMouseOver(){
+			tagsPlusOnMouseOver = function(){
 				//alert("test");
-				$('minus').appear(); 
+				$('minus').appear(5); 
 				
 				return false;
 			}
 			
 			
-			function tagsPlusOnMouseOut(){
+			tagsPlusOnMouseOut = function(){
 				//alert("test");
 				$('minus').fade();
 				return false;
@@ -98,10 +119,10 @@
 <body>
   <div id="header">
   	<div class="container_24">
-      <span>
+      
       		<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
-      </span>
-      <span>
+      
+     
 	      <ul class="links">
 	      	<li><a href="#">About Spine</a></li>
 	      	<li><a href="#">How it works</a></li>
@@ -202,7 +223,7 @@
             </g:form>
             
           </div>
-          <div class="grid_4 omega my_updates">
+          <div class="grid_4 omega my_updates" id="test1">
             <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
             <p><a href="#">My Spine Updates</a></p>
           </div>
@@ -227,6 +248,9 @@
 					    	
 				   			}
 				});
+
+				
+				
 	          </script>
 	          	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
 	            <div class="grid_10 description omega">
@@ -244,9 +268,9 @@
 	                		
 		               		<g:each in="${n.tags}" var="t">    	        	  
 			                    <li>	                    
-				                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver();" onmouseout="javascript:tagsMinusOnMouseOut();">${t.key}</a>
-				                    <span id="minus" style="{display: none;}">
-				                    	<g:remoteLink action="removeTag" id="1" update="[success:'message',failure:'error']">-</g:remoteLink>
+				                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${n.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${n.email}_${t.key}_minus');">${t.key}</a>
+				                    <span id="${n.email}_${t.key}_minus" style="{display: none;}" class="minus">
+				                    	<g:remoteLink action="removeTag" id="${n.email}" params="[user: n.email, tag: t.key]">-</g:remoteLink>
 				                    </span>
 			                    </li>
 		                   	</g:each>
@@ -296,34 +320,18 @@
           
           <!-- <img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" />  -->
           
-          <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" id="selectedImage"/>
+          <img src="" alt="" width="100" height="150" class="avatar" id="selectedImage"/>
+          <span id="selectUser">Please choose one of your contacts to see more details!</span>
+          
      
           
           <ul class="description">
-            <li class="name" id="selectedUserName">Alewxander Niemz</li>
-            <li class="company" id="selectedCompany">Accenture GmbH</li>
-            <li class="city" id="selectedCity">Wien</li>
+            <li class="name" id="selectedUserName"></li>
+            <li class="company" id="selectedCompany"></li>
+            <li class="city" id="selectedCity"></li>
           </ul>
           
           <ul class="tags" id="selectedTags">
-            <li><a href="#">#html</a></li>
-            <li><a href="#">#vienna</a></li>
-            <li><a href="#">#jazz</a></li>
-            <li><a href="#">#rock</a></li>
-            <li><a href="#">#css</a></li>
-            <li><a href="#">#html5</a></li>
-            <li><a href="#">#prater</a></li>
-            <li><a href="#">#blockwurst</a></li>
-            <li><a href="#">#samba</a></li>
-            <li><a href="#">#dancing</a></li>
-            <li><a href="#">#lisp</a></li>
-            <li><a href="#">#foto</a></li>
-            <li><a href="#">#drama</a></li>
-            <li><a href="#">#sesamestreet</a></li>
-            <li><a href="#">#rest</a></li>
-            <li><a href="#">#namibia</a></li>
-            <li><a href="#">#travel</a></li>
-            <li><a href="#">#testing</a></li>
           </ul>
           
           <p class="all_tags"><a href="#">All tags</a></p>
