@@ -8,6 +8,7 @@ class BadgeServiceTests extends GrailsUnitTestCase {
 	def badgeService = new BadgeService()
 	def taglist1 = [Java:5, Spring:3, Operations:9, ITIL:11]
 	def taglist2 = [Frankfurt:6]
+	def taglist3 = [Cloud:3, Soccer:5]
 	
     protected void setUp() {
         super.setUp()
