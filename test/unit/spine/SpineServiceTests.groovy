@@ -73,6 +73,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 	void testGetUserNetwork2() {
 		
 		def result = s.getUserNetwork(u2, '', 0)
+		result.each { println it}
 		assert result.size() == 12		
 	}
 
@@ -82,6 +83,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 	void testGetUser1() {
 		
 		def result = s.getUser('markus.long@techbank.com')
+		println result
 		assert result != null
 		
 	}

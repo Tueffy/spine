@@ -15,12 +15,11 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes1() {
 		def n = new NetworkService()
 		def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
-		def targetResultList = [
-			'anne.brown@techbank.com',
-			'petra.gerste@techbank.com',
-			'falk.seibild@techbank.com',
-			'markus.long@techbank.com',
-			'brigitte.prinz@techbank.com']
+		def targetResultList = ['anne.brown@techbank.com', 
+			'petra.gerste@techbank.com', 
+			'ingmar.mueller@techbank.com', 
+			'vera.rath@techbank.com', 
+			'falk.seibild@techbank.com']
 		
 		def resultList = []
 		result.each {
@@ -32,12 +31,11 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes2() {
 		def n = new NetworkService()
 		def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5)
-		def targetResultList = [
-			'markus.long@techbank.com',
-			'brigitte.prinz@techbank.com',
-			'gundula.geise@techbank.com',
-			'matthias.zugler@techbank.com',
-			'fero.bacak@techbank.com']
+		def targetResultList = ['vera.rath@techbank.com', 
+			'falk.seibild@techbank.com', 
+			'markus.long@techbank.com', 
+			'brigitte.prinz@techbank.com', 
+			'jure.zakotnik@techbank.com']
 		
 		def resultList = []
 		result.each {
@@ -45,7 +43,18 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		}
 		assert resultList.containsAll(targetResultList)
 	}
-
+	
+	void testQueryForNeighbourNodes3() {
+		def n = new NetworkService()
+		def result = n.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5)
+		def targetResultList = []
+		def resultList = []
+		result.each {
+			resultList.add(it.email)
+		}
+		assert resultList.containsAll(targetResultList)
+	}
+	
 	void testGetNodeURIFromEmail() {
 		def n = new NetworkService()
 		assert n.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/3'
