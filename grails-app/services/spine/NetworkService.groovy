@@ -148,7 +148,7 @@ class NetworkService {
 		   
 		   neighbour = it[0].data
 		   neighbour['distance'] = it[1]
-		   //println "Elem: "+neighbour
+		   println "Elem: "+neighbour
 		   
 		   resultNodes.add(neighbour)
 	   }
@@ -182,11 +182,7 @@ class NetworkService {
 				}
 			}
 		}
-
-		// sort the map
-		def sortedTagMap = tagMap.sort { a, b -> a.value <=> b.value }
-		
-		return sortedTagMap
+		return tagMap
 	}
 
 	/**
@@ -213,11 +209,15 @@ class NetworkService {
 		graphcomm.neoPost(indexPath, postBody)
 
 		//put country into index
-		postBody = ['value' : props.email, 'key' : 'country', 'uri' : nodeRef]
+		postBody = ['value' : props.country, 'key' : 'country', 'uri' : nodeRef]
 		graphcomm.neoPost(indexPath, postBody)
 
 		//put city into index
-		postBody = ['value' : props.email, 'key' : 'city', 'uri' : nodeRef]
+		postBody = ['value' : props.city, 'key' : 'city', 'uri' : nodeRef]
+		graphcomm.neoPost(indexPath, postBody)
+		
+		//put freeText into index
+		postBody = ['value' : props.freeText, 'key' : 'freeText', 'uri' : nodeRef]
 		graphcomm.neoPost(indexPath, postBody)
 	}
 

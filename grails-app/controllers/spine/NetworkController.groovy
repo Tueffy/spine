@@ -42,12 +42,12 @@ class NetworkController {
 		else
 			user.email = session.user
 			
-		n  = spineService.getUserNetwork(user, null, 0, null)
+		n  = spineService.getUserNetwork(user, null, 0)
 		
 		for ( i in n ) {
 				def userFromList = new User()
 				userFromList.email = i.email
-				def tags = spineService.getUserTags(userFromList, 3)
+				def tags = spineService.getUserTags(userFromList)
 				i.tags = tags
 				println i
 		}
@@ -146,7 +146,7 @@ class NetworkController {
 	def getTags = {
 		def user = new User()
 		user.email =params.id		
-		def tags = spineService.getUserTags(user, 5)
+		def tags = spineService.getUserTags(user)
 		println tags
 		render tags as JSON
 	}	

@@ -15,6 +15,7 @@ class User {
 	String freeText
 	//@TODO: Temporary solution to iterate tags 
 	HashMap tags
+	Long distance
 
 	String toString()
 	{ "$email" }

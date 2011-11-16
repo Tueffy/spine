@@ -15,12 +15,12 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes1() {
 		def n = new NetworkService()
 		def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
-		def targetResultList = ['anne.brown@techbank.com', 
-			'petra.gerste@techbank.com', 
-			'ingmar.mueller@techbank.com', 
-			'vera.rath@techbank.com', 
-			'falk.seibild@techbank.com']
-		
+		def targetResultList = ['anne.brown@techbank.com',
+			'fero.bacak@techbank.com',
+			'petra.gerste@techbank.com',
+			'markus.long@techbank.com',
+			'jonas.jux@techbank.com']
+
 		def resultList = []
 		result.each {
 			resultList.add(it.email)
@@ -31,12 +31,11 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes2() {
 		def n = new NetworkService()
 		def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5)
-		def targetResultList = ['vera.rath@techbank.com', 
+		def targetResultList = ['markus.long@techbank.com', 
+			'jonas.jux@techbank.com', 
+			'matthias.zugler@techbank.com', 
 			'falk.seibild@techbank.com', 
-			'markus.long@techbank.com', 
-			'brigitte.prinz@techbank.com', 
-			'jure.zakotnik@techbank.com']
-		
+			'brigitte.prinz@techbank.com']
 		def resultList = []
 		result.each {
 			resultList.add(it.email)
@@ -65,7 +64,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testGetIncomingTagsForNode2() {
 		def n = new NetworkService()
 		def output = n.getIncomingTagsForNode('markus.long@techbank.com')
-		assert output == ['ITIL':3, 'Help':1, 'Operations':3, 'Desk':1, 'IT':2]
+		assert output == ['ITIL':4, 'Help':3, 'Operations':5, 'Desk':3, 'IT':3]
 	}
 	
 	void testGetIncomingTagsForNode() {
@@ -192,17 +191,17 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	void testReadRelationship()
 	{
-		def props = ['startNode':'jure.zakotnik@techbank.com','endNode':'ingmar.mueller@techbank.com']
+		def props = ['startNode':'jure.zakotnik@techbank.com','endNode':'fero.bacak@techbank.com']
 		def n = new NetworkService()
 		def json = n.readRelationship(props)
 		println json
-		assert json == ['http://localhost:7474/db/data/relationship/70']
+		assert json == ['http://localhost:7474/db/data/relationship/50']
 	}
 
 	void testSetProperty()
 	{
 		def n = new NetworkService()
-		def data = n.setProperty(['startNode':'jure.zakotnik@techbank.com','endNode':'ingmar.mueller@techbank.com','tags':'zCloud zJava'])
+		def data = n.setProperty(['startNode':'jure.zakotnik@techbank.com','endNode':'fero.bacak@techbank.com','tags':'zCloud zJava'])
 		println data
 		assert data
 
@@ -213,7 +212,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		def n = new NetworkService()
 		def data = n.getProperty(['http://localhost:7474/db/data/relationship/70'])
 		println data
-		assert data == ['zCloud', 'zJava']
+		assert data == ['Accounting']
 	}
 	
 	void testCreateDatabase() //use this only with an empty database
@@ -233,54 +232,54 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testGetAllProperties() {
 		def n = new NetworkService()
 		def allProps = n.getAllProperties()
-		assert allProps == ['Agile':11,
-			'IT':14,
-			'Java':17,
-			'Bielefeld':5,
-			'Soccer':4,
-			'Spring':10,
-			'Wine':1,
-			'Munich':2,
-			'Jax':2,
-			'2011':2,
-			'Warhammer':1,
-			'SSL':2,
-			'RPG':2,
-			'Operations':7,
-			'Development':4,
-			'Cloud':3,
-			'BPM':1,
-			'Violin':3,
-			'Beethoven':3,
-			'Front':10,
-			'Risk':2,
-			'Trading':9,
-			'Market':2,
-			'Office':10,
-			'Swaps':4,
-			'Bonds':5,
-			'Stocks':1,
-			'Tradings':1,
-			'Derivates':1,
-			'Products':3,
-			'Cash':3,
-			'Warrants':3,
-			'OTC':1,
-			'Help':3,
-			'ITIL':4,
-			'Desk':3,
-			'Innovation':6,
-			'SQL':2,
-			'HTML':4,
-			'Frankfurt':3,
-			'ISO20000':2,
-			'Accounting':5,
-			'Chinese':5,
-			'Sales':2,
-			'Business':2,
-			'Switzerland':1,
-			'London':1,
-			'zCloud':2,
-			'zJava':2]
+		assert allProps == ['Agile':11, 
+			'IT':14, 
+			'Java':18, 
+			'Bielefeld':5, 
+			'Soccer':6, 
+			'Spring':11, 
+			'Wine':1, 
+			'Munich':2, 
+			'Jax':2, 
+			'2011':2, 
+			'Warhammer':1, 
+			'SSL':2, 
+			'RPG':2, 
+			'Operations':7, 
+			'Development':4, 
+			'Cloud':3, 
+			'BPM':1, 
+			'Violin':3, 
+			'Beethoven':4, 
+			'Risk':2, 
+			'Front':11, 
+			'Trading':10, 
+			'Market':2, 
+			'Office':11, 
+			'Swaps':4, 
+			'Bonds':5, 
+			'Tradings':1, 
+			'Stocks':1, 
+			'Derivates':1, 
+			'Products':3, 
+			'Cash':3, 
+			'Warrants':3, 
+			'OTC':1, 
+			'Help':3, 
+			'ITIL':4, 
+			'Desk':3, 
+			'Innovation':6, 
+			'HTML':4, 
+			'SQL':2, 
+			'Frankfurt':5, 
+			'ISO20000':2, 
+			'Accounting':5, 
+			'Chinese':5, 
+			'Sales':2, 
+			'Business':2, 
+			'Switzerland':1, 
+			'London':1, 
+			'zCloud':1, 
+			'zJava':1]
 	}
 }

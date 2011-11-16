@@ -90,7 +90,7 @@ class SpineService {
 			user.imagePath = it.image
 			user.freeText = 'My biography'
 			user.tags = networkService.getIncomingTagsForNode(it.email)
-			
+			user.distance = it.distance
 			userList.add(user)
 		}
 
