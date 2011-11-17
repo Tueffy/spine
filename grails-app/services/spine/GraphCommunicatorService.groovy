@@ -2,12 +2,14 @@ package spine
 
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
+import org.apache.commons.logging.LogFactory
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.Method.*
 
 class GraphCommunicatorService {
 
     static transactional = false
+    private static final log = LogFactory.getLog(this)
 
     HTTPBuilder httpBuilder
 
@@ -44,12 +46,12 @@ class GraphCommunicatorService {
             }
 
             response.success = { resp, json ->
-                log.trace("Received response: ${json.properties}")
+                log.trace("Received response: ${json}")
                 return json
             }
 
             response.failure = { resp ->
-                log.error("Request failure: ${resp}")
+                log.error("Request failure: ${resp.properties}")
                 return []
             }
         }
