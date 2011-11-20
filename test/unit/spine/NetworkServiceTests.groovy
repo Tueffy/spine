@@ -202,6 +202,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	void testCheckDB() {
 		i.checkDB()
+		//TODO, check for the right values here
 	}
 
     void testCreateDatabase() //use this only with an empty database

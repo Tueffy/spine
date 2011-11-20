@@ -40,9 +40,30 @@ class ImportDataService {
     }
 	
 	def checkDB() {
+		def results = [:] //map with results, nodes, rels, properties, index
 		def ctx = bb.createAppCtx()
 		def g = ctx.getBean(GraphCommunicatorService.class)
-		def result = g.neoGet('/db/data/index/node')
-		println result
+		
+		//nodex in indices
+		def json = g.neoGet('/db/data/index/node/names/email', ['query': 'email:*'])
+        results['nodesEmailIndexSize'] = json.data.size
+		json = g.neoGet('/db/data/index/node/names/lastName', ['query': 'lastName:*'])
+		results['nodesLastNameIndexSize'] = json.data.size
+		json = g.neoGet('/db/data/index/node/names/firstName', ['query': 'firstName:*'])
+		results['nodesFirstNameIndexSize'] = json.data.size
+		json = g.neoGet('/db/data/index/node/names/country', ['query': 'country:*'])
+		results['nodesCountryIndexSize'] = json.data.size
+		json = g.neoGet('/db/data/index/node/names/city', ['query': 'city:*'])
+		results['nodesCityIndexSize'] = json.data.size
+		json = g.neoGet('/db/data/index/node/names/freeText', ['query': 'freeText:*'])
+		results['nodesFreeTextIndexSize'] = json.data.size
+		
+		//rels in indices
+		json = g.neoGet('/db/data/index/relationship/edges', ['query': 'tag:*'])
+		results['relsTagsIndexSize'] = json.data.size
+		
+		//TODO continue here
+		
+		println results
 	}
 }
