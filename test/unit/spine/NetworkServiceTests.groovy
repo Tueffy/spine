@@ -9,7 +9,6 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-
         initBeans(new BeanCtxFactory().createAppCtx())
     }
 
@@ -17,12 +16,18 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         n = ctx.getBean(NetworkService.class)
         i = ctx.getBean(ImportDataService.class)
     }
+	
+	/**
+	 * Checks the status of the test database. This checks: number of nodes, relationships, properties, indices
+	 * @return true if DB is ok
+	 */
 
     protected void tearDown() {
         super.tearDown()
     }
 
-
+	
+	
     void testQueryForNeighbourNodes1() {
         def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
         def targetResultList = ['anne.brown@techbank.com',
@@ -194,6 +199,10 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         println data
         assert data == ['Accounting']
     }
+	
+	void testCheckDB() {
+		i.checkDB()
+	}
 
     void testCreateDatabase() //use this only with an empty database
     {

@@ -4,6 +4,8 @@ class ImportDataService {
 
     static transactional = false
     NetworkService networkService
+	BeanCtxFactory bb = new BeanCtxFactory() 
+	
 
     def importEdges(String file) {
         println 'Starting to connect nodes...'
@@ -36,4 +38,11 @@ class ImportDataService {
         }
         println "Nodes created!"
     }
+	
+	def checkDB() {
+		def ctx = bb.createAppCtx()
+		def g = ctx.getBean(GraphCommunicatorService.class)
+		def result = g.neoGet('/db/data/index/node')
+		println result
+	}
 }
