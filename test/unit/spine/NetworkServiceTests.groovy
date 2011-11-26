@@ -4,18 +4,13 @@ import grails.test.GrailsUnitTestCase
 import org.springframework.context.ApplicationContext
 
 class NetworkServiceTests extends GrailsUnitTestCase {
-    private NetworkService n
-    private ImportDataService i
+    def networkService
+    def importDataService
 
     protected void setUp() {
         super.setUp()
-        initBeans(new BeanCtxFactory().createAppCtx())
     }
 
-    private def initBeans(ApplicationContext ctx) {
-        n = ctx.getBean(NetworkService.class)
-        i = ctx.getBean(ImportDataService.class)
-    }
 	
 	/**
 	 * Checks the status of the test database. This checks: number of nodes, relationships, properties, indices
@@ -29,7 +24,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	
     void testQueryForNeighbourNodes1() {
-        def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
+        def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
         def targetResultList = ['anne.brown@techbank.com',
                 'fero.bacak@techbank.com',
                 'petra.gerste@techbank.com',
@@ -44,7 +39,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     }
 
     void testQueryForNeighbourNodes2() {
-        def result = n.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5)
+        def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5)
         def targetResultList = ['markus.long@techbank.com',
                 'jonas.jux@techbank.com',
                 'matthias.zugler@techbank.com',
@@ -58,7 +53,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     }
 
     void testQueryForNeighbourNodes3() {
-        def result = n.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5)
+        def result = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5)
         def targetResultList = []
         def resultList = []
         result.each {
@@ -68,42 +63,42 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     }
 
     void testGetNodeURIFromEmail() {
-        assert n.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/3'
-        assert n.getNodeURIFromEmail('monika.hoppe@techbank.com') == 'http://localhost:7474/db/data/node/5'
-        assert n.getNodeURIFromEmail('invalidemail.email@techbank.com') == null
+        assert networkService.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/3'
+        assert networkService.getNodeURIFromEmail('monika.hoppe@techbank.com') == 'http://localhost:7474/db/data/node/5'
+        assert networkService.getNodeURIFromEmail('invalidemail.email@techbank.com') == null
     }
 
     void testGetIncomingTagsForNode2() {
-        def output = n.getIncomingTagsForNode('markus.long@techbank.com')
+        def output = networkService.getIncomingTagsForNode('markus.long@techbank.com')
         assert output == ['ITIL': 4, 'Help': 3, 'Operations': 5, 'Desk': 3, 'IT': 3]
     }
 
     void testGetIncomingTagsForNode() {
-        def output = n.getIncomingTagsForNode('christan.tueffers@techbank.com')
+        def output = networkService.getIncomingTagsForNode('christan.tueffers@techbank.com')
         assert output == [:]
     }
 
     void testCreateAndDeleteNode() {
         def r = ''
         def data = [lastName: 'UnitTestNode', firstName: 'Node', password: 'manage', country: 'Germany', city: 'Frankfurt', email: 'unit.test@techbank.com', image: 'jure.zakotnik@techbank.com.jpg']
-        def output = n.createNode(data)
+        def output = networkService.createNode(data)
         println 'Create node output: ' + output
-        assert n.readNode('unit.test@techbank.com')
-        n.deleteNode('unit.test@techbank.com')
-        assert n.readNode('unit.test@techbank.com') == null
+        assert networkService.readNode('unit.test@techbank.com')
+        networkService.deleteNode('unit.test@techbank.com')
+        assert networkService.readNode('unit.test@techbank.com') == null
     }
 
     void testCreateAndDeleteRelationship() {
         def props = ['startNode': 'christian.tueffers@techbank.com', 'endNode': 'ingmar.mueller@techbank.com']
-        def output = n.createRelationship(props)
+        def output = networkService.createRelationship(props)
         println 'Create relationship output: ' + output
         assert output
-        n.deleteRelationship(props)
-        assert n.readRelationship(props) == []
+        networkService.deleteRelationship(props)
+        assert networkService.readRelationship(props) == []
     }
 
     void testReadNode() {
-        def data = n.readNode('jure.zakotnik@techbank.com')
+        def data = networkService.readNode('jure.zakotnik@techbank.com')
         println data
         assert data.lastName == 'Zakotnik'
         assert data.firstName == 'Jure'
@@ -117,25 +112,25 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     void testUpdateNode() {
         def r = ''
         def data = [lastName: 'Zakotnik', firstName: 'Jure', password: 'cluster2', country: 'Germany', city: 'Frankfurt', email: 'jure.zakotnik@techbank.com', image: 'jure.zakotnik@techbank.com.jpg']
-        n.updateNode('jure.zakotnik@techbank.com', data)
-        r = n.readNode('jure.zakotnik@techbank.com')
+        networkService.updateNode('jure.zakotnik@techbank.com', data)
+        r = networkService.readNode('jure.zakotnik@techbank.com')
         println r
         assert r.password == 'cluster2'
-        n.updateNode('jure.zakotnik@techbank.com', [password: 'cluster'])
-        r = n.readNode('jure.zakotnik@techbank.com')
+        networkService.updateNode('jure.zakotnik@techbank.com', [password: 'cluster'])
+        r = networkService.readNode('jure.zakotnik@techbank.com')
         println r
         assert r.password == 'cluster'
     }
 
     void testReadNodeEmpty() {
-        def data = n.readNode('noemail.zakotnik@techbank.com')
+        def data = networkService.readNode('noemail.zakotnik@techbank.com')
         println data
         assert data == null
     }
 
     void testQueryNodeWithSingleParameter() {
         def queryObject = [email: 'm*']
-        def data = n.queryNode(queryObject)
+        def data = networkService.queryNode(queryObject)
         println data
         assert data == ['monika.hoppe@techbank.com',
                 'matthias.miller@techbank.com',
@@ -157,7 +152,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
     void testQueryNodeWithSingleParameter2() {
         def queryObject = [email: 'christian.tueffers@techbank.com']
-        def data = n.queryNode(queryObject)
+        def data = networkService.queryNode(queryObject)
         println data
         assert data == ['christian.tueffers@techbank.com']
     }
@@ -165,7 +160,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
     void testQueryNodeWithManyParametersOneResult() {
         def queryObject = [email: 'm*', lastName: 'Miller']
-        def data = n.queryNode(queryObject)
+        def data = networkService.queryNode(queryObject)
         println data
         assert data == ['matthias.miller@techbank.com']
     }
@@ -174,7 +169,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
     void testQueryNodeWithManyParametersNoResult() {
         def queryObject = [email: 'm*', firstName: 'Zakotnik']
-        def data = n.queryNode(queryObject)
+        def data = networkService.queryNode(queryObject)
         println data
         assert data == []
     }
@@ -182,26 +177,26 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
     void testReadRelationship() {
         def props = ['startNode': 'jure.zakotnik@techbank.com', 'endNode': 'fero.bacak@techbank.com']
-        def json = n.readRelationship(props)
+        def json = networkService.readRelationship(props)
         println json
         assert json == ['http://localhost:7474/db/data/relationship/50']
     }
 
     void testSetProperty() {
-        def data = n.setProperty(['startNode': 'jure.zakotnik@techbank.com', 'endNode': 'fero.bacak@techbank.com', 'tags': 'zCloud zJava'])
+        def data = networkService.setProperty(['startNode': 'jure.zakotnik@techbank.com', 'endNode': 'fero.bacak@techbank.com', 'tags': 'zCloud zJava'])
         println data
         assert data
 
     }
 
     void testGetProperty() {
-        def data = n.getProperty(['http://localhost:7474/db/data/relationship/70'])
+        def data = networkService.getProperty(['http://localhost:7474/db/data/relationship/70'])
         println data
         assert data == ['Accounting']
     }
 	
 	void testCheckDB() {
-		i.checkDB()
+		importDataService.checkDB()
 		//TODO, check for the right values here
 	}
 
@@ -211,16 +206,16 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         //read nodes file
         def nodesInput = new File('.\\test\\unit\\spine\\nodes.txt')
         //println nodesInput.text
-        //n.importNodes(nodesInput.text)
+        //networkService.importNodes(nodesInput.text)
         def edgesInput = new File('.\\test\\unit\\spine\\edges.txt')
         //println edgesInput.text
-        //n.importEdges(edgesInput.text)
+        //networkService.importEdges(edgesInput.text)
 
         assert true
     }
 
     void testGetAllProperties() {
-        def allProps = n.getAllProperties()
+        def allProps = networkService.getAllProperties()
         assert allProps == ['Agile': 11,
                 'IT': 14,
                 'Java': 18,

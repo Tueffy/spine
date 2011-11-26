@@ -44,7 +44,7 @@ class ImportDataService {
 		def ctx = bb.createAppCtx()
 		def g = ctx.getBean(GraphCommunicatorService.class)
 		
-		//nodex in indices
+		//nodes in indices
 		def json = g.neoGet('/db/data/index/node/names/email', ['query': 'email:*'])
         results['nodesEmailIndexSize'] = json.data.size
 		json = g.neoGet('/db/data/index/node/names/lastName', ['query': 'lastName:*'])
