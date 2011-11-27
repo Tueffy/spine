@@ -6,6 +6,7 @@ import grails.spring.BeanBuilder
  * User: stas
  * Date: 11/17/11
  */
+/*
 class BeanCtxFactory {
     private def bb = new BeanBuilder()
 
@@ -31,3 +32,4 @@ class BeanCtxFactory {
         return bb.createApplicationContext()
     }
 }
+*/

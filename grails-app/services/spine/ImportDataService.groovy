@@ -3,8 +3,9 @@ package spine
 class ImportDataService {
 
     static transactional = false
-    NetworkService networkService
-	BeanCtxFactory bb = new BeanCtxFactory() 
+    def networkService
+	def graphCommunicatorService
+	 
 	
 
     def importEdges(String file) {
@@ -41,28 +42,29 @@ class ImportDataService {
 	
 	def checkDB() {
 		def results = [:] //map with results, nodes, rels, properties, index
-		def ctx = bb.createAppCtx()
-		def g = ctx.getBean(GraphCommunicatorService.class)
 		
 		//nodes in indices
-		def json = g.neoGet('/db/data/index/node/names/email', ['query': 'email:*'])
+		def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': 'email:*'])
         results['nodesEmailIndexSize'] = json.data.size
-		json = g.neoGet('/db/data/index/node/names/lastName', ['query': 'lastName:*'])
+		json = graphCommunicatorService.neoGet('/db/data/index/node/names/lastName', ['query': 'lastName:*'])
 		results['nodesLastNameIndexSize'] = json.data.size
-		json = g.neoGet('/db/data/index/node/names/firstName', ['query': 'firstName:*'])
+		json = graphCommunicatorService.neoGet('/db/data/index/node/names/firstName', ['query': 'firstName:*'])
 		results['nodesFirstNameIndexSize'] = json.data.size
-		json = g.neoGet('/db/data/index/node/names/country', ['query': 'country:*'])
+		json = graphCommunicatorService.neoGet('/db/data/index/node/names/country', ['query': 'country:*'])
 		results['nodesCountryIndexSize'] = json.data.size
-		json = g.neoGet('/db/data/index/node/names/city', ['query': 'city:*'])
+		json = graphCommunicatorService.neoGet('/db/data/index/node/names/city', ['query': 'city:*'])
 		results['nodesCityIndexSize'] = json.data.size
-		json = g.neoGet('/db/data/index/node/names/freeText', ['query': 'freeText:*'])
+		json = graphCommunicatorService.neoGet('/db/data/index/node/names/freeText', ['query': 'freeText:*'])
 		results['nodesFreeTextIndexSize'] = json.data.size
 		
 		//rels in indices
-		json = g.neoGet('/db/data/index/relationship/edges', ['query': 'tag:*'])
+		json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': 'tag:*'])
 		results['relsTagsIndexSize'] = json.data.size
 		
-		//TODO continue here
+		//total nodes via REST (should match index!)
+		(1..1000).each { i->
+			json = graphCommunicatorService.neoGet('/db/data/node/' + i)
+		}
 		
 		println results
 	}

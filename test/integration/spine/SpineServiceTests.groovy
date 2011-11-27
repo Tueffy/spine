@@ -4,7 +4,7 @@ import grails.test.GrailsUnitTestCase
 
 class SpineServiceTests extends GrailsUnitTestCase {
 
-    private SpineService s
+    def spineService
     def u1 = new User()
     def u2 = new User()
     def u3 = new User()
@@ -19,7 +19,6 @@ class SpineServiceTests extends GrailsUnitTestCase {
         u3.email = 'christian.tueffers@techbank.com'
         u4.email = 'fero.bacak@techbank.com'
 
-        s = new BeanCtxFactory().createAppCtx().getBean(SpineService.class)
     }
 
     protected void tearDown() {
@@ -30,7 +29,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testLoginUser1() {
 
-        def success = s.loginUser('christian.tueffers@techbank.com', 'manage')
+        def success = spineService.loginUser('christian.tueffers@techbank.com', 'manage')
         assert success.lastName == 'Tueffers'
         assert success.firstName == 'Christian'
         assert success.country == 'Germany'
@@ -42,19 +41,19 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testLoginUser2() {
 
-        def failure = s.loginUser('christian.tueffers@techbank.com', 'password')
+        def failure = spineService.loginUser('christian.tueffers@techbank.com', 'password')
         assert failure == null
     }
 
     void testLoginUser3() {
 
-        def notexist = s.loginUser('christian.tueffers@techbank.com', 'password')
+        def notexist = spineService.loginUser('christian.tueffers@techbank.com', 'password')
         assert notexist == null
     }
 
     void testLoginUser4() {
 
-        def success = s.loginUser('markus.long@techbank.com', 'clojure')
+        def success = spineService.loginUser('markus.long@techbank.com', 'clojure')
         assert success.lastName == 'Long'
         assert success.firstName == 'Markus'
         assert success.country == 'Germany'
@@ -69,13 +68,13 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testGetUserNetwork1() {
 
-        def result = s.getUserNetwork(u1, '', 0)
+        def result = spineService.getUserNetwork(u1, '', 0)
         assert result.size() == 10
     }
 
     void testGetUserNetwork2() {
 
-        def result = s.getUserNetwork(u2, '', 0)
+        def result = spineService.getUserNetwork(u2, '', 0)
         assert result.size() == 10
     }
 
@@ -83,7 +82,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testGetUser1() {
 
-        def result = s.getUser('markus.long@techbank.com')
+        def result = spineService.getUser('markus.long@techbank.com')
         assert result != null
 
     }
@@ -92,32 +91,32 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testGetUserTags1() {
 
-        def output = s.getUserTags(u1)
+        def output = spineService.getUserTags(u1)
         assert output == ['ITIL': 4, 'Help': 3, 'Operations': 5, 'Desk': 3, 'IT': 3]
 
     }
 
     void testGetUserTags2() {
 
-        def output = s.getUserTags(u2)
+        def output = spineService.getUserTags(u2)
         assert output == ['Spring': 4, 'Java': 8, 'IT': 9, 'Agile': 11, 'Cloud': 1, 'BPM': 1, 'RPG': 2, 'Operations': 2, 'Bielefeld': 5, 'Development': 1, 'Warhammer': 1, 'SSL': 1, 'Munich': 2, 'Jax': 2, '2011': 2, 'Wine': 1, 'Soccer': 1]
     }
 
     void testGetUserTags3() {
 
-        def output = s.getUserTags(u3)
+        def output = spineService.getUserTags(u3)
         assert output == [:]
     }
 
     void testGetUserTags4() {
 
-        def output = s.getUserTags(u4)
+        def output = spineService.getUserTags(u4)
         assert output == [Spring: 7, Java: 9, Development: 2, IT: 1, HTML: 3, SQL: 2, SSL: 1, zCloud: 1, zJava: 1]
     }
 
 /*	void testAddTag(){
 
-        def test = s.addTag(u1,'ingmar.mueller@techbank.com','zCloud zJava')
+        def test = spineService.addTag(u1,'ingmar.mueller@techbank.com','zCloud zJava')
         assert test == true
     }
 */

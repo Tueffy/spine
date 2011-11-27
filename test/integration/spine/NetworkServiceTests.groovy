@@ -1,7 +1,7 @@
 package spine
 
 import grails.test.GrailsUnitTestCase
-import org.springframework.context.ApplicationContext
+
 
 class NetworkServiceTests extends GrailsUnitTestCase {
     def networkService
@@ -20,8 +20,6 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
-
-	
 	
     void testQueryForNeighbourNodes1() {
         def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)

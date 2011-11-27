@@ -11,7 +11,7 @@ class GraphCommunicatorService {
     static transactional = false
     private static final log = LogFactory.getLog(this)
 
-    HTTPBuilder httpBuilder
+    HTTPBuilder httpBuilder = new HTTPBuilder('http://localhost:7474')
 
     def neoPost(requestPath, requestQuery) {
         internalRequest(POST, requestPath, requestQuery)
@@ -36,7 +36,7 @@ class GraphCommunicatorService {
     private def internalRequest(Method method, String requestPath, requestQuery = null) {
         log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
 
-        return httpBuilder.request(method, JSON) {req ->
+        return httpBuilder.request(method, groovyx.net.http.ContentType.JSON) {req ->
             uri.path = requestPath
 
             if (method == GET) {

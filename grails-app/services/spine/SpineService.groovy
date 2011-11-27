@@ -3,8 +3,8 @@ package spine
 class SpineService {
 
     static transactional = false
-    NetworkService networkService
-    BadgeService badgeService
+    def  networkService
+    def badgeService
 
     /**
      * take the email address and the password and verify, if exist in database and correct
