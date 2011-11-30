@@ -74,4 +74,20 @@ class UserController {
 		session.user = null
 		redirect(controller:'user', action:'login')
 	}
+	
+	/**
+	 * while registering user can upload a picture of himself throw AJAX
+	 */
+	def doAjaxPictureUpload = {
+		def d = request.getFile('picture')
+	}
+	
+	/**
+	 * crop the image uploaded by the user throw AJAX 
+	 */
+	def doAjaxPictureCropping = {
+//		def i
+		// Image loaded, we want to crop it now
+		
+	}
 }
