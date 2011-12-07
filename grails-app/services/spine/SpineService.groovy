@@ -168,7 +168,7 @@ class SpineService {
         newUser.city = userparams.city
         newUser.country = userparams.country
         newUser.imagePath = userparams.image
-        //newUser.freeText = "Free Text"
+        newUser.freeText = userparams.freetext
 
         // set over into map for call
         def userProps = ['firstName': newUser.firstName,

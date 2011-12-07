@@ -1,10 +1,17 @@
 package spine
 
+import java.io.File;
+
+import org.codehaus.groovy.grails.web.context.ServletContextHolder;
 import grails.converters.JSON
+import pl.burningice.plugins.image.BurningImageService
+import spine.FileService
 
 class UserController {
 
 	def spineService
+	BurningImageService burningImageService
+	FileService fileService
 
 	/**
 	 * nothing displayed in case of login
@@ -52,7 +59,25 @@ class UserController {
 	def doRegister = {	
 		
 		// create map with parameters
-		def userparams = ['firstName' : params.firstName, 'lastName' : params.lastName, 'city' : params.city, 'country' : params.country, 'email' : params.email, 'password' : params.password, 'image' : params.email+".jpg"]
+		def userparams = [
+			'firstName' : params.firstName,
+			'lastName' : params.lastName,
+			'city' : params.city,
+			'country' : params.country,
+			'email' : params.email,
+			'password' : params.password, 
+			'image' : "",
+			'freeText' : params.freetext ]
+		
+		// If an image has been sent, apply cropping
+		if(params.picture != "")
+		{
+			cropUserPicture()
+			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
+		}
+		
+		
+		
 		
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {
@@ -75,19 +100,25 @@ class UserController {
 		redirect(controller:'user', action:'login')
 	}
 	
-	/**
-	 * while registering user can upload a picture of himself throw AJAX
-	 */
-	def doAjaxPictureUpload = {
-		def d = request.getFile('picture')
+	private Boolean cropUserPicture()
+	{
+		int minHeightWidhth = 50
+		if(params.crop_w.toInteger() < minHeightWidhth || params.crop_h.toInteger() < minHeightWidhth)
+			return false
+		
+		String inputFilename = params.picture
+		String inputDir = ServletContextHolder.servletContext.getRealPath('/') + "uploads/tmp/"
+		String inputFileExtension = fileService.extractExtensionFromFileName(inputFilename)
+		String outputDir = ServletContextHolder.servletContext.getRealPath('/') + "images/profiles/"
+		burningImageService.doWith(inputDir + inputFilename, outputDir).execute {
+			it.crop(params.crop_x1.toInteger(), params.crop_y1.toInteger(), params.crop_w.toInteger(), params.crop_h.toInteger())
+		}
+		
+		File file = new File(outputDir + inputFilename)
+		String outputFileName = params.email + "." + inputFileExtension 
+		fileService.renameFile(file, outputFileName) 
+
+		return true
 	}
 	
-	/**
-	 * crop the image uploaded by the user throw AJAX 
-	 */
-	def doAjaxPictureCropping = {
-//		def i
-		// Image loaded, we want to crop it now
-		
-	}
 }
