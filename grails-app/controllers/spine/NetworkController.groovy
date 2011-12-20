@@ -1,9 +1,13 @@
 package spine
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.commons.*
 
 
 class NetworkController {
+	
+	def config = ConfigurationHolder.config
+	
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
 	def spineService
@@ -32,18 +36,16 @@ class NetworkController {
 	
 	
 	def index = {
-		
-		def n = null
-		
+		// Get the user
 		User user = new User()
-		
 		if(params.user !=null)
 			user.email = params.user			
 		else
 			user.email = session.user
 			
-		n  = spineService.getUserNetwork(user, null, 0)
-		
+		// Get user network (get the first page)
+		def n = null
+		n  = spineService.getUserNetwork(user, null, 0, config.network.itemsPerPage)
 		for ( i in n ) {
 				def userFromList = new User()
 				userFromList.email = i.email
@@ -68,6 +70,22 @@ class NetworkController {
 		//println allusers
 		[param : params.filter, user : user, neighbours : n]
 		//[param : params.filter, user : session.user]
+	}
+	
+	def ajaxPage = {
+		// Get the user
+		User user = new User()
+		if(params.user !=null)
+			user.email = params.user
+		else
+			user.email = session.user
+		
+		// Then get the page, according to the configured pagination
+		if(params.page == null) params.page = 1
+		int offset = params.page.toInteger() - 1
+		offset *= config.network.itemsPerPage
+		def n  = spineService.getUserNetwork(user, null, offset, config.network.itemsPerPage)
+		render( template: "page", model: [neighbours: n]);
 	}
 	
 	def linkProperties = {

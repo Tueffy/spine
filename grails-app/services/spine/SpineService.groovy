@@ -52,7 +52,7 @@ class SpineService {
      * @param offset
      * @return userList of type User
      */
-    def getUserNetwork(User contextUser, String filter, int offset) {
+    def getUserNetwork(User contextUser, String filter, int offset, int limit) {
 
         def queryReturn
         def userList = []
@@ -62,7 +62,7 @@ class SpineService {
         if ((filter == null) || (filter == '')) {
 
             // get the neighbours in batches of 20
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
 
         }
         else {
@@ -75,7 +75,7 @@ class SpineService {
             println "search filter: " + wordList
 
             // now we need to wait until the network service queryNode is ready, as this is not the case yet, use the same service as in the if
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
         }
 
         // loop through the list and instantiate the user objects incl. tags
@@ -121,8 +121,10 @@ class SpineService {
         user.country = userNode.country
         user.city = userNode.city
         user.imagePath = userNode.image
-        user.freeText = 'My biography'
+        user.freeText = userNode.freeText
         user.tags = networkService.getIncomingTagsForNode(userNode.email)
+		// TODO: does not look good, have to rethink the way we manage user in the code
+		user.password = userNode.password
         if (user.tags != null)
             user.badges = badgeService.evaluateTags(user.tags)
 
@@ -212,10 +214,27 @@ class SpineService {
      */
     def updateUserProfile(User loggedInUser, HashMap properties) {
 
-        def success = new Boolean()
-
-        // update node properties
-
+        def success = false
+		
+		def userProps = [
+			'email': loggedInUser.email,
+			'firstName': properties.firstName == '' ? loggedInUser.firstName : properties.firstName, 
+			'lastName': properties.lastName == '' ? loggedInUser.lastName : properties.lastName,
+			'city': properties.city == '' ? loggedInUser.city : properties.city,
+			'country': properties.country == '' ? loggedInUser.country : properties.country,
+			'imagePath': properties.imagePath == '' ? loggedInUser.imagePath : properties.imagePath,
+			'freeText': properties.freeText == '' ? loggedInUser.country : properties.freeText,
+			'password': properties.password == '' ? loggedInUser.password : properties.password 
+			]
+		
+		println ""
+		println ""
+		println ""
+		println ""
+		println ""
+		networkService.updateNode(loggedInUser.email, userProps)
+		
+		success = true
         return success
     }
 

@@ -58,7 +58,8 @@ class NetworkService {
             newProperties.(it.getKey()) = it.getValue()
         }
         //remove all old index entries
-        removeNodeIndex(json.self[0])
+//        removeNodeIndex(json.self[0])
+		graphCommunicatorService.neoDelete(json.self[0])
         //add new properties to node
         graphCommunicatorService.neoPut(json.self[0] + '/properties', newProperties)
         //add new index entries

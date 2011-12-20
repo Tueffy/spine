@@ -3,13 +3,16 @@ package spine
 import java.io.File;
 
 import org.codehaus.groovy.grails.web.context.ServletContextHolder;
+
+import com.sun.net.httpserver.Authenticator.Success;
+
 import grails.converters.JSON
 import pl.burningice.plugins.image.BurningImageService
 import spine.FileService
 
 class UserController {
 
-	def spineService
+	SpineService spineService
 	BurningImageService burningImageService
 	FileService fileService
 
@@ -73,7 +76,7 @@ class UserController {
 		if(params.picture != "")
 		{
 			cropUserPicture()
-			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
+			userparams.image = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}
 		
 		
@@ -102,6 +105,7 @@ class UserController {
 	
 	private Boolean cropUserPicture()
 	{
+		if(params.email == null) params.email = session.user.email
 		int minHeightWidhth = 50
 		if(params.crop_w.toInteger() < minHeightWidhth || params.crop_h.toInteger() < minHeightWidhth)
 			return false
@@ -116,9 +120,55 @@ class UserController {
 		
 		File file = new File(outputDir + inputFilename)
 		String outputFileName = params.email + "." + inputFileExtension 
-		fileService.renameFile(file, outputFileName) 
+//		if(session.user.imagePath != null)
+//			fileService.deleteFile(outputDir + session.user.imagePath)
+		println ""
+		println "File renaming = "
+		println file.renameTo(new File(outputDir + outputFileName))
+		println outputDir + outputFileName
 
 		return true
+	}
+	
+	def profile = {
+		return [ user: session.user ]
+	}
+	
+	def updateProfile = {
+		// Get the current user
+		User user = session.user
+		
+		// create map with parameters
+		def userparams = [
+			'firstName' : params.firstname,
+			'lastName' : params.lastname,
+			'city' : params.city,
+			'country' : params.country,
+			'email' : params.email,
+			'password' : params.password, 
+			'imagePath' : "",
+			'freeText' : params.freeText ]
+		
+		// If an image has been sent, apply cropping
+		println "picture = ${params.picture}"
+		if(params.picture != "")
+		{
+			cropUserPicture()
+			userparams.imagePath = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
+		}
+		
+		Boolean success = spineService.updateUserProfile(user, userparams)
+		[ user: userparams ]
+		
+		if(success)
+		{
+			// Reload the user in the session
+			session.user = spineService.getUser(user.email) 
+			flash.message = "Profile updated ! ";
+			redirect(action: "profile")
+		}
+		else
+			render(view:"profile")
 	}
 	
 }

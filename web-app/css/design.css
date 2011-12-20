@@ -63,13 +63,13 @@ a:hover { color:#67624e; }
  Content and main lists
 */
 
-#right { background:url(../images/my_spine_bg.png) no-repeat; background-position: top left; }
+#right { background:url(../images/home/my_spine_bg.png) no-repeat; background-position: top left; }
 
 #right .header h2 { font-size: 24px; font-family:"HelveticaRounded Bold"; color:#67624e; padding: 15px; font-weight:normal; }
 #right .header .news { height: 20px; width: 750px; padding: 8px 10px 8px 10px; background:#dad5bd; border-radius: 12px; font-size:11px; font-weight:bold; color:#958e73; margin-left: 15px; box-shadow: 0px 2px 2px #ffffff;}
 #right .header .news img.bubble { position:absolute; margin-left: -42px;}
 
-#right .feed_and_details { background:#fff; border-radius: 15px 15px 0 0; margin-top: 15px; background-image:url(../images/feed_bg.gif); background-repeat:repeat-y; }
+#right .feed_and_details { background:#fff; border-radius: 15px 15px 0 0; margin-top: 15px; background-image:url(../images/home/feed_bg.gif); background-repeat:repeat-y; }
 #right .feed {  }
 #right .feed .filter { background:#c9c5b8; border-radius:15px 0 0 0; height:90px; }
 #right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:350px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 24px; color:#c9c5b8; padding: 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}

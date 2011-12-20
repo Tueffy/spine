@@ -40,6 +40,14 @@ class FileService {
 		System.out.println("\n" + renamingSuccess) // TODO : Don't forget to remove this, or used a better way for logging events
 	}
 	
+	
+	def deleteFile(String path)
+	{
+		File file = new File(path)
+		if(file.exists())
+			file.delete()
+	}
+	
 	/** 
 	 * Extract extension from filename 
 	 * @param String fileName

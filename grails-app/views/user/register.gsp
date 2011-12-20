@@ -150,7 +150,7 @@
 			<div class="form_slide dialog">
 				<p>Tell us more about yourself (Optional) </p>
 				
-				<textarea name="freetext">...</textarea>
+				<textarea name="freeText">...</textarea>
 				
 				<div class="buttons">
 					<br />

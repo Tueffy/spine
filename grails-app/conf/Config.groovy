@@ -94,3 +94,5 @@ log4j = {
 
     warn 'org.mortbay.log'
 }
+
+network.itemsPerPage = 20
