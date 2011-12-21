@@ -10,6 +10,7 @@ import grails.converters.JSON
 import pl.burningice.plugins.image.BurningImageService
 import spine.FileService
 
+
 class UserController {
 
 	SpineService spineService
@@ -76,7 +77,7 @@ class UserController {
 		if(params.picture != "")
 		{
 			cropUserPicture()
-			userparams.image = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
+			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}
 		
 		
@@ -110,6 +111,7 @@ class UserController {
 		if(params.crop_w.toInteger() < minHeightWidhth || params.crop_h.toInteger() < minHeightWidhth)
 			return false
 		
+		// Crop the picture and dealing with the tmp picture
 		String inputFilename = params.picture
 		String inputDir = ServletContextHolder.servletContext.getRealPath('/') + "uploads/tmp/"
 		String inputFileExtension = fileService.extractExtensionFromFileName(inputFilename)
@@ -118,16 +120,31 @@ class UserController {
 			it.crop(params.crop_x1.toInteger(), params.crop_y1.toInteger(), params.crop_w.toInteger(), params.crop_h.toInteger())
 		}
 		
-		File file = new File(outputDir + inputFilename)
-		String outputFileName = params.email + "." + inputFileExtension 
-//		if(session.user.imagePath != null)
-//			fileService.deleteFile(outputDir + session.user.imagePath)
-		println ""
+		
+		// Delete the old file
+		Boolean oldFileDeleted
+		if(session.user.imagePath != null)
+		{
+			File oldFileToDelete = new File(outputDir + session.user.imagePath)
+			if(oldFileToDelete.exists() && !oldFileToDelete.directory)
+			{
+				oldFileDeleted = oldFileToDelete.delete();
+				println "\nFile deleted = ${oldFileDeleted}"
+			}
+		}
+		
+		// Finalize upload by putting the cropped picture to its right place
 		println "File renaming = "
-		println file.renameTo(new File(outputDir + outputFileName))
-		println outputDir + outputFileName
+		File file = new File(outputDir + inputFilename)
+		String outputFileName = params.email + "." + inputFileExtension
+		Boolean fileMoved = file.renameTo(new File(outputDir + outputFileName))
+		println fileMoved.toString() + "\n" + outputDir + outputFileName
+		
+		// If moving failed, delete the tmp file
+		if(!fileMoved)
+			file.delete() 
 
-		return true
+		return fileMoved
 	}
 	
 	def profile = {
@@ -154,7 +171,7 @@ class UserController {
 		if(params.picture != "")
 		{
 			cropUserPicture()
-			userparams.imagePath = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
+			userparams.imagePath = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}
 		
 		Boolean success = spineService.updateUserProfile(user, userparams)

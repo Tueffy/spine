@@ -218,13 +218,13 @@ class SpineService {
 		
 		def userProps = [
 			'email': loggedInUser.email,
-			'firstName': properties.firstName == '' ? loggedInUser.firstName : properties.firstName, 
-			'lastName': properties.lastName == '' ? loggedInUser.lastName : properties.lastName,
-			'city': properties.city == '' ? loggedInUser.city : properties.city,
-			'country': properties.country == '' ? loggedInUser.country : properties.country,
-			'imagePath': properties.imagePath == '' ? loggedInUser.imagePath : properties.imagePath,
-			'freeText': properties.freeText == '' ? loggedInUser.country : properties.freeText,
-			'password': properties.password == '' ? loggedInUser.password : properties.password 
+			'firstName': properties.firstName ? properties.firstName : loggedInUser.firstName, 
+			'lastName': properties.lastName ? properties.lastName : loggedInUser.lastName,
+			'city': properties.city ? properties.city : loggedInUser.city,
+			'country': properties.country ? properties.country : loggedInUser.country,
+			'imagePath': properties.imagePath ? properties.imagePath : loggedInUser.imagePath,
+			'freeText': properties.freeText ? properties.freeText : loggedInUser.freeText,
+			'password': properties.password ? properties.password : loggedInUser.password 
 			]
 		
 		println ""
