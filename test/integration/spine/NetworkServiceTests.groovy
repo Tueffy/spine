@@ -260,3 +260,4 @@ class NetworkServiceTests extends GrailsUnitTestCase {
                 'zJava': 1]
     }
 }
+

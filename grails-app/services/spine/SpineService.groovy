@@ -6,6 +6,7 @@ class SpineService {
     def  networkService
     def badgeService
 
+	
     /**
      * take the email address and the password and verify, if exist in database and correct
      * if yes then instantiate the loggedInUser object, if not, return null
@@ -45,6 +46,7 @@ class SpineService {
         return user
     }
 
+	
     /**
      *
      * @param contextUser
@@ -69,7 +71,8 @@ class SpineService {
 
             // first step is to tokenize the filter string
             def tokens = " ,;"
-            def wordList = []
+            def wordList = [] 
+			
             wordList = filter.tokenize(tokens)
 
             println "search filter: " + wordList

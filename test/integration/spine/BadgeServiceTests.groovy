@@ -38,3 +38,4 @@ class BadgeServiceTests extends GrailsUnitTestCase {
 		assert result.size() == 1
     }
 }
+

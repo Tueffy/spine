@@ -500,7 +500,6 @@ class NetworkService {
 
      /*
 
-
      def createEdge (List edgeProperties) {
          String node1 = findNodeByEmail(edgeProperties[0])[0]
          String node2 = findNodeByEmail(edgeProperties[1])[0]

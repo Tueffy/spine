@@ -8,7 +8,6 @@ class ImportDataService {
     def NetworkService networkService
 	def GraphCommunicatorService graphCommunicatorService
 	 
-	
 
     def importEdges(String file) {
         println 'Starting to connect nodes...'
