@@ -121,6 +121,20 @@ class NetworkService {
         }
         return queryResult
     }
+	
+	def queryRelationship(Map queryObject) 
+	{
+		def queryResult = []
+		// Turn the queryObject into a valid lucene query
+		def queryString = ''
+		queryObject.each {
+			queryString = queryString + it.key + ':' + it.value + ' AND '
+		}
+		//dirty hack, remove the last AND.. (in groovy maps, there are some nice collapsing functions for this...
+		queryString = queryString.substring(0, queryString.size() - 5)
+		def json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': (queryString)])
+		return json
+	}
 
     /**
      * Uses the cypher plugin to retrieve the neighbours using offset and limit. The result includes the start node of the query itself.

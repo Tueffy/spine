@@ -35,7 +35,7 @@ class SpineService {
                 user.country = userNode.country
                 user.city = userNode.city
                 user.imagePath = userNode.image
-                user.freeText = 'My biography'
+                user.freeText = userNode.freeText
                 user.tags = networkService.getIncomingTagsForNode(userNode.email)
                 if (user.tags != null)
                     user.badges = badgeService.evaluateTags(user.tags)
@@ -89,7 +89,7 @@ class SpineService {
             user.country = it.country
             user.city = it.city
             user.imagePath = it.image
-            user.freeText = 'My biography'
+            user.freeText = it.freeText
             user.tags = networkService.getIncomingTagsForNode(it.email)
             user.distance = it.distance
             if (user.tags != null)
@@ -305,4 +305,11 @@ class SpineService {
 
         return badgeList
     }
+	
+	def filterRelationShip (Map queryObject)
+	{
+		return networkService.queryRelationship(queryObject)
+	}
+	
+	def search
 }

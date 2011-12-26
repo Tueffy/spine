@@ -1,38 +1,70 @@
-<!DOCTYPE html>
 <html>
-    <head>
-        <title><g:layoutTitle default="spine" /></title>
-        <link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
-        <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
-        <g:layoutHead />
-        <g:javascript library="application" />
-    <link href="${resource(dir:'css',file:'reset.css')}" rel="stylesheet" type="text/css">
-  	<link href="${resource(dir:'css',file:'960.css')}" rel="stylesheet" type="text/css">
-  	<link href="${resource(dir:'css',file:'design.css')}" rel="stylesheet" type="text/css">
-  	<link href="${resource(dir:'css',file:'landing.css')}" rel="stylesheet" type="text/css">
-    </head>
-    <body>
-<!-- OLD        
-		<div id="spinner" class="spinner" style="display:none;">
-            <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
-        </div>
-        <div id="spineLogo"><a href="http://spine-it.com"><img src="${resource(dir:'images',file:'logo.png')}" alt="spine" border="0" /></a></div>
- -->
- 
- 	<div class="body">
-  			<div id="header">
-    			<div class="container_24">
-      				<a href="http://spine-it.com">
-      					<img src="${resource(dir:'images/home',file:'logo.png')}" alt="Spine" width="222" height="61" class="logo" />
-      				</a>
-        <ul class="links">
-    	  	<li><g:link action="login" controller="user">Login</g:link></li><br>
-      		<li><g:link action="about" controller="home">About Spine</g:link></li><br>
-      		<li><g:link action="contact" controller="home">Contact us</g:link></li>
-        
-      	</ul>
-    </div>        
+<head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  	<title>My Spine</title>
+  	<link href="${resource(dir:'css',file:'reset.css')}" rel="stylesheet" type="text/css" />
+  	<link href="${resource(dir:'css',file:'960.css')}" rel="stylesheet" type="text/css" />
+  	<link href="${resource(dir:'css',file:'design.css')}" rel="stylesheet" type="text/css" />
+  	<link href="${resource(dir:'css',file:'ajax.css')}" rel="stylesheet" type="text/css" />
+  
+  	<g:javascript src="jquery/jquery-1.7.min.js" />
+  	<g:javascript>
+  		jQuery.noConflict();
+  	</g:javascript>
+  	<g:javascript src="main.js" />
+  	<g:javascript library='scriptaculous' />
+  	<g:layoutHead />
+</head>
+
+<body>
+  <div id="header">
+  	<div class="container_24">
+      <span>
+      		<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
+      </span>
+      <ul class="links">
+	      <g:if test="${session.user.email}">
+	      	<li><g:link controller="network" action="index">My Network</g:link ></li>
+	      	<li><g:link controller="user" action="profile">Profile</g:link></li>
+	      	<li><a href="#">About Spine</a></li>
+	        <li><g:link controller="user"  action="doLogout">Logout</g:link ></li>
+	      </g:if>
+	      <g:else>
+	      	<li><g:link controller="user" action="login">Login</g:link ></li>
+	      </g:else>
+      </ul>
+    	     
+      <p class="news">
+          <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
+          <span id="message">You've got 7 new tags and 1 new badge.</span>
+      </p>       
+    </div>
+  </div>
+  
+  <div id="nav">
+    <div class="container_24" id="hot_tags">
     
-        <g:layoutBody />
-    </body>
-</html> 
+      <ul >
+        <li><img src="/spine/images/home/hot_tags.png" width="75" height="23" alt="Hot Tags" ></li>
+        <li class="hot_tags" id="hot_tags_soap"><a href="#">#soap</a></li>
+        <li><a href="#">#cloud</a></li>
+        <li><a href="#">#html</a></li>
+        <li><a href="#">#xhtml</a></li>
+        <li><a href="#">#java</a></li>
+      </ul>
+      <script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
+    </div>
+  </div>
+  
+  <!-- BEGIN : container -->
+  <div id="container" class="container_24">
+  	<g:layoutBody />
+  </div>
+  <!-- END : container -->
+  
+  
+	
+  
+</body>
+
+</html>

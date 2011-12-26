@@ -127,7 +127,6 @@
 				</div>
 				
 				<div id="cropper" style="display: none;">
-<%--					<cropper:crop imageId="cropper-img" />	--%>
 					<img id="cropper-img" />
 					<input type="hidden" name="crop_x1" id="crop_x1" value="0" />
 					<input type="hidden" name="crop_y1" id="crop_y1" value="0" />

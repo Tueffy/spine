@@ -4,21 +4,21 @@ import grails.test.GrailsUnitTestCase
 
 
 class NetworkServiceTests extends GrailsUnitTestCase {
-    def networkService
-    def importDataService
+    def NetworkService networkService
+    def ImportDataService importDataService
+	def checkDbResults
 
     protected void setUp() {
         super.setUp()
+		checkDbResults = importDataService.checkDB()
     }
-
 	
 	/**
-	 * Checks the status of the test database. This checks: number of nodes, relationships, properties, indices
-	 * @return true if DB is ok
-	 */
-
+	* Checks the status of the test database. This checks: number of nodes, relationships, properties, indices
+	*/
     protected void tearDown() {
         super.tearDown()
+		assert checkDbResults == importDataService.checkDB()
     }
 	
     void testQueryForNeighbourNodes1() {
@@ -193,11 +193,6 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         assert data == ['Accounting']
     }
 	
-	void testCheckDB() {
-		importDataService.checkDB()
-		//TODO, check for the right values here
-	}
-
     void testCreateDatabase() //use this only with an empty database
     {
 

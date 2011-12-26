@@ -10,7 +10,8 @@ class NetworkController {
 	
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
-	def spineService
+	def SpineService spineService
+	def GraphCommunicatorService graphCommunicatorService
 
 	def ajaxAutoComplete = {
 		println "test.."
@@ -33,8 +34,18 @@ class NetworkController {
 		render choices
 	}
 			
-	
-	
+	def test = {
+		def json = spineService.filterRelationShip(['Agile':1])
+//		def requestPath = '/db/data/index/relationship/edges'
+//		def requestQuery = [
+//			'key' : 'Agile', 
+//			'value' : 1, 
+//			'uri' : 'http://localhost:7474/db/data/relationship/6'
+//			]
+//		def json = graphCommunicatorService.neoPost(requestPath, requestQuery)
+		render json
+	}
+
 	def index = {
 		// Get the user
 		User user = new User()
@@ -53,23 +64,7 @@ class NetworkController {
 				i.tags = tags
 				println i
 		}
-		
-		
-		//println params.user
-		/*
-		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
-		def n  = spineService.getNeighbours(neighbourParameters)
-		
-		def allusers = []
-		n.each {
-			def neighbour = spineService.getPropertiesByEmail(it.key)
-			neighbour["distance"] = it.value
-			allusers.add(neighbour)
-		}
-		*/
-		//println allusers
-		[param : params.filter, user : user, neighbours : n]
-		//[param : params.filter, user : session.user]
+		[param : params.filter, user : session.user, neighbours : n]
 	}
 	
 	def ajaxPage = {

@@ -4,11 +4,14 @@ import grails.test.GrailsUnitTestCase
 
 class SpineServiceTests extends GrailsUnitTestCase {
 
-    def spineService
+    def SpineService spineService
     def u1 = new User()
     def u2 = new User()
     def u3 = new User()
     def u4 = new User()
+	
+	def ImportDataService importDataService
+	def checkDbResults
 
     protected void setUp() {
         super.setUp()
@@ -19,10 +22,15 @@ class SpineServiceTests extends GrailsUnitTestCase {
         u3.email = 'christian.tueffers@techbank.com'
         u4.email = 'fero.bacak@techbank.com'
 
+		checkDbResults = importDataService.checkDB()
     }
 
+    /**
+	* Checks the status of the test database. This checks: number of nodes, relationships, properties, indices
+	*/
     protected void tearDown() {
         super.tearDown()
+		assert checkDbResults == importDataService.checkDB()
     }
 
     // tests for loginUser
@@ -68,13 +76,13 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testGetUserNetwork1() {
 
-        def result = spineService.getUserNetwork(u1, '', 0)
+        def result = spineService.getUserNetwork(u1, '', 0, 10)
         assert result.size() == 10
     }
 
     void testGetUserNetwork2() {
 
-        def result = spineService.getUserNetwork(u2, '', 0)
+        def result = spineService.getUserNetwork(u2, '', 0, 10)
         assert result.size() == 10
     }
 
