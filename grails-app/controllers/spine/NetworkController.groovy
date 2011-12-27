@@ -42,6 +42,8 @@ class NetworkController {
 			user.email = params.user			
 		else
 			user.email = session.user
+		
+		user = spineService.getUser(user.email)
 			
 		// Get user network (get the first page)
 		def n = null
@@ -153,40 +155,106 @@ class NetworkController {
 			return false
 		}
 	}
+	 
 	
-	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def getUser  = {
+		
 		def user = new User()
 		user.email = params.id
+	
+		//@TODO: Optimize with direct call to getUser
+		def n = null
+		n  = spineService.getUserNetwork(user, null, 0, 20)
+		
+		
+		for ( i in n ) {
+				def email1 = params.id;
+				def email2 = i.email;
+				if(email1.equalsIgnoreCase(email2)){					
+					user = i
+					println "TEST"
+					break
+				}
+		}		
+		
 		render user as JSON
+		
 	}
 	
+	/**
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def getTags = {
+		
 		def user = new User()
-		user.email =params.id		
+		user.email = params.id		
+		
 		def tags = spineService.getUserTags(user)
+		
 		println tags
+		
 		render tags as JSON
 	}	
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def removeTag = {
 		def user = new User()
-		user.email ="test@test.com"
+		user.email = params.user
+		
+		//println params.user
+		//println params.tag
+		
+		def tags = spineService.removeTag(session.user, user, params.tag)
 		render user as JSON
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def setTag = {
 		def user = new User()
 		user.email ="test@test.com"
 		render user as JSON
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	 */
 	def addTag = {
 		
 		def user = new User()
-	
-		//spineService.addTag(session.user, params.id	, params.e)
+		println params.e
+		
+		//spineService.addTag(session.user, params.id, params.e)
+		
 		render user as JSON
 	}
 
+	
+	/**
+	*
+	*
+	* @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+	*/
+   def getUserStatistics = {
+	   
+	   def statistics = [badgesNumber : "10", tagsNumber: "50"]
+	   
+	   render statistics as JSON
+   }
+   
 }
+

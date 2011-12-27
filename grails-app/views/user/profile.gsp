@@ -1,13 +1,12 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>My Spine</title>
-<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
-<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">
-
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>My Spine</title>
+	<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
+	<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
+	<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
+	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">
 	<g:javascript src="jquery/jquery-1.7.min.js" />
 	<g:javascript>jQuery.noConflict();</g:javascript>
 	<g:javascript src="main.js" />
@@ -18,13 +17,14 @@
 	<uploader:head />
 	<cropper:head />
 </head>
-
 <body>
 	<div id="header">
 		<div class="container_24">
-			<span> <img src="/spine/images/home/logo.png" alt="Spine"
-				width="222" height="61" class="logo" />
-			</span> <span>
+			
+			<span> 
+				<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
+			</span> 
+			<span>
 				<ul class="links">
 					<li><a href="#">About Spine</a></li>
 					<li><a href="#">How it works</a></li>
@@ -43,65 +43,40 @@
 
 	<div id="nav">
 		<div class="container_24" id="hot_tags">
-
-			<ul>
-				<li><img src="/spine/images/home/hot_tags.png" width="75"
-					height="23" alt="Hot Tags"></li>
-				<li class="hot_tags" id="hot_tags_soap"><a href="#">#soap</a></li>
-				<li><a href="#">#cloud</a></li>
-				<li><a href="#">#html</a></li>
-				<li><a href="#">#xhtml</a></li>
-				<li><a href="#">#java</a></li>
-			</ul>
-			<script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
 		</div>
 	</div>
 
 	<!-- BEGIN : container -->
 	<div id="container" class="container_24">
-
 		<div class="landing">
+			<h2>My Profile</h2>
+        	<p class="subtitle">Update your profile details...</p>
 			<g:form action="updateProfile">
 				<table class="userForm" style="width:100%;">
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='lastname'>Last Name:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input
-							id="lastname" type='text' name='lastname'
-							value='${user?.lastName}' /></td>
+						<td valign='top' style='text-align: left;' width='20%'><label for='lastname'>Last Name:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="lastname" type='text' name='lastname'	value='${user?.lastName}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='firstname'>First Name:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input
-							id="firstname" type='text' name='firstname'
-							value='${user?.firstName}' /></td>
+						<td valign='top' style='text-align: left;' width='20%'><label for='firstname'>First Name:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="firstname" type='text' name='firstname' value='${user?.firstName}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='country'>Country:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input
-							id="country" type='text' name='country' value='${user?.country}' />
+						<td valign='top' style='text-align: left;' width='20%'><label for='country'>Country:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="country" type='text' name='country' value='${user?.country}' />
 						</td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='city'>City:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input
-							id="city" type='text' name='city' value='${user?.city}' /></td>
+						<td valign='top' style='text-align: left;' width='20%'><label for='city'>City:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="city" type='text' name='city' value='${user?.city}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='password'>Password:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input
-							id="password" type='password' name='password'
-							value='' /></td>
+						<td valign='top' style='text-align: left;' width='20%'><label for='password'>Password:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="password" type='password' name='password' value='' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label
-							for='freeText'>More about yourself:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'>
-							<textarea id="freeText" name="freeText">${user?.freeText}</textarea>
+						<td valign='top' style='text-align: left;' width='20%'><label for='freeText'>More about yourself:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><textarea id="freeText" name="freeText">${user?.freeText}</textarea>
 						</td>
 					</tr>
 					<tr class='prop'>
@@ -145,19 +120,16 @@
 					<input type="hidden" name="picture" id="picture_field" />
 				</div>
 				
-				<div class="buttons">
-					<input type="submit" value="Envoyer" />
-				</div>
 				
+				<div class="buttons" style="text-align:right;margin-right:50px">
+					<span class="formButton">
+						<input type="submit" value="Update"></input>
+					</span>
+				</div>
 			</g:form>
 		</div>
 
 	</div>
 	<!-- END : container -->
-
-
-
-
 </body>
-
 </html>

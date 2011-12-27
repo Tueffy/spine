@@ -7,8 +7,10 @@ import org.codehaus.groovy.grails.web.context.ServletContextHolder;
 import com.sun.net.httpserver.Authenticator.Success;
 
 import grails.converters.JSON
+import groovy.text.SimpleTemplateEngine
 import pl.burningice.plugins.image.BurningImageService
 import spine.FileService
+import spine.SmtpService
 
 
 class UserController {
@@ -16,6 +18,7 @@ class UserController {
 	SpineService spineService
 	BurningImageService burningImageService
 	FileService fileService
+	SmtpService smtpService
 
 	/**
 	 * nothing displayed in case of login
@@ -27,8 +30,7 @@ class UserController {
 	/**
 	 * in case of registration, pre-fill email address
 	 */
-	def register = {
-		
+	def register = {		
 		//to do: delete email via session, but to differently
 		[tmp_email : session.email]
 	}
@@ -74,18 +76,18 @@ class UserController {
 			'freeText' : params.freetext ]
 		
 		// If an image has been sent, apply cropping
-		if(params.picture != "")
-		{
+		if(params.picture != ""){
 			cropUserPicture()
 			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}
 		
 		
-		
-		
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {
 			flash['message'] = "New user has been created"
+			
+			smtpService.sendRegistrationEmail("alexander.michelbach@gmail.com","alexander.michelbach@gmail.com")
+			
 			redirect(controller:'user', action:'login')
 		}
 		else {
@@ -148,6 +150,13 @@ class UserController {
 	}
 	
 	def profile = {
+		
+	
+		
+		def user = session.user
+		
+		println session
+		
 		return [ user: session.user ]
 	}
 	
@@ -187,5 +196,7 @@ class UserController {
 		else
 			render(view:"profile")
 	}
+	
+	
 	
 }

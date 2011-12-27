@@ -13,7 +13,8 @@
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
-grails.mime.types = [html: ['text/html', 'application/xhtml+xml'],
+grails.mime.types = [
+		html: ['text/html', 'application/xhtml+xml'],
         xml: ['text/xml', 'application/xml'],
         text: 'text/plain',
         js: 'text/javascript',
@@ -95,4 +96,18 @@ log4j = {
     warn 'org.mortbay.log'
 }
 
-network.itemsPerPage = 20
+network.itemsPerPage = 5
+
+grails {
+	mail {
+	  host = "email-smtp.us-east-1.amazonaws.com"
+	  port = 465
+	  username = "AKIAJAF7F45ZIHP3LVEQ"
+	  password = "ArToT20nyOJhYMXXIMmc+TPSseGqrxNGzJApYUHZ/u26"
+	  props = ["mail.smtp.auth":"true",
+			   "mail.smtp.socketFactory.port":"465",
+			   "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+			   "mail.smtp.socketFactory.fallback":"false"]
+ 
+	} 
+}

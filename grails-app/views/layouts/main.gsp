@@ -6,18 +6,12 @@
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
         <g:layoutHead />
         <g:javascript library="application" />
-    <link href="${resource(dir:'css',file:'reset.css')}" rel="stylesheet" type="text/css">
-  	<link href="${resource(dir:'css',file:'960.css')}" rel="stylesheet" type="text/css">
-  	<link href="${resource(dir:'css',file:'design.css')}" rel="stylesheet" type="text/css">
-  	<link href="${resource(dir:'css',file:'landing.css')}" rel="stylesheet" type="text/css">
+	    <link href="${resource(dir:'css',file:'reset.css')}" rel="stylesheet" type="text/css">
+	  	<link href="${resource(dir:'css',file:'960.css')}" rel="stylesheet" type="text/css">
+	  	<link href="${resource(dir:'css',file:'design.css')}" rel="stylesheet" type="text/css">
+	  	<link href="${resource(dir:'css',file:'landing.css')}" rel="stylesheet" type="text/css">
     </head>
     <body>
-<!-- OLD        
-		<div id="spinner" class="spinner" style="display:none;">
-            <img src="${resource(dir:'images',file:'spinner.gif')}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
-        </div>
-        <div id="spineLogo"><a href="http://spine-it.com"><img src="${resource(dir:'images',file:'logo.png')}" alt="spine" border="0" /></a></div>
- -->
  
  	<div class="body">
   			<div id="header">
@@ -31,8 +25,7 @@
       		<li><g:link action="contact" controller="home">Contact us</g:link></li>
         
       	</ul>
-    </div>        
-    
+    </div>            
         <g:layoutBody />
     </body>
 </html> 

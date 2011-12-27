@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'HelveticaRounded Bold';
+    src: url('heb____-webfont.eot'),
+         url('heb____-webfont.eot?#iefix') format('embedded-opentype'),
+         url('heb____-webfont.woff') format('woff'),
+         url('heb____-webfont.ttf') format('truetype'),
+         url('heb____-webfont.svg#HelveticaRounded Bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body { padding: 0; margin: 0; font-family:Tahoma, Geneva, sans-serif; font-size:14px; background:#f0ebd5;}
 body, a, div, span, ul, il {}
 a { color:#958e73; }
@@ -46,7 +57,7 @@ a:hover { color:#67624e; }
 #left ul.description li.company { color:#958e73; }
 #left ul.description li.city { color:#958e73; }
 
-#left ul.menu { list-style:none; margin-top:75px; padding-top: 25px; font-size: 11px; font-weight:bold; }
+#left ul.menu { list-style:none; padding-top: 25px; font-size: 11px; font-weight:bold; }
 #left ul.menu li { border-bottom:1px dotted #958e73; padding-top: 5px; padding-bottom: 8px; }
 #left ul.menu a { color:#67624e; text-decoration:none; }
 #left ul.menu a:hover { color: #b0ab96; }
@@ -72,7 +83,7 @@ a:hover { color:#67624e; }
 #right .feed_and_details { background:#fff; border-radius: 15px 15px 0 0; margin-top: 15px; background-image:url(../images/home/feed_bg.gif); background-repeat:repeat-y; }
 #right .feed {  }
 #right .feed .filter { background:#c9c5b8; border-radius:15px 0 0 0; height:90px; }
-#right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:350px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 24px; color:#c9c5b8; padding: 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}
+#right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:350px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 18pt; color:#c9c5b8; padding: 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}
 #right .feed .filter ul.filter_list { list-style:none; text-align: right; margin: 4px 14px 0 0; padding-bottom:13px; }
 #right .feed .filter ul.filter_list li { display: inline-block; color: white; font-size:11px; font-weight:bold;margin-left:8px; }
 #right .feed .filter ul.filter_list li a { color: white; text-decoration: none; }
@@ -96,7 +107,7 @@ a:hover { color:#67624e; }
 #right .feed .contact ul.tags li { display:inline-block; margin-right: 11px;}
 #right .feed .contact ul.tags li a {  padding: 3px; border-radius:5px; text-decoration:none; }
 #right .feed .contact ul.tags li a:hover { background:#c9c5b8; }
-#right .feed .contact .distance { font-size:28px; width:40px; height:40px; margin:5px; margin-left:35px; border-radius:10px; background:#c9c5b8; padding:4px; text-align:center; width:50px; color:#FFFFFF;}
+#right .feed .contact .distance { font-family:"HelveticaRounded Bold";font-size:28pt; width:40px; height:40px; margin:5px; margin-left:35px; border-radius:10px; background:#c9c5b8; padding:4px; text-align:center; width:50px; color:#FFFFFF;}
 #right .feed .contact .distance_arrows { width:33px; height:24px; background:url(../images/distance_arrows.png) no-repeat; margin-top:-15px; margin-left:20px;}
 #right .feed .separator { border-bottom:1px dotted #958e73; margin-left: 2%; margin-top: 15px; margin-bottom:5px; width:89% }
 

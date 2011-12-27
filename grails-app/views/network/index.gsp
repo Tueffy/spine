@@ -14,88 +14,120 @@
   	<g:javascript src="main.js" />
   	<g:javascript library='scriptaculous' />
   	<g:javascript src="app/scroll.js" />
-  		<g:javascript>
+  	<g:javascript>
   			window.onload = function(){
                 
                   new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "/spine/network/ajaxAutoComplete",{});
-                  
+                                   
                   Droppables.add('left', { 
 				    accept: 'contact',
 				    hoverclass: 'hover',
 				    onDrop: function(e) { 
-				    			//alert(e.id);				    
-				    			window.location = "index?user="+e.id;
+				    		//alert(e.id);				    
+				    		window.location = "index?user="+e.id;
 				    			
-				   			}
+				   		}
 				  });
+								  
 				  
+				  new Ajax.Request('/spine/network/getUserStatistics/${user.email}', {
+    				asynchronous:true,
+    				evalScripts:true,
+    				onSuccess: function(transport) {
+   						var tagsJSON = transport.responseText;
+   						var tags = eval("("+tagsJSON+")");		
+										   
+					    for (var key in tags) {						   
+			    		   $(key).innerHTML = tags[key];
+				   		}			    		  
+				   		
+					}
+    			});		
 				
+			}
+			
+			var firstUser = null;
+			
+			getFirstUser = function(){
+				return firstUser;
+			}
+			
+			setFirstUser = function(user){
+				firstUser = user;
 			}
         	
         	function updateSelectedUser(e) {
         		//alert(e);
-        		 // evaluate the JSON
+        		// evaluate the JSON
     			var user = eval("("+e.responseText+")");
-    			$("selectedUserName").innerHTML = user.email;
-    			//$("selectedCity").innerHTML = user.email;
-    			//$("selectedCountry").innerHTML = user.email;
-    			
+    			$("selectUser").fade();
+    			$("selectedUserName").innerHTML = user.firstName +' ' + user.lastName;
+    			$("selectedCity").innerHTML = user.city;
+    			//$("selectedCountry").innerHTML = user.country;
+    			$("selectedImage").appear();
     			$("selectedImage").src = "/spine/images/profiles/"+ user.email + ".jpg";
-    			
+    			      			
     			var container = $("selectedTags");
 							
 				var liList = container.childNodes;
 				
-				
 				for(var i = 0;i < liList.length;i++){	
 					//alert (liList[i+1].nodeName);	
-					var li = liList[i]
+					var li = liList[i];
 					if(li.nodeName == "LI"){
 						$(li).fade();
 					}
     			}
-				
-				for(var i = 0;i<10;i++){				
-					var new_element = document.createElement('li');
-					new_element.innerHTML = "#" + "test";	
-					container.insertBefore(new_element, container.firstchild);
-	    			$(new_element).grow();
-    			}
+    			    			
+    			new Ajax.Request('/spine/network/getTags/'+ user.email, {
+    				asynchronous:true,
+    				evalScripts:true,
+    				onSuccess: function(transport) {
+   						var tagsJSON = transport.responseText;
+   						var tags = eval("("+tagsJSON+")");		
+						for (var key in tags) {						   
+						   var new_element = document.createElement('li');
+						   new_element.innerHTML = "#" + key;	
+						   container.insertBefore(new_element, container.firstchild);
+			    		   $(new_element).grow();
+				   		}
+					}
+    			});
+    			
     			
     			
 			}
 			
 			
-			function tagsMinusOnMouseOver(){
-				//alert("test");
-				$('minus').appear(); 
-				
+			tagsMinusOnMouseOver = function(e){
+				//alert(e);
+				$(e).appear();
+				$(e).onmouseout = function(){
+					$(this).fade();
+				}
 				return false;
 			}
 			
 			
-			function tagsMinusOnMouseOut(){
+			tagsMinusOnMouseOut = function(e){
 				//alert("test");
-				$('minus').fade();
+				$(e).fade({ duration: 7.0});
 				return false;
 			}
 					
-			function tagsPlusOnMouseOver(){
+			tagsPlusOnMouseOver = function(){
 				//alert("test");
-				$('minus').appear(); 
+				$('minus').appear(5); 
 				
 				return false;
 			}
 			
 			
-			function tagsPlusOnMouseOut(){
+			tagsPlusOnMouseOut = function(){
 				//alert("test");
 				$('minus').fade();
 				return false;
-			}
-			
-			
-			
+			}			
 			
     </g:javascript>
   
@@ -113,7 +145,7 @@
 	      	<li><a href="#">How it works</a></li>
 	      	<li><a href="#">Terms and conditions</a></li>
 	      	<li><a href="#">Disclaimer</a></li>
-	        <li><g:link controller="user"  action="doLogout">Logout</g:link ></li>
+	        <li><g:link controller="user" onclick="return confirm('Are you sure?');" action="doLogout">Logout</g:link ></li>
 	      </ul>
     	     
       <p class="news">
@@ -142,16 +174,16 @@
   <div id="container" class="container_24">
   	
     <!-- START : LEFT menu -->
-    <div class="grid_4" id="left">
-      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" />
+    <div class="grid_5" id="left">
+      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" style="margin-left:45px"/>
      
-	  <ul class="description">
-          <li class="name">${user.firstName} ${user.lastName}</li>
-          <li class="company">tbd</li>
+	  <ul class="description"  style="margin-left:45px">
+          <li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
+          <li class="company">${user.company}</li>
           <li class="city">${user.country}</li>
 	  </ul>
       
-      <div class="grid_8 omega badges">
+      <div class="badges"  style="margin-left:35px">
         <ul>
           <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
           <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
@@ -161,21 +193,27 @@
           <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
         </ul>
       </div>
-      <br/>
+      
       <ul class="menu">
-        <li><a href="#"><span>13</span> Badges</a></li>
-        <li><a href="#"><span>146</span> Tags</a></li>
-        <li><a href="#"><span>3</span> Events</a></li>
-        <li><a href="#"><span>11</span> My Notes</a></li>
-        <li><a href="#"><span>56</span> Messages</a></li>
-        <li><a href="#"><span>2</span> Last Jobs</a></li>
+        <li><a href="#"><span id="badgesNumber"></span> Badges</a></li>
+        <li><a href="#"><span id="tagsNumber"></span> Tags</a></li>
       </ul>
+      
+      
+      <p>
+         <a href="#">
+         	Invite new user
+         </a>
+         <form>
+         	Email: <input type="text"/>
+         </form>
+      </p>
     </div>
     <!-- END : LEFT menu -->
     
     
     <!-- BEGIN : RIGHT column -->
-    <div class="grid_20" id="right">
+    <div class="grid_19" id="right">
     
       <!-- BEGIN : Messages -->
       <div class="grid_12 alpha header">
@@ -190,7 +228,7 @@
       <!-- END : Messages -->
     
       <!-- BEGIN : Feed & Details blocks -->
-      <div class="grid_20 feed_and_details">
+      <div class="grid_19 feed_and_details">
       <!-- BEGIN : Feed block -->
       <div class="grid_14 alpha feed">
       
@@ -208,7 +246,7 @@
             </g:form>
             
           </div>
-          <div class="grid_4 omega my_updates">
+          <div class="grid_4 omega my_updates" id="test1">
             <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
             <p><a href="#">My Spine Updates</a></p>
           </div>
@@ -218,64 +256,33 @@
           <g:render template="page"></g:render>
           <!-- END Flux -->
           
-                  
-          <!-- BEGIN : pagination -->
-          <!--
-          <div class="grid_14 alpha omega pagination">
-            <div class="grid_1 alpha prev"><p><a href="#">Prev</a></p></div>
-            <div class="grid_10 pages">
-            	<ul>
-                  <li><a href="#">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                </ul>
-            </div>
-            <div class="grid_2 omega next"><p><a href="#">Next</a></p></div>
-          </div>
-          --!>
-          <!-- END : pagination --> 
-          
         </div>
         <!-- END : Feed block -->
         
         <!-- BEGIN : Details block -->
-        <div class="grid_6 omega details_panel">
+        <div class="grid_5 omega details_panel" >
           
           <!-- <img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" />  -->
           
-          <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" id="selectedImage"/>
-     
+          
+          <img src="/spine/images/profiles/anonymous.gif"" alt="anonymous" width="100" height="150" class="avatar" id="selectedImage" style="margin-left:45px"/>
+     	  
+     	  <span id="selectUser" style="font-size:9pt">Please choose one of your contacts to see more details!</span>
+     	  
           
           <ul class="description">
-            <li class="name" id="selectedUserName">Alewxander Niemz</li>
-            <li class="company" id="selectedCompany">Accenture GmbH</li>
-            <li class="city" id="selectedCity">Wien</li>
+            <li class="name" id="selectedUserName"></li>
+            <li class="company" id="selectedCompany"></li>
+            <li class="city" id="selectedCity"></li>
           </ul>
           
           <ul class="tags" id="selectedTags">
-            <li><a href="#">#html</a></li>
-            <li><a href="#">#vienna</a></li>
-            <li><a href="#">#jazz</a></li>
-            <li><a href="#">#rock</a></li>
-            <li><a href="#">#css</a></li>
-            <li><a href="#">#html5</a></li>
-            <li><a href="#">#prater</a></li>
-            <li><a href="#">#blockwurst</a></li>
-            <li><a href="#">#samba</a></li>
-            <li><a href="#">#dancing</a></li>
-            <li><a href="#">#lisp</a></li>
-            <li><a href="#">#foto</a></li>
-            <li><a href="#">#drama</a></li>
-            <li><a href="#">#sesamestreet</a></li>
-            <li><a href="#">#rest</a></li>
-            <li><a href="#">#namibia</a></li>
-            <li><a href="#">#travel</a></li>
-            <li><a href="#">#testing</a></li>
+           
           </ul>
           
           <p class="all_tags"><a href="#">All tags</a></p>
+          
+          
         </div> 
         <!-- END : Details block -->
       </div>
@@ -299,13 +306,13 @@
       -->
       <!-- END : Footer -->
       
-      <div class="grid_20 alpha omega close">
+      <div class="grid_19 alpha omega close">
         &nbsp;
       </div>
       
       <!-- BEGIN : Copyright -->
       <!-- > -->
-      <div class="grid_20 alpha omega copyright">
+      <div class="grid_19 alpha omega copyright">
         <div class="grid_5 omega">&copy; Spine 2011 - All rights reserved</div>
       </div>
       <!-- END : Copyright -->
@@ -314,11 +321,6 @@
     <!-- END : Right column -->
     
   </div>
-  <!-- END : container -->
-  
-  
-	
-  
+  <!-- END : container -->  
 </body>
-
 </html>

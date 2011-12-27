@@ -6,18 +6,18 @@
 
          	var mydrag = new Draggable('${n.email}', { revert: true });
 
-        Droppables.add('${n.email}', { 
-		    accept: 'hot_tags',
-		    hoverclass: 'hover',
-		    onDrop: function(dragged, dropped, event) { 
-		    			//alert('Dragged: ' + dragged.id);
-		    		    //alert('Dropped onto: ' + dropped.id);
-		    		    //alert('Held ctrl key: ' + event.ctrlKey);			    
-		    			
-		    			new Ajax.Request('/spine/network/addTag/'+dropped.id, {asynchronous:true,evalScripts:true,parameters:'e='+dragged.id});
-			    	
-		   			}
-		});
+	        Droppables.add('${n.email}', { 
+			    accept: 'hot_tags',
+			    hoverclass: 'hover',
+			    onDrop: function(dragged, dropped, event) { 
+			    	//alert('Dragged: ' + dragged.id);
+			    	//alert('Dropped onto: ' + dropped.id);
+			    	//alert('Held ctrl key: ' + event.ctrlKey);			    
+			    	alert(dropped.id);
+			    	new Ajax.Request('/spine/network/addTag/'+dropped.id, {asynchronous:true,evalScripts:true,parameters:'e='+dragged.id});
+				    	
+			   	}
+			});
          </script>
          	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
            <div class="grid_10 description omega">
@@ -27,7 +27,7 @@
              </ul>
             
              <h3><g:remoteLink action="getUser" id="${n.email}" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>
-             <p class="company">Accenture GmbH, ${user?.city}, ${user?.country}<br> </p>
+             <p class="company">Accenture GmbH, ${n.city}, ${n.country}<br> </p>
              
              <div class="grid_7 alpha">
              	<p class="quote"><span>„</span>Looking forward to new challenges<span>„</span></p>
@@ -35,8 +35,8 @@
                		
                		<g:each in="${n.tags}" var="t">    	        	  
 	                    <li>	                    
-		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver();" onmouseout="javascript:tagsMinusOnMouseOut();">${t.key}</a>
-		                    <span id="minus" style="{display: none;}">
+		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${n.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${n.email}_${t.key}_minus');">${t.key}</a>
+		                    <span id="${n.email}_${t.key}_minus" style="{display: none;}">
 		                    	<g:remoteLink action="removeTag" id="1" update="[success:'message',failure:'error']">-</g:remoteLink>
 		                    </span>
 	                    </li>

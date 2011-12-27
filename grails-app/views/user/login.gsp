@@ -22,7 +22,9 @@
       </ul>
     </div>
   </div>
-  
+  <div id="nav">
+    <div class="container_24"></div>
+  </div>
   <!-- BEGIN : container -->
   <div id="container" class="container_24">
   	<div class="grid_14 alpha landing">
@@ -31,6 +33,8 @@
         <g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
+		<br/>
+		<br/>
 		<g:form action="doLogin" method="post">
 			<div class="dialog">
 				<table class="userForm">
@@ -53,8 +57,9 @@
 					</tr>
 				</table>
 			</div>
-			<div class="buttons">
-				<span class="formButton"> <input type="submit" value="Login"></input>
+			<div class="buttons" style="text-align:right;margin-right:50px">
+				<span class="formButton"> 
+					<input type="submit" value="Login" ></input>
 				</span>
 			</div>
 		</g:form>

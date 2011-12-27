@@ -22,15 +22,17 @@
       </ul>
     </div>
   </div>
-  
+  <div id="nav">
+    <div class="container_24"></div>
+  </div>
   <!-- BEGIN : container -->
   <div id="container" class="container_24">
   	<div class="grid_14 alpha landing">
     	<h2>Connect with your co-workers</h2>
-        <p class="subtitle">Spine is the <strong>free</strong> private social network for your company</p>
+        <p class="subtitle">Spine is your <strong>free</strong> private social network for your company</p>
         <g:form method="post" action="doSignup" class="registration" controller="home">
           <input type="text" name="email" value="${home?.email}" />
-          <input type="submit" value="Sign up" />
+          <span style="{align:right}"><input type="submit" value="Sign up" /></span>
         </g:form>
     </div>
     <div class="grid_10 omega knowledge"><img src="${resource(dir:'images/home',file:'knowledge.png')}" width="399" height="299" alt="Knowledge"></div>
