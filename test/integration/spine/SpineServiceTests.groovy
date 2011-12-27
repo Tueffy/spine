@@ -106,8 +106,9 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testGetUserTags2() {
 
-        def output = spineService.getUserTags(u2)
-        assert output == ['Spring': 4, 'Java': 8, 'IT': 9, 'Agile': 11, 'Cloud': 1, 'BPM': 1, 'RPG': 2, 'Operations': 2, 'Bielefeld': 5, 'Development': 1, 'Warhammer': 1, 'SSL': 1, 'Munich': 2, 'Jax': 2, '2011': 2, 'Wine': 1, 'Soccer': 1]
+        def output = spineService.getUserTags(u2).sort()
+		def expected = ['Spring': 4, 'Java': 8, 'IT': 9, 'Agile': 11, 'Cloud': 1, 'BPM': 1, 'RPG': 2, 'Operations': 2, 'Bielefeld': 5, 'Development': 1, 'Warhammer': 1, 'SSL': 1, 'Munich': 2, 'Jax': 2, '2011': 2, 'Wine': 1, 'Soccer': 1].sort()
+        assert output == expected
     }
 
     void testGetUserTags3() {

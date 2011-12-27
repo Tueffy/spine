@@ -10,7 +10,10 @@ class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
 	def SpineService spineService
-	def GraphCommunicatorService graphCommunicatorService
+	
+	// For developpment and testing purpose only ! 
+//	def GraphCommunicatorService graphCommunicatorService
+//	def NetworkService networkService
 
 	def ajaxAutoComplete = {
 		println "test.."
@@ -33,16 +36,29 @@ class NetworkController {
 		render choices
 	}
 			
+	/**
+	 * For testing purpose, used mostly by PJ during developement to have a quick access to Services
+	 */
 	def test = {
-		def json = spineService.filterRelationShip(['Agile':1])
+//		def props = ['startNode': 'ingmar.mueller@techbank.com', 'endNode': 'markus.long@techbank.com', 'tags':'Sales']
+//		def rel = networkService.deleteProperty(props)
+//		render rel.toString()
+//		def json = spineService.filterRelationShip(['Agile':1])
+		
+		
 //		def requestPath = '/db/data/index/relationship/edges'
 //		def requestQuery = [
-//			'key' : 'Agile', 
-//			'value' : 1, 
+//			'key' : 'Agile',
+//			'value' : 1,
 //			'uri' : 'http://localhost:7474/db/data/relationship/6'
 //			]
 //		def json = graphCommunicatorService.neoPost(requestPath, requestQuery)
-		render json
+//				render json
+				
+				
+//		def requestPath = '/db/data/index/relationship/edges/6'
+//		def json = graphCommunicatorService.neoDelete(requestPath)
+//		render json
 	}
 
 	def index = {
