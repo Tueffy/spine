@@ -100,7 +100,7 @@ a:hover { color:#67624e; }
 #right .feed .contact .description ul.badges li { display: inline; }
 #right .feed .contact .description h3 { color:#67624e; font-size:14px; font-weight:bold; }
 #right .feed .contact .description p.company { color:#958e73; font-size:11px; font-weight:bold; }
-#right .feed .contact .quote { font-family:"HelveticaRounded Bold"; font-size:13px; color:#c9c5b8; margin-top: -22px; margin-bottom: 5px;}
+#right .feed .contact .quote { font-family:"HelveticaRounded Bold"; font-size:10pt; color:#c9c5b8; margin-top: 5px; margin-bottom: 5px;}
 #right .feed .contact .quote span { font-size: 40px; display:inline-block; vertical-align:sub; }
 #right .feed .contact .quote span:first-child { vertical-align:super; }
 #right .feed .contact ul.tags { list-style:none; font-size: 9pt; font-weight:bold ;font-family:Tahoma, Geneva, sans-serif;}

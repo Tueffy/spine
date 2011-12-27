@@ -30,7 +30,7 @@
              <p class="company">Accenture GmbH, ${n.city}, ${n.country}<br> </p>
              
              <div class="grid_7 alpha">
-             	<p class="quote"><span>„</span>Looking forward to new challenges<span>„</span></p>
+               <p class="quote">„Looking forward to new challenges„</p>
                <ul class="tags">           		
                		
                		<g:each in="${n.tags}" var="t">    	        	  
