@@ -5,8 +5,7 @@
   	<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
   	<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
   	<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">
-  
+  	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">  
   	<g:javascript src="jquery/jquery-1.7.min.js" />
   	<g:javascript>
   		jQuery.noConflict();
@@ -56,7 +55,7 @@
 				firstUser = user;
 			}
         	
-        	function updateSelectedUser(e) {
+        	updateSelectedUser = function (e){
         		//alert(e);
         		// evaluate the JSON
     			var user = eval("("+e.responseText+")");
@@ -129,36 +128,29 @@
 				return false;
 			}			
 			
+			
+			inviteNewUser = function (e) {
+				alert("dd");
+			}
+			
     </g:javascript>
-  
 </head>
-
 <body>
+  <!-- BEGIN : HEADER -->
   <div id="header">
   	<div class="container_24">
-      <span>
-      		<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
-      </span>
-      <span>
-	      <ul class="links">
-	      	<li><a href="#">About Spine</a></li>
-	      	<li><a href="#">How it works</a></li>
-	      	<li><a href="#">Terms and conditions</a></li>
-	      	<li><a href="#">Disclaimer</a></li>
-	        <li><g:link controller="user" onclick="return confirm('Are you sure?');" action="doLogout">Logout</g:link ></li>
-	      </ul>
-    	     
+      <g:render template="/inc/header"></g:render>
       <p class="news">
           <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
           <span id="message">You've got 7 new tags and 1 new badge.</span>
       </p>       
     </div>
-  </div>
-  
+  </div>  
+  <!-- END : HEADER -->
+  <!-- BEGIN : NAV -->
   <div id="nav">
-    <div class="container_24" id="hot_tags">
-    
-      <ul >
+    <div id="hot_tags" class="container_24">    
+      <ul>
         <li><img src="/spine/images/home/hot_tags.png" width="75" height="23" alt="Hot Tags" ></li>
         <li class="hot_tags" id="hot_tags_soap"><a href="#">#soap</a></li>
         <li><a href="#">#cloud</a></li>
@@ -169,20 +161,17 @@
       <script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
     </div>
   </div>
-  
-  <!-- BEGIN : container -->
+  <!-- END : NAV -->
+  <!-- BEGIN : CONTAINER -->
   <div id="container" class="container_24">
-  	
-    <!-- START : LEFT menu -->
+    <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
-      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" style="margin-left:45px"/>
-     
+      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" style="margin-left:45px"/>     
 	  <ul class="description"  style="margin-left:45px">
           <li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
           <li class="company">${user.company}</li>
           <li class="city">${user.country}</li>
-	  </ul>
-      
+	  </ul>      
       <div class="badges"  style="margin-left:35px">
         <ul>
           <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
@@ -193,48 +182,28 @@
           <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
         </ul>
       </div>
-      
       <ul class="menu">
         <li><a href="#"><span id="badgesNumber"></span> Badges</a></li>
         <li><a href="#"><span id="tagsNumber"></span> Tags</a></li>
-      </ul>
-      
-      
+      </ul>   
+      <br/>   
       <p>
-         <a href="#">
-         	Invite new user
-         </a>
+         Invite new user
          <form>
-         	Email: <input type="text"/>
+         	Email: <input type="text" id="inviteUserMail"/>
+         	<g:remoteLink action="inviteNewUser" id="invite" update="foo" onSuccess="inviteNewUser(e)">Invite</g:remoteLink>
          </form>
       </p>
     </div>
-    <!-- END : LEFT menu -->
-    
-    
-    <!-- BEGIN : RIGHT column -->
-    <div class="grid_19" id="right">
-    
-      <!-- BEGIN : Messages -->
-      <div class="grid_12 alpha header">
-        <!--  
-        <p class="news">
-          Happening now: <span id="message"></span><span id="error"></span>
-        </p>       
-      -->
-      </div>
-      
-    
-      <!-- END : Messages -->
-    
+    <!-- END : LEFT MENU -->    
+    <!-- BEGIN : RIGHT COLUMN -->
+    <div class="grid_19" id="right">    
       <!-- BEGIN : Feed & Details blocks -->
       <div class="grid_19 feed_and_details">
       <!-- BEGIN : Feed block -->
       <div class="grid_14 alpha feed">
-      
           <!-- BEGIN : filter & my updates -->
           <div class="grid_10 alpha filter">
-                    
             <g:form name="filterByTag" method="post" action="index">
               <input type="text" name="filter" id="autocomplete" value="Filter ${user.firstName}'s spine" default="Filter Christian‘s spine" onClick="javascript:this.value='';" />
               <div id="autocomplete_choices" class="autocomplete"></div>              
@@ -243,8 +212,7 @@
                 <li><a href="#">Expertise</a></li>
                 <li><a href="#">Distances</a></li>
             </ul>
-            </g:form>
-            
+            </g:form>            
           </div>
           <div class="grid_4 omega my_updates" id="test1">
             <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
@@ -260,52 +228,23 @@
         <!-- END : Feed block -->
         
         <!-- BEGIN : Details block -->
-        <div class="grid_5 omega details_panel" >
-          
+        <div class="grid_5 omega details_panel" >          
           <!-- <img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" />  -->
-          
-          
           <img src="/spine/images/profiles/anonymous.gif"" alt="anonymous" width="100" height="150" class="avatar" id="selectedImage" style="margin-left:45px"/>
-     	  
      	  <span id="selectUser" style="font-size:9pt">Please choose one of your contacts to see more details!</span>
-     	  
-          
           <ul class="description">
             <li class="name" id="selectedUserName"></li>
             <li class="company" id="selectedCompany"></li>
             <li class="city" id="selectedCity"></li>
-          </ul>
-          
+          </ul>          
           <ul class="tags" id="selectedTags">
            
-          </ul>
-          
+          </ul>          
           <p class="all_tags"><a href="#">All tags</a></p>
-          
-          
         </div> 
         <!-- END : Details block -->
       </div>
-      <!-- END : Feed & Details blocks -->
-      
-      <!-- BEGIN : Footer -->
-      <!--  
-      <div class="grid_20 alpha omega footer">
-        <div class="grid_5 alpha logo"><img src="/spine/images/logo.png" alt="Spine" width="123" height="34" class="logo" /></div>
-        <div class="grid_15 omega links">
-          <ul>
-            <li><a href="#">Über uns</a></li>
-            <li><a href="#">How it works</a></li>
-            <li><a href="#">Spine Blog</a></li>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Service</a></li>
-            <li><a href="#">Facebook</a></li>
-          </ul>
-        </div>
-      </div>
-      -->
-      <!-- END : Footer -->
-      
+      <!-- END : Feed & Details blocks -->  
       <div class="grid_19 alpha omega close">
         &nbsp;
       </div>

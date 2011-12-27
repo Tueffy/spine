@@ -53,7 +53,7 @@ font-size:10px;
 			 your private social network <br/>
 			 for your company.</h2><br/><br/>
 			<div class="callToAction">Follow the link below to confirm your subscription to spine.</div>
-			<div class="link"><a href="#" target=blank> http://www.spine.de/subscribe/confirm?u=16b832d9ad4b28edf261f34df&id=62f9f9e407&e=6e42bace25/
+			<div class="link"><a href="#" target=blank> http://www.spine.de/subscribe/confirm/${id} 
 			</a></div><br/><br/><div class="text">
 			If you received this email by mistake, simply delete it. <br/>
 			You won't be subscribed if you don't click the confirmation link above.<br/>

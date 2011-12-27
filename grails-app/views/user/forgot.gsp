@@ -20,14 +20,12 @@
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
     </div>  
     <div class="grid_14 alpha landing">
-    	<h2 style="font-size:36pt;color:#000000">Stay connected <br/> with your co-workers</h2>
-        <p class="subtitle" style="font-size:20pt;font-family:Tahoma;color:#67624e">Spine is the private social network <br/>inside  your company</p>
-        <g:form method="post" action="doSignup" class="registration" controller="home">
+    	<h2 style="font-size:36pt;color:#000000">Forgot your password?</h2>
+    	<p class="subtitle" style="font-size:20pt;font-family:Tahoma;color:#67624e">We will send it to you ...</p>
+        <g:form method="post" action="doPasswordRecovery" class="registration" controller="user">
           <input type="text" name="email" value="${home?.email}" />
-          <span style="{align:right}"><input type="submit" value="Sign up" /></span>
+          <span style="{align:right}"><input type="submit" value="Send" /></span>
         </g:form>
-        <br/>
-        <span style="{align:right;font-size:11px;font-family:Tahoma;font-weight:bold}"><a href="/spine/user/login">Already registered?</a></span>
     </div>	
   </div>  
   <!-- END : CONTAINER -->

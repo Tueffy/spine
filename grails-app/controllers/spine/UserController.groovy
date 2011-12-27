@@ -24,8 +24,13 @@ class UserController {
 	 * nothing displayed in case of login
 	 */
 	def login = {
+		
 	}
 
+	
+	def forgot = {
+		redirect (controller : 'user' , action : 'forgot')
+	}
 	
 	/**
 	 * in case of registration, pre-fill email address
@@ -57,6 +62,22 @@ class UserController {
 			redirect(controller:'user',action:'login')
 		}
 	}
+	
+	/**
+	* Send email to user for password recovery
+	*/
+   def doPasswordRecovery = {
+	   
+	   // create map with parameters
+	   def userparams = [
+		   'email' : params.email
+	   ]
+	   
+	  smtpService.sendPasswordRecoveryMail("t.michelbach@gmail.com","t.michelbach@gmail.com");
+	  
+	  flash['message'] = "Password recovery procedure was sent to your email address!"
+	  redirect(controller:'user',action:'login')
+   }
 
 	
 	/**
@@ -86,7 +107,7 @@ class UserController {
 		if (spineService.createNewUser(userparams, null) != null) {
 			flash['message'] = "New user has been created"
 			
-			smtpService.sendRegistrationEmail("alexander.michelbach@gmail.com","alexander.michelbach@gmail.com")
+			smtpService.sendRegistrationEmail("t.michelbach@gmail.com","t.michelbach@gmail.com")
 			
 			redirect(controller:'user', action:'login')
 		}

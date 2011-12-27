@@ -2,7 +2,7 @@ package spine
 
 import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.*
-
+import spine.SmtpService 
 
 class NetworkController {
 	
@@ -11,6 +11,7 @@ class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
 	def spineService
+	def smtpService
 
 	def ajaxAutoComplete = {
 		println "test.."
@@ -255,6 +256,23 @@ class NetworkController {
 	   
 	   render statistics as JSON
    }
+   
+   
+   /**
+   *
+   *
+   * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
+   */
+  def inviteNewUser = {
+	  
+	  smtpService.sendUserInvitationMail("t.michelbach@gmail.com", "t.michelbach@gmail.com")
+	  
+	  def status = [success : "true"]
+	  
+	  println status
+	  
+	  render status as JSON
+  }
    
 }
 

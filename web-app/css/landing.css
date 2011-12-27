@@ -1,10 +1,10 @@
 #container .lander > h2, #container .lander > p, #container .lander > form { margin-left: 15px; font-family:"HelveticaRounded Bold"; }
-#container .landing h2 { color:#67624e; font-size:24px; font-weight:normal; margin-top: 15px;  }
+#container .landing h2 { color:#67624e; font-size:24pt; font-weight:normal; margin-top: 15px;  font-family:"HelveticaRounded Bold";}
 #container .landing p.subtitle { margin-bottom:20px; margin-top:5px; }
 #container .landing form td {height:50px}
 #container .landing form input[type=text],  #container .landing form input[type=password], #container .landing form textarea{ 
 	width: 400px; 
-	font-size:10pt; 
+	font-size:11pt; 
 	border:1px solid #67624e; 
 	padding:5px; 
 	border-radius:5px; 
@@ -12,16 +12,19 @@
     box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;
     color: #111111;
     opacity: 0.7;
+    height:35px;
+    font-family:Tahoma;
 }
 #container .landing form textarea {
 	height: 300px;
 	width: 450px;
 }
-
     
 input[type=button], input[type=submit], input[type=file] { 
 	margin-left: 5px;
-	font-size:18px; padding:5px 10px; border:1px solid #67624e; 
+	font-size:18px; 
+	padding:5px 10px; 
+	border:1px solid #67624e; 
 	color:white; cursor:pointer;
 	border-radius:2px;
 	background: #00b7ea; /* Old browsers */
