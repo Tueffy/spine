@@ -226,6 +226,38 @@ class NetworkService {
         //put freeText into index
         postBody = ['value': props.freeText, 'key': 'freeText', 'uri': nodeRef]
         graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put company into index
+        postBody = ['value': props.company, 'key': 'company', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put department into index
+        postBody = ['value': props.department, 'key': 'department', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put jobTitle into index
+        postBody = ['value': props.jobTitle, 'key': 'jobTitle', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put gender into index
+        postBody = ['value': props.gender, 'key': 'gender', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put birthday into index
+        postBody = ['value': props.birthday, 'key': 'birthday', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put phone into index
+        postBody = ['value': props.phone, 'key': 'phone', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put mobile into index
+        postBody = ['value': props.mobile, 'key': 'mobile', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
+
+		//put phone into status
+        postBody = ['value': props.status, 'key': 'status', 'uri': nodeRef]
+        graphCommunicatorService.neoPost(indexPath, postBody)
     }
 
     /**

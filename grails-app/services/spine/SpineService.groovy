@@ -32,11 +32,21 @@ class SpineService {
                 // copy over the values from the hash map into the user object
                 user.firstName = userNode.firstName
                 user.lastName = userNode.lastName
+				user.password = userNode.password
                 user.email = userNode.email
                 user.country = userNode.country
                 user.city = userNode.city
                 user.imagePath = userNode.image
                 user.freeText = userNode.freeText
+				user.company = userNode.company
+				user.department = userNode.department
+				user.jobTitle = userNode.jobTitle
+				user.phone = userNode.phone
+				user.mobile = userNode.mobile
+				user.gender = userNode.gender
+				user.birthday = userNode.birthday
+				user.status = userNode.status
+				
                 user.tags = networkService.getIncomingTagsForNode(userNode.email)
                 if (user.tags != null)
                     user.badges = badgeService.evaluateTags(user.tags)
@@ -93,7 +103,16 @@ class SpineService {
             user.city = it.city
             user.imagePath = it.image
             user.freeText = it.freeText
-            user.tags = networkService.getIncomingTagsForNode(it.email)
+			user.company = it.company
+			user.department = it.department
+			user.jobTitle = it.jobTitle
+			user.phone = it.phone
+			user.mobile = it.mobile
+			user.gender = it.gender
+			user.birthday = it.birthday
+			user.status = it.status
+			
+			user.tags = networkService.getIncomingTagsForNode(it.email)
             user.distance = it.distance
             if (user.tags != null)
                 user.badges = badgeService.evaluateTags(user.tags)
@@ -125,6 +144,15 @@ class SpineService {
         user.city = userNode.city
         user.imagePath = userNode.image
         user.freeText = userNode.freeText
+		user.company = userNode.company
+		user.department = userNode.department
+		user.jobTitle = userNode.jobTitle
+		user.phone = userNode.phone
+		user.mobile = userNode.mobile
+		user.gender = userNode.gender
+		user.birthday = userNode.birthday
+		user.status = userNode.status
+		
         user.tags = networkService.getIncomingTagsForNode(userNode.email)
 		// TODO: does not look good, have to rethink the way we manage user in the code
 		user.password = userNode.password
@@ -174,6 +202,14 @@ class SpineService {
         newUser.country = userparams.country
         newUser.imagePath = userparams.image
         newUser.freeText = userparams.freetext
+		newUser.company = userparams.company
+		newUser.department = userparams.department
+		newUser.jobTitle = userparams.jobTitle
+		newUser.phone = userparams.phone
+		newUser.mobile = userparams.mobile
+		newUser.gender = userparams.gender
+		newUser.birthday = userparams.birthday
+		newUser.status = userparams.status
 
         // set over into map for call
         def userProps = ['firstName': newUser.firstName,
@@ -182,7 +218,17 @@ class SpineService {
                 'country': newUser.country,
                 'email': newUser.email,
                 'password': newUser.password,
-                'image': newUser.imagePath]
+                'image': newUser.imagePath,
+				'freeText': newUser.freeText,
+				'company' : newUser.company,
+				'department' : newUser.department,
+				'jobTitle' : newUser.jobTitle,
+				'phone' : newUser.phone,
+				'mobile' : newUser.mobile,
+				'gender' : newUser.gender,
+				'birthday' : newUser.birthday,
+				'status' : newUser.status
+				]
 
         // verify if node with same email does not exist already
         if (networkService.readNode(newUser.email) != null)
@@ -227,7 +273,15 @@ class SpineService {
 			'country': properties.country ? properties.country : loggedInUser.country,
 			'imagePath': properties.imagePath ? properties.imagePath : loggedInUser.imagePath,
 			'freeText': properties.freeText ? properties.freeText : loggedInUser.freeText,
-			'password': properties.password ? properties.password : loggedInUser.password 
+			'password': properties.password ? properties.password : loggedInUser.password,
+			'company': properties.company ? properties.company : loggedInUser.company,
+			'department': properties.department ? properties.department : loggedInUser.department,
+			'jobTitle': properties.jobTitle ? properties.jobTitle : loggedInUser.jobTitle,
+			'phone': properties.phone ? properties.phone : loggedInUser.phone,
+			'mobile': properties.mobile ? properties.mobile : loggedInUser.mobile,
+			'gender': properties.gender ? properties.gender : loggedInUser.gender,
+			'birthday': properties.birthday ? properties.birthday : loggedInUser.birthday,
+			'status': properties.status ? properties.status : loggedInUser.status
 			]
 		
 		println ""

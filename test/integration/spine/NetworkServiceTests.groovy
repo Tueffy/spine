@@ -23,11 +23,11 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
     void testQueryForNeighbourNodes1() {
         def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
-        def targetResultList = ['anne.brown@techbank.com',
-                'fero.bacak@techbank.com',
-                'petra.gerste@techbank.com',
-                'markus.long@techbank.com',
-                'jonas.jux@techbank.com']
+        def targetResultList = ['jack.rumpsy@techbank.com',
+                'gudrun.mosters@techbank.com',
+                'john.holland@techbank.com',
+                'michaela.pfeffer@techbank.com',
+                'karina.wocek@techbank.com']
 
         def resultList = []
         result.each {
@@ -38,12 +38,13 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
     void testQueryForNeighbourNodes2() {
         def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5)
-        def targetResultList = ['markus.long@techbank.com',
-                'jonas.jux@techbank.com',
-                'matthias.zugler@techbank.com',
-                'falk.seibild@techbank.com',
-                'brigitte.prinz@techbank.com']
-        def resultList = []
+        def targetResultList = ['michaela.pfeffer@techbank.com',
+                'karina.wocek@techbank.com',
+                'hope.soli@techbank.com',
+                'petra.gerste@techbank.com',
+                'anne.brown@techbank.com']
+
+		        def resultList = []
         result.each {
             resultList.add(it.email)
         }
@@ -61,14 +62,14 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     }
 
     void testGetNodeURIFromEmail() {
-        assert networkService.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/3'
-        assert networkService.getNodeURIFromEmail('monika.hoppe@techbank.com') == 'http://localhost:7474/db/data/node/5'
+        assert networkService.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/4'
+        assert networkService.getNodeURIFromEmail('monika.hoppe@techbank.com') == 'http://localhost:7474/db/data/node/6'
         assert networkService.getNodeURIFromEmail('invalidemail.email@techbank.com') == null
     }
 
     void testGetIncomingTagsForNode2() {
         def output = networkService.getIncomingTagsForNode('markus.long@techbank.com')
-        assert output == ['ITIL': 4, 'Help': 3, 'Operations': 5, 'Desk': 3, 'IT': 3]
+        assert output == ['Help':3, 'ITIL':5, 'Operations':6, 'Desk':3, 'IT':4, 'Java':2, 'SOA':1]
     }
 
     void testGetIncomingTagsForNode() {
@@ -130,22 +131,23 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         def queryObject = [email: 'm*']
         def data = networkService.queryNode(queryObject)
         println data
-        assert data == ['monika.hoppe@techbank.com',
-                'matthias.miller@techbank.com',
-                'markus.long@techbank.com',
-                'michael.arlt@techbank.com',
-                'michael.frisch@techbank.com',
-                'melanie.murrende@techbank.com',
-                'matthias.zugler@techbank.com',
-                'michaela.pfeffer@techbank.com',
-                'magi.clavi@techbank.com',
-                'markus.tretschok@techbank.com',
-                'mirko.traesch@techbank.com',
-                'mario.gamez@techbank.com',
-                'marianne.michel@techbank.com',
-                'mick.jugger@techbank.com',
-                'manuel.neiner@techbank.com',
-                'matthias.ossler@techbank.com']
+        assert data == ['monika.hoppe@techbank.com', 
+			'matthias.miller@techbank.com', 
+			'markus.long@techbank.com', 
+			'michael.arlt@techbank.com', 
+			'michael.frisch@techbank.com', 
+			'melanie.murrende@techbank.com', 
+			'matthias.zugler@techbank.com', 
+			'michaela.pfeffer@techbank.com', 
+			'magi.clavi@techbank.com', 
+			'markus.tretschok@techbank.com', 
+			'mirko.traesch@techbank.com', 
+			'mario.gamez@techbank.com', 
+			'marianne.michel@techbank.com', 
+			'mick.jugger@techbank.com', 
+			'manuel.neiner@techbank.com', 
+			'matthias.ossler@techbank.com', 
+			'mario.drache@eurobank.int']
     }
 
     void testQueryNodeWithSingleParameter2() {
@@ -177,7 +179,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         def props = ['startNode': 'jure.zakotnik@techbank.com', 'endNode': 'fero.bacak@techbank.com']
         def json = networkService.readRelationship(props)
         println json
-        assert json == ['http://localhost:7474/db/data/relationship/50']
+        assert json == ['http://localhost:7474/db/data/relationship/59']
     }
 
     void testSetProperty() {
@@ -190,7 +192,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     void testGetProperty() {
         def data = networkService.getProperty(['http://localhost:7474/db/data/relationship/70'])
         println data
-        assert data == ['Accounting']
+        assert data == ['Soccer, Frankfurt']
     }
 	
 	void testCheckDB() {
@@ -202,66 +204,84 @@ class NetworkServiceTests extends GrailsUnitTestCase {
     {
 
         //read nodes file
-        def nodesInput = new File('.\\test\\unit\\spine\\nodes.txt')
+        def nodesInput = new File('/Users/christiantueffers/Development/workspace/spine/test/integration/spine/nodes2.txt')
         //println nodesInput.text
-        //networkService.importNodes(nodesInput.text)
-        def edgesInput = new File('.\\test\\unit\\spine\\edges.txt')
+        //importDataService.importNodes(nodesInput.text)
+        def edgesInput = new File('/Users/christiantueffers/Development/workspace/spine/test/integration/spine/edges2.txt')
         //println edgesInput.text
-        //networkService.importEdges(edgesInput.text)
+        //importDataService.importEdges(edgesInput.text)
 
         assert true
     }
 
     void testGetAllProperties() {
         def allProps = networkService.getAllProperties()
-        assert allProps == ['Agile': 11,
-                'IT': 14,
-                'Java': 18,
-                'Bielefeld': 5,
-                'Soccer': 6,
-                'Spring': 11,
-                'Wine': 1,
-                'Munich': 2,
-                'Jax': 2,
-                '2011': 2,
-                'Warhammer': 1,
-                'SSL': 2,
-                'RPG': 2,
-                'Operations': 7,
-                'Development': 4,
-                'Cloud': 3,
-                'BPM': 1,
-                'Violin': 3,
-                'Beethoven': 4,
-                'Risk': 2,
-                'Front': 11,
-                'Trading': 10,
-                'Market': 2,
-                'Office': 11,
-                'Swaps': 4,
-                'Bonds': 5,
-                'Tradings': 1,
-                'Stocks': 1,
-                'Derivates': 1,
-                'Products': 3,
-                'Cash': 3,
-                'Warrants': 3,
-                'OTC': 1,
-                'Help': 3,
-                'ITIL': 4,
-                'Desk': 3,
-                'Innovation': 6,
-                'HTML': 4,
-                'SQL': 2,
-                'Frankfurt': 5,
-                'ISO20000': 2,
-                'Accounting': 5,
-                'Chinese': 5,
-                'Sales': 2,
-                'Business': 2,
-                'Switzerland': 1,
-                'London': 1,
-                'zCloud': 1,
-                'zJava': 1]
+        assert allProps ==  ['Agile':16, 
+			'IT':30, 
+			'Java':27, 
+			'Bielefeld':8, 
+			'Soccer':9, 
+			'Spring':11, 
+			'Wine':4, 
+			'Munich':2, 
+			'Jax':2, 
+			'2011':2, 
+			'Warhammer':1, 
+			'SSL':2, 
+			'RPG':2, 
+			'Operations':15, 
+			'Development':4, 
+			'Cloud':6, 
+			'BPM':1, 
+			'Accounting':6, 
+			'Conf':1, 
+			'Gartner':1, 
+			'Retail':2, 
+			'ITIL':7, 
+			'Violin':3, 
+			'Beethoven':4, 
+			'Front':13, 
+			'Risk':4, 
+			'Trading':12, 
+			'Market':3, 
+			'Office':13, 
+			'Swaps':6, 
+			'Bonds':7, 
+			'Stocks':1, 
+			'Tradings':1, 
+			'Derivates':1, 
+			'Products':3, 
+			'Cash':3, 
+			'Warrants':3, 
+			'OTC':1, 
+			'Help':3, 
+			'Desk':3, 
+			'Innovation':8, 
+			'HTML':4, 
+			'SQL':2, 
+			'Frankfurt':5, 
+			'ISO20000':2, 
+			'Chinese':7, 
+			'Sales':2, 
+			'Business':2, 
+			'Switzerland':1, 
+			'London':7, 
+			'Clearing':1, 
+			'Recruiting':4, 
+			'Collaboration':3, 
+			'Law':1, 
+			'Contract':1, 
+			'CIO':3, 
+			'Equity':1, 
+			'Brokerage':1, 
+			'Leadership':2, 
+			'SOA':3, 
+			'HR':2, 
+			'TOP':1, 
+			'Love':1, 
+			'ProjectX':13, 
+			'zCloud':1, 
+			'zJava':1]
+
     }
 }

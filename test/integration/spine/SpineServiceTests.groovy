@@ -60,8 +60,8 @@ class SpineServiceTests extends GrailsUnitTestCase {
         assert success.city == 'Hamburg'
         assert success.email == 'markus.long@techbank.com'
         assert success.imagePath == 'markus.long@techbank.com.jpg'
-        assert success.tags.size() == 5
-        assert success.badges.size() == 1
+        assert success.tags.size() == 7
+        assert success.badges.size() == 2
     }
 
     // tests for getUserNetwork
@@ -92,20 +92,20 @@ class SpineServiceTests extends GrailsUnitTestCase {
     void testGetUserTags1() {
 
         def output = spineService.getUserTags(u1)
-        assert output == ['ITIL': 4, 'Help': 3, 'Operations': 5, 'Desk': 3, 'IT': 3]
+        assert output == ['Help':3, 'ITIL':5, 'Operations':6, 'Desk':3, 'IT':4, 'Java':2, 'SOA':1]
 
     }
 
     void testGetUserTags2() {
 
         def output = spineService.getUserTags(u2)
-        assert output == ['Spring': 4, 'Java': 8, 'IT': 9, 'Agile': 11, 'Cloud': 1, 'BPM': 1, 'RPG': 2, 'Operations': 2, 'Bielefeld': 5, 'Development': 1, 'Warhammer': 1, 'SSL': 1, 'Munich': 2, 'Jax': 2, '2011': 2, 'Wine': 1, 'Soccer': 1]
+        assert output ==  ['Agile':15, 'IT':11, 'Java':12, 'SOA':1, 'Spring':4, 'Cloud':1, 'BPM':1, 'RPG':2, 'Operations':2, 'Bielefeld':5, 'Development':1, 'Warhammer':1, 'SSL':1, 'Munich':2, 'Jax':2, '2011':2, 'Wine':1, 'Soccer':1]
     }
 
     void testGetUserTags3() {
 
         def output = spineService.getUserTags(u3)
-        assert output == [:]
+        assert output == ['Love':1, 'ProjectX':1]
     }
 
     void testGetUserTags4() {
