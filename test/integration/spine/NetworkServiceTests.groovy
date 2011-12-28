@@ -63,6 +63,33 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		}
 		assert resultList.containsAll(targetResultList)
 	}
+	
+	void testQueryForNeighbourNodes4()
+	{
+		def tagsToSearchFor = ['Agile']
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def targetResultList = ['jure.zakotnik@techbank.com']
+		def resultList = []
+		result.each {
+			resultList.add(it.email)
+		}
+		assert resultList.containsAll(targetResultList)
+	}
+	
+	void testQueryForNeighbourNodes5()
+	{
+		def tagsToSearchFor = ['IT']
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def targetResultList = [
+			'jure.zakotnik@techbank.com',
+			 'markus.long@techbank.com'
+		]
+		def resultList = []
+		result.each {
+			resultList.add(it.email)
+		}
+		assert resultList.containsAll(targetResultList)
+	}
 
 	void testGetNodeURIFromEmail() {
 		assert networkService.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/3'

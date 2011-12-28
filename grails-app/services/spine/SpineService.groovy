@@ -37,6 +37,7 @@ class SpineService {
                 user.city = userNode.city
                 user.imagePath = userNode.image
                 user.freeText = userNode.freeText
+				user.password = userNode.password
                 user.tags = networkService.getIncomingTagsForNode(userNode.email)
                 if (user.tags != null)
                     user.badges = badgeService.evaluateTags(user.tags)
@@ -144,12 +145,9 @@ class SpineService {
      * @return userTagMap
      */
     def getUserTags(User user) {
-
         def userTagMap = [:]
-
         // get the tags
         userTagMap = networkService.getIncomingTagsForNode(user.email)
-
         return userTagMap
     }
 
@@ -213,7 +211,7 @@ class SpineService {
      *
      * @param loggedInUser
      * @param properties
-     * @return success
+     * @return Boolean success
      */
     def updateUserProfile(User loggedInUser, HashMap properties) {
 
@@ -230,11 +228,6 @@ class SpineService {
 			'password': properties.password ? properties.password : loggedInUser.password 
 			]
 		
-		println ""
-		println ""
-		println ""
-		println ""
-		println ""
 		networkService.updateNode(loggedInUser.email, userProps)
 		
 		success = true
@@ -251,63 +244,63 @@ class SpineService {
      */
     def addTag(User loggedInUser, String targetUser, String tags) {
 
-        // tokenize taglist, then check, if relationship exists, if yes then update, if not then create new one
-
-        def success = new Boolean()
-        def parameters = new HashMap()
+        Boolean success = false
+        HashMap parameters = [:]
 
         parameters.put('startNode', loggedInUser.email)
         parameters.put('endNode', targetUser)
         parameters.put('tags', tags)
 
-        //Todo: Relationship exists?
-        if (networkService.readRelationship() == null) {
+        // If the relationship doesn't exists we create it
+        if (!networkService.readRelationship(parameters)) {
             networkService.createRelationship(parameters)
         }
         networkService.setProperty(parameters)
 
         return success = true
     }
+	
+	def addTag(User loggedInUser, User targetUser, String tags) {
+		addTag(loggedInUser, targetUser.email, tags)
+	}
 
     /**
-     * Remove a tag from relationship and delete, if non left
+     * Remove a tag from relationship and delete, if none left
      *
      * @param loggedInUser
      * @param targetUser
      * @param taglist
-     * @return sucess
+     * @return Boolean success
      */
-    def removeTag(User loggedInUser, User targetUser, String tag) {
+    def removeTag(User loggedInUser, User targetUser, String tags) {
+        Boolean success = false
+        Map parameters = [:]
 
-        // remove tag from relationship properties; if no property left, delete relationship
+        parameters.put('startNode', loggedInUser.email)
+        parameters.put('endNode', targetUser.email)
+        parameters.put('tags', tags)
 
-        def success = new Boolean()
-        def parameters = new HashMap()
-
-        parameters.put('startNode', loggedInUser)
-        parameters.put('endNode', targetUser)
-        parameters.put('tag', tag)
-
-        success = networkService.deleteProperty(parameters)
-
-
+        success = (networkService.deleteProperty(parameters))
         return success
     }
 
     /**
      * Calls the method evaluateBadgeRules from the badge service based on a list of tags provided
      *
-     * @param user
-     * @return badgeList
+     * @param Map tags
+     * @return List badgeList (List on Badge objects)
      */
-    def getBadges(TreeMap tags) {
-
+    def getBadges(Map tags) {
         def badgeList = ['javahero', 'godofhtml']
-
-        // retrieve list of badges, actually just a list of imagepaths
-
+		badgeList = badgeService.evaluateTags(tags)
         return badgeList
     }
+	
+	def getBadges(User user)
+	{
+		def userTags = getUserTags(user)
+		return getBadges(userTags)
+	}
 	
 	def filterRelationShip (Map queryObject)
 	{

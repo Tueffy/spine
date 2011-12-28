@@ -161,6 +161,34 @@ class NetworkService {
         }
         return resultNodes
     }
+	
+	def queryForNeighbourNodes(String email, int offset, int limit, List filter)
+	{
+		// At the moment we search for only one tag
+		// TODO : Add multi tag support
+		// TODO : Merge duplicated code about the queryForNeighbourNodes methodes
+		
+		// Build the query
+		def query = "start n=node:names(email={SP_user}) match p=n-[:connect*1..5]->(x) "
+		query += "where all(r in rels(p) : r."+ filter[0] +") "
+		query += "return distinct x, min(length(p)) "
+		query += "order by min(length(p)) skip " + offset + " limit " + limit + " "
+		
+		// Execute the query
+		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
+		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
+		
+		// Get results
+		def resultNodes = []
+		def neighbour = [:]
+		json.data.each {
+			neighbour = it[0].data
+			neighbour['distance'] = it[1]
+			println "Elem: " + neighbour
+			resultNodes.add(neighbour)
+		}
+		return resultNodes
+	}
 
     /** Returns all properties for the relationship pointing to the node referred to and their number.
      * E.g. for markus.long@techbank.com, it returns ['ITIL':3, 'Help':1, 'Operations':3, 'Desk':1, 'IT':2]

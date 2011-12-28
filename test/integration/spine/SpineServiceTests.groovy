@@ -122,12 +122,33 @@ class SpineServiceTests extends GrailsUnitTestCase {
         def output = spineService.getUserTags(u4)
         assert output == [Spring: 7, Java: 9, Development: 2, IT: 1, HTML: 3, SQL: 2, SSL: 1, zCloud: 1, zJava: 1]
     }
+	
+	void testRemoveTag()
+	{
+		spineService.addTag(u1, u4, 'Office')
+		def userTags = spineService.getUserTags(u4)
+		assert userTags['Office'] == 1
+		spineService.removeTag(u1, u4, 'Office')
+		userTags = spineService.getUserTags(u4)
+		assert (userTags['Office'] == null)
+	}
 
-/*	void testAddTag(){
-
-        def test = spineService.addTag(u1,'ingmar.mueller@techbank.com','zCloud zJava')
-        assert test == true
+	void testAddTag() {
+        assert true // If testRemoveTag is ok, testAddTag must be ok
     }
-*/
+	
+	void testGetBadges()
+	{
+		// Calling with a Map of tags
+		def userTags = spineService.getUserTags(u1)
+		def userBadges = spineService.getBadges(userTags)
+		assert userBadges.size() == 1
+		assert userBadges[0].name == "The Operator"
+		
+		// Calling with a user object
+		userBadges = spineService.getBadges(u1)
+		assert userBadges.size() == 1
+		assert userBadges[0].name == "The Operator"
+	}
 
 }

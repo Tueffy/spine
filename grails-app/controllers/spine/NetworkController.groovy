@@ -59,6 +59,7 @@ class NetworkController {
 //		def requestPath = '/db/data/index/relationship/edges/6'
 //		def json = graphCommunicatorService.neoDelete(requestPath)
 //		render json
+		
 	}
 
 	def index = {
