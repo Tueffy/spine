@@ -308,6 +308,20 @@ class SpineService {
 
         return badgeList
     }
+
+	
+	/**
+	* Get a list of hot tags
+	*
+	* @param 
+	* @return tagList
+	*/
+   def getHotTags() {
+
+	   def tagList = ['Java', 'London', 'Cloud', 'Equities', 'IT', 'Trading', 'Innovation', 'Leadership', 'Wine', 'Agile']
+	   return tagList
+   }
+
 	
 	def filterRelationShip (Map queryObject)
 	{
