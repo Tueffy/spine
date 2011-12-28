@@ -2,7 +2,7 @@
 #container .landing h2 { color:#67624e; font-size:24px; font-weight:normal; margin-top: 15px;  }
 #container .landing p.subtitle { margin-bottom:20px; margin-top:5px; }
 #container .landing form td {height:50px}
-#container .landing form input[type=text] { 
+#container .landing form input[type=text],  #container .landing form input[type=password], #container .landing form textarea{ 
 	width: 400px; 
 	font-size:10pt; 
 	border:1px solid #67624e; 
@@ -13,20 +13,13 @@
     color: #111111;
     opacity: 0.7;
 }
-#container .landing form input[type=password] { 
-	width: 400px; 
-	font-size:10pt; 
-	border:1px solid #67624e; 
-	padding:5px; 
-	border-radius:5px; 
-    border: medium none !important;
-    box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;
-    color: #111111;
-    opacity: 0.7;
+#container .landing form textarea {
+	height: 300px;
+	width: 450px;
 }
 
     
-#container .landing form input[type=submit] { 
+#container .landing form input[type=button], #container .landing form input[type=submit]  { 
 	margin-left: 5px;
 	font-size:18px; padding:5px 10px; border:1px solid #67624e; 
 	color:white; cursor:pointer;
@@ -41,7 +34,7 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */
 }
 
-#container .landing form input[type=submit]:hover {
+#container .landing form input[type=button]:hover, #container .landing form input[type=submit]:hover {
 	background: #007dea; /* Old browsers */
 	background: -moz-linear-gradient(top,  #007dea 0%, #005bbc 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#007dea), color-stop(100%,#005bbc)); /* Chrome,Safari4+ */
@@ -51,3 +44,30 @@
 	background: linear-gradient(top,  #007dea 0%,#005bbc 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007dea', endColorstr='#005bbc',GradientType=0 ); /* IE6-9 */
 }
+
+#container .landing form div.upload_box { padding: 20px; }
+#container .landing form div.upload_box input[type=file] { 
+/* 	position:absolute; */
+/* 	width: 160px; */
+/* 	height: 50px; */
+/* 	left:-137px; */
+/* 	-moz-opacity:0; */
+/* 	filter:alpha(opacity: 0); */
+/* 	opacity: 0; */
+/* 	z-index: 2; */
+}
+
+#container .landing form div.upload_box input[type=button] {
+	background: #a90329; /* Old browsers */
+	background: -moz-linear-gradient(top,  #a90329 0%, #8f0222 44%, #6d0019 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a90329), color-stop(44%,#8f0222), color-stop(100%,#6d0019)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* IE10+ */
+	background: linear-gradient(top,  #a90329 0%,#8f0222 44%,#6d0019 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 ); /* IE6-9 */
+}
+
+/* Registration form slider */
+#container .landing form div.form_slide {	display: none; }
+#container .landing form div.current { display: block; }

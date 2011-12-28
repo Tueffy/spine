@@ -1,4 +1,4 @@
-$(document).ready(function(e) {
+jQuery(document).ready(function(e) {
 	
 	function emptyInputText(jObject)
 	{
@@ -8,16 +8,16 @@ $(document).ready(function(e) {
 	
 	function unEmptyInputText(jObject)
 	{
-		if($.trim(jObject.val()) == '')
+		if(jQuery.trim(jObject.val()) == '')
 			jObject.val(jObject.attr('default'));
 	}
 	
     // Erease / refill default text in the search box
-	$('#header').on('focus', '.search', function () { emptyInputText($(this)) });
-	$('#header').on('blur', '.search', function () { unEmptyInputText($(this)) });
+	jQuery('#header').on('focus', '.search', function () { emptyInputText(jQuery(this)) });
+	jQuery('#header').on('blur', '.search', function () { unEmptyInputText(jQuery(this)) });
 	
 	// Erease / refill default text in the filter box
-	$('#container .feed  .filter').on('focus', 'input[type=text]', function () { emptyInputText($(this)) });
-	$('#container .feed  .filter').on('blur', 'input[type=text]', function () { unEmptyInputText($(this)) });
+	jQuery('#container .feed  .filter').on('focus', 'input[type=text]', function () { emptyInputText(jQuery(this)) });
+	jQuery('#container .feed  .filter').on('blur', 'input[type=text]', function () { unEmptyInputText(jQuery(this)) });
 
 });
