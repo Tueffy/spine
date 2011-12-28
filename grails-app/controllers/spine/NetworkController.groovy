@@ -1,12 +1,19 @@
 package spine
 
 import grails.converters.JSON
-
+import org.codehaus.groovy.grails.commons.*
 
 class NetworkController {
+	
+	def config = ConfigurationHolder.config
+	
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
-	def spineService
+	def SpineService spineService
+	
+	// For developpment and testing purpose only ! 
+//	def GraphCommunicatorService graphCommunicatorService
+//	def NetworkService networkService
 
 	def ajaxAutoComplete = {
 		println "test.."
@@ -29,21 +36,42 @@ class NetworkController {
 		render choices
 	}
 			
-	
-	
+	/**
+	 * For testing purpose, used mostly by PJ during developement to have a quick access to Services
+	 */
+	def test = {
+//		def props = ['startNode': 'ingmar.mueller@techbank.com', 'endNode': 'markus.long@techbank.com', 'tags':'Sales']
+//		def rel = networkService.deleteProperty(props)
+//		render rel.toString()
+//		def json = spineService.filterRelationShip(['Agile':1])
+		
+		
+//		def requestPath = '/db/data/index/relationship/edges'
+//		def requestQuery = [
+//			'key' : 'Agile',
+//			'value' : 1,
+//			'uri' : 'http://localhost:7474/db/data/relationship/6'
+//			]
+//		def json = graphCommunicatorService.neoPost(requestPath, requestQuery)
+//				render json
+				
+				
+//		def requestPath = '/db/data/index/relationship/edges/6'
+//		def json = graphCommunicatorService.neoDelete(requestPath)
+//		render json
+	}
+
 	def index = {
-		
-		def n = null
-		
+		// Get the user
 		User user = new User()
-		
 		if(params.user !=null)
 			user.email = params.user			
 		else
 			user.email = session.user
 			
-		n  = spineService.getUserNetwork(user, null, 0)
-		
+		// Get user network (get the first page)
+		def n = null
+		n  = spineService.getUserNetwork(user, null, 0, config.network.itemsPerPage)
 		for ( i in n ) {
 				def userFromList = new User()
 				userFromList.email = i.email
@@ -51,23 +79,23 @@ class NetworkController {
 				i.tags = tags
 				println i
 		}
+		[param : params.filter, user : session.user, neighbours : n]
+	}
+	
+	def ajaxPage = {
+		// Get the user
+		User user = new User()
+		if(params.user !=null)
+			user.email = params.user
+		else
+			user.email = session.user
 		
-		
-		//println params.user
-		/*
-		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
-		def n  = spineService.getNeighbours(neighbourParameters)
-		
-		def allusers = []
-		n.each {
-			def neighbour = spineService.getPropertiesByEmail(it.key)
-			neighbour["distance"] = it.value
-			allusers.add(neighbour)
-		}
-		*/
-		//println allusers
-		[param : params.filter, user : user, neighbours : n]
-		//[param : params.filter, user : session.user]
+		// Then get the page, according to the configured pagination
+		if(params.page == null) params.page = 1
+		int offset = params.page.toInteger() - 1
+		offset *= config.network.itemsPerPage
+		def n  = spineService.getUserNetwork(user, null, offset, config.network.itemsPerPage)
+		render( template: "page", model: [neighbours: n]);
 	}
 	
 	def linkProperties = {

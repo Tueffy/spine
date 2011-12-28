@@ -6,6 +6,7 @@ class SpineService {
     def  networkService
     def badgeService
 
+	
     /**
      * take the email address and the password and verify, if exist in database and correct
      * if yes then instantiate the loggedInUser object, if not, return null
@@ -35,7 +36,7 @@ class SpineService {
                 user.country = userNode.country
                 user.city = userNode.city
                 user.imagePath = userNode.image
-                user.freeText = 'My biography'
+                user.freeText = userNode.freeText
                 user.tags = networkService.getIncomingTagsForNode(userNode.email)
                 if (user.tags != null)
                     user.badges = badgeService.evaluateTags(user.tags)
@@ -45,6 +46,7 @@ class SpineService {
         return user
     }
 
+	
     /**
      *
      * @param contextUser
@@ -52,7 +54,7 @@ class SpineService {
      * @param offset
      * @return userList of type User
      */
-    def getUserNetwork(User contextUser, String filter, int offset) {
+    def getUserNetwork(User contextUser, String filter, int offset, int limit) {
 
         def queryReturn
         def userList = []
@@ -62,20 +64,21 @@ class SpineService {
         if ((filter == null) || (filter == '')) {
 
             // get the neighbours in batches of 20
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
 
         }
         else {
 
             // first step is to tokenize the filter string
             def tokens = " ,;"
-            def wordList = []
+            def wordList = [] 
+			
             wordList = filter.tokenize(tokens)
 
             println "search filter: " + wordList
 
             // now we need to wait until the network service queryNode is ready, as this is not the case yet, use the same service as in the if
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
+            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
         }
 
         // loop through the list and instantiate the user objects incl. tags
@@ -89,7 +92,7 @@ class SpineService {
             user.country = it.country
             user.city = it.city
             user.imagePath = it.image
-            user.freeText = 'My biography'
+            user.freeText = it.freeText
             user.tags = networkService.getIncomingTagsForNode(it.email)
             user.distance = it.distance
             if (user.tags != null)
@@ -121,8 +124,10 @@ class SpineService {
         user.country = userNode.country
         user.city = userNode.city
         user.imagePath = userNode.image
-        user.freeText = 'My biography'
+        user.freeText = userNode.freeText
         user.tags = networkService.getIncomingTagsForNode(userNode.email)
+		// TODO: does not look good, have to rethink the way we manage user in the code
+		user.password = userNode.password
         if (user.tags != null)
             user.badges = badgeService.evaluateTags(user.tags)
 
@@ -168,7 +173,7 @@ class SpineService {
         newUser.city = userparams.city
         newUser.country = userparams.country
         newUser.imagePath = userparams.image
-        //newUser.freeText = "Free Text"
+        newUser.freeText = userparams.freetext
 
         // set over into map for call
         def userProps = ['firstName': newUser.firstName,
@@ -212,10 +217,27 @@ class SpineService {
      */
     def updateUserProfile(User loggedInUser, HashMap properties) {
 
-        def success = new Boolean()
-
-        // update node properties
-
+        def success = false
+		
+		def userProps = [
+			'email': loggedInUser.email,
+			'firstName': properties.firstName ? properties.firstName : loggedInUser.firstName, 
+			'lastName': properties.lastName ? properties.lastName : loggedInUser.lastName,
+			'city': properties.city ? properties.city : loggedInUser.city,
+			'country': properties.country ? properties.country : loggedInUser.country,
+			'imagePath': properties.imagePath ? properties.imagePath : loggedInUser.imagePath,
+			'freeText': properties.freeText ? properties.freeText : loggedInUser.freeText,
+			'password': properties.password ? properties.password : loggedInUser.password 
+			]
+		
+		println ""
+		println ""
+		println ""
+		println ""
+		println ""
+		networkService.updateNode(loggedInUser.email, userProps)
+		
+		success = true
         return success
     }
 
@@ -286,4 +308,11 @@ class SpineService {
 
         return badgeList
     }
+	
+	def filterRelationShip (Map queryObject)
+	{
+		return networkService.queryRelationship(queryObject)
+	}
+	
+	def search
 }

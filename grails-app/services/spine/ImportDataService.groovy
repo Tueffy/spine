@@ -1,12 +1,13 @@
 package spine
 
+import java.security.MessageDigest
+
 class ImportDataService {
 
     static transactional = false
-    def networkService
-	def graphCommunicatorService
+    def NetworkService networkService
+	def GraphCommunicatorService graphCommunicatorService
 	 
-	
 
     def importEdges(String file) {
         println 'Starting to connect nodes...'
@@ -61,11 +62,17 @@ class ImportDataService {
 		json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': 'tag:*'])
 		results['relsTagsIndexSize'] = json.data.size
 		
-		//total nodes via REST (should match index!)
-		(1..1000).each { i->
-			json = graphCommunicatorService.neoGet('/db/data/node/' + i)
+		// Check integrity of users we use for testing purpose
+		results['nodesChecksum'] = []
+		def mainUsers = ['jure.zakotnik@techbank.com', 
+			'christian.tueffers@techbank.com', 
+			'ingmar.mueller@techbank.com', 
+			'monika.hoppe@techbank.com']
+		mainUsers.eachWithIndex () {
+			it, i -> results['nodesChecksum'][i] = networkService.readNode(it)
 		}
 		
 		println results
+		return results
 	}
 }

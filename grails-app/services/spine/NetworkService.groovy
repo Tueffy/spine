@@ -1,5 +1,7 @@
 package spine
 
+import java.util.regex.*
+
 class NetworkService {
     static transactional = false
 
@@ -58,7 +60,8 @@ class NetworkService {
             newProperties.(it.getKey()) = it.getValue()
         }
         //remove all old index entries
-        removeNodeIndex(json.self[0])
+//        removeNodeIndex(json.self[0])
+		graphCommunicatorService.neoDelete(json.self[0])
         //add new properties to node
         graphCommunicatorService.neoPut(json.self[0] + '/properties', newProperties)
         //add new index entries
@@ -120,6 +123,20 @@ class NetworkService {
         }
         return queryResult
     }
+	
+	def queryRelationship(Map queryObject) 
+	{
+		def queryResult = []
+		// Turn the queryObject into a valid lucene query
+		def queryString = ''
+		queryObject.each {
+			queryString = queryString + it.key + ':' + it.value + ' AND '
+		}
+		//dirty hack, remove the last AND.. (in groovy maps, there are some nice collapsing functions for this...
+		queryString = queryString.substring(0, queryString.size() - 5)
+		def json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': (queryString)])
+		return json
+	}
 
     /**
      * Uses the cypher plugin to retrieve the neighbours using offset and limit. The result includes the start node of the query itself.
@@ -271,6 +288,7 @@ class NetworkService {
     def setProperty(Map props) {
         // tokenize tags and add to relationship if not yet exist for the later
         def relationship = readRelationship(props)[0]
+		
         def tokens = " ,;"
         def tagList = []
         def result = ''
@@ -280,18 +298,20 @@ class NetworkService {
         if (allExistingTags == null) { //no properties present
             allExistingTags = [:]
         }
-        tagList.each {
-            allExistingTags[it] = 1
-        }
+        tagList.each { allExistingTags[it] = 1 }
         graphCommunicatorService.neoPut(relationship + '/properties', allExistingTags)
+		
         // add to index
-        def postBody
-        def indexPath = '/db/data/index/relationship/edges/'
-        allExistingTags.each {
-            postBody = ['value': it.key, 'key': 'tag', 'uri': relationship]
-            println 'Index put relationship: ' + postBody
-            result = graphCommunicatorService.neoPost(indexPath, postBody)
-        }
+		List propsForIndexing = []
+		allExistingTags.each { propsForIndexing.add(it) }
+		result = setRelationshipIndex(relationship, propsForIndexing)
+//        def postBody
+//        def indexPath = '/db/data/index/relationship/edges/'
+//        allExistingTags.each {
+//            postBody = ['value': it.key, 'key': 'tag', 'uri': relationship]
+//            println 'Index put relationship: ' + postBody
+//            result = graphCommunicatorService.neoPost(indexPath, postBody)
+//        }
         return result.data
     }
 
@@ -310,12 +330,87 @@ class NetworkService {
         return props
     }
 
-    def deleteProperty(Map props) {
-        //TODO: implement this, remove property from index and relationship!
+	/**
+	 * Delete the properties given in the map
+	 * @param props A map with the following template : [startNode: X, endNode: X, tags: 'HTML,Java']
+	 * @return
+	 */
+    def Map deleteProperty(Map props) {
         //delete prop on relationship and on index
-        def rel = readRelationship(props)
-
+		// Get the relationship we want to deal with
+        def relationship = readRelationship(props)[0]
+		
+		// Turn props.tag (String) into a proper List
+		def tagList = []
+		tagList = props.tags.tokenize(" ,;") // Use " ,;" to cut tags from each others
+		
+		// Get the actual tags of the relationship in the database
+		def actualTags = graphCommunicatorService.neoGet(relationship + '/properties')
+		if(!actualTags) actualTags = [:]
+		
+		// Now we remove the tags specified in tagList from actualTag
+		tagList.each {
+			if(actualTags.containsKey(it)) actualTags.remove(it)
+		}
+		
+		// Save the actual tags
+		// We do not use the setProperty method, cause it won't delete the tags
+		graphCommunicatorService.neoPut(relationship + '/properties', actualTags)
+		
+		// Remove removed tags from the index
+		setRelationshipIndex(relationship, actualTags)
+		
+		// If a relationship is left without properties, we delete it
+		if(actualTags.isEmpty())
+			deleteRelationship(props)
+		
+		return actualTags
     }
+	
+	/**
+	 * Put a relationship in the index. (erease old data in the index about this relationship)
+	 * /!\ Be careful to always update the index BEFORE actually updating a relationship 
+	 * @param relationshipURI The URI of the relationship
+	 * @param newProps A map which contains the new properties of the relationship to index
+	 */
+	def setRelationshipIndex(String relationshipURI, Map newProps)
+	{
+		def indexPath = '/db/data/index/relationship/edges/'
+		def relationshipID = getIdFromURI(relationshipURI)
+		def result = ''
+		
+		// Remove old entry from index
+		graphCommunicatorService.neoDelete(indexPath + relationshipID)
+		
+		// Recreate the entry in the index
+		def requestQuery = []
+		newProps.each {
+			key, value -> 
+			requestQuery = [ 'key' : key,
+			'value' : value,
+			'uri' : relationshipURI ]
+			result = graphCommunicatorService.neoPost(indexPath, requestQuery)
+		}
+		return result
+	}
+	
+	def setRelationshipIndex(String relationshipURI, List newProps)
+	{
+		Map map = [:]
+		newProps.each { map[it] = 'tag' }
+		return setRelationshipIndex(relationshipURI, map)
+	}
+	
+	def String getIdFromURI(String URI)
+	{
+		Pattern pattern = Pattern.compile('(.*)/([0-9]+)/?')
+		Matcher matcher = pattern.matcher(URI)
+		matcher.matches()
+		if(matcher.groupCount() > 0)
+			return matcher.group(2)
+		else 
+			return '-1'
+	}
 
     /**
      * Returns a list of all existing properties on relationships and their number
@@ -484,7 +579,6 @@ class NetworkService {
      }
 
      /*
-
 
      def createEdge (List edgeProperties) {
          String node1 = findNodeByEmail(edgeProperties[0])[0]

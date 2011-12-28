@@ -2,7 +2,6 @@ package spine
 
 import java.awt.Image
 import java.awt.Toolkit
-import java.util.regex.* 
 
 import grails.converters.JSON
 import groovyx.net.http.ContentType;
@@ -17,8 +16,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
+import javax.swing.ImageIcon;
 import javax.imageio.ImageIO
 import pl.burningice.plugins.image.BurningImageService
+
+import spine.FileService
 
 
 /**
@@ -29,6 +31,7 @@ import pl.burningice.plugins.image.BurningImageService
 class AjaxUploadController extends uk.co.desirableobjects.ajaxuploader.AjaxUploadController  {
 
 	BurningImageService burningImageService
+	FileService fileService
 	
 	/**
 	 * Overwrite the upload method from the default plug-in controller
@@ -38,7 +41,9 @@ class AjaxUploadController extends uk.co.desirableobjects.ajaxuploader.AjaxUploa
 
 			String uploadedDir = 'uploads/tmp/'
 			String uploadedFileName =  params.qqfile
+			uploadedFileName = fileService.generateRandomUniqueFileName() + "." + fileService.extractExtensionFromFileName(uploadedFileName).toLowerCase()
 			String uploadedFullFileDir = ServletContextHolder.servletContext.getRealPath('/') + uploadedDir
+//			File uploaded = new File(uploadedFullFileDir + uploadedFileName)
 			File uploaded = new File(uploadedFullFileDir + uploadedFileName)
 			InputStream inputStream = selectInputStream(request)
 
@@ -48,7 +53,9 @@ class AjaxUploadController extends uk.co.desirableobjects.ajaxuploader.AjaxUploa
 			// Do some stuff on the picture
 			int test;
 			burningImageService.doWith(uploadedFullFileDir + uploadedFileName, uploadedFullFileDir).execute {
-				Image image = Toolkit.getDefaultToolkit().getImage(uploadedFullFileDir + uploadedFileName)
+				// We use an ImageIcon here, to make sure the image is actually loaded
+				ImageIcon pre_image = new ImageIcon(uploadedFullFileDir + uploadedFileName)
+				Image image = pre_image.getImage()
 				image.flush()
 				int width = image.getWidth(null);
 				int height = image.getHeight(null);
@@ -61,8 +68,11 @@ class AjaxUploadController extends uk.co.desirableobjects.ajaxuploader.AjaxUploa
 				}
 				test = width;
 			}
+			
+			// Rename the uploaded file
+			fileService.renameFile(uploaded, fileService.generateRandomUniqueFileName())
 
-			return render(text: [success:true, filename:uploadedFileName, dir:uploadedDir, width:test] as JSON, contentType:'text/json')
+			return render(text: [success:true, filename:fileService.replaceLowercasedExtension(uploadedFileName), dir:uploadedDir, width:test, tmp:fileService.generateRandomUniqueFileName()] as JSON, contentType:'text/json')
 
 		} catch (FileUploadException e) {
 
@@ -73,21 +83,4 @@ class AjaxUploadController extends uk.co.desirableobjects.ajaxuploader.AjaxUploa
 
 	}
 	
-	/**
-	 * If an file extension is uppercased, lowercase it
-	 * @param String originalFileName
-	 * @return String
-	 */
-	private replaceLowercasedExtension(String originalFileName)
-	{
-		Pattern pattern = Pattern.compile("\\.([A-Z]+)\$")
-		Matcher matcher = pattern.matcher(originalFileName)
-		StringBuilder stringBuilder = new StringBuilder(originalFileName)
-		while(matcher.find())
-		{
-			String buf= stringBuilder.substring(matcher.start(), matcher.end()).toLowerCase();
-			stringBuilder.replace(matcher.start(), matcher.end(), buf);
-		}
-		return stringBuilder.toString()
-	}
 }

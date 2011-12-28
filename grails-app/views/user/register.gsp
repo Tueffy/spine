@@ -18,7 +18,7 @@
 <body>
   <div id="header">
     <div class="container_24">
-      <img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
+      <img src="/spine/images/logo.png" alt="Spine" width="222" height="61" class="logo" />
     
       <ul class="links">
       	<li><a href="#">About</a></li>
@@ -106,6 +106,7 @@
 				<div class="upload_box">
 					<uploader:uploader id="picture" multiple="false">
 						<uploader:onComplete>
+							$('picture_field').writeAttribute('value', responseJSON.filename);
 							$('au-picture').hide();
 							$('cropper').show();
 							$('cropper-img').writeAttribute('src', '../' + responseJSON.dir + responseJSON.filename);
@@ -117,8 +118,8 @@
 									$( 'crop_y1' ).value = coords.y1;
 									$( 'crop_x2' ).value = coords.x2;
 									$( 'crop_y2' ).value = coords.y2;
-									$( 'crop_width' ).value = dimensions.width;
-									$( 'crop_height' ).value = dimensions.height;
+									$( 'crop_w' ).value = dimensions.width;
+									$( 'crop_h' ).value = dimensions.height;
 							 	} }
 							);
 						</uploader:onComplete>
@@ -126,7 +127,6 @@
 				</div>
 				
 				<div id="cropper" style="display: none;">
-<%--					<cropper:crop imageId="cropper-img" />	--%>
 					<img id="cropper-img" />
 					<input type="hidden" name="crop_x1" id="crop_x1" value="0" />
 					<input type="hidden" name="crop_y1" id="crop_y1" value="0" />
@@ -134,9 +134,10 @@
 					<input type="hidden" name="crop_y2" id="crop_y2" value="0" />
 					<input type="hidden" name="crop_h" id="crop_h" value="0" />
 					<input type="hidden" name="crop_w" id="crop_w" value="0" />
+					<input type="hidden" name="picture" id="picture_field" />
 				</div>
 				
-				
+				<br />
 				<div class="buttons">
 					<span class="formButton"><input type="button" value="Previous" class="prev" /></span>
 					<span class="formButton"><input type="button" value="Next" class="next" /></span>
@@ -144,15 +145,17 @@
 			</div>
 			<!--  END : Second slide -->
 			
+			
 			<!-- BEGIN : Third slide -->
 			<div class="form_slide dialog">
 				<p>Tell us more about yourself (Optional) </p>
 				
-				<textarea rows="" cols="">...</textarea>
+				<textarea name="freeText">...</textarea>
 				
 				<div class="buttons">
+					<br />
 					<span class="formButton"><input type="button" value="Previous" class="prev" /></span>
-					<span class="formButton"><input type="button" value="Finish" class="finish" /></span>
+					<span class="formButton"><input type="submit" value="Finish" class="finish" /></span>
 				</div>
 			</div>
 			<!--  END : Third slide -->
