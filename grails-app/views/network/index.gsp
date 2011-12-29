@@ -1,13 +1,7 @@
 <html>
 <head>
-  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  	<title>My Spine</title>
-  	<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">
-  
-  	<g:javascript library='scriptaculous' />
+	<meta name="layout" content="main">
+  	  	<g:javascript src="app/scroll.js" />
   		<g:javascript>
   			window.onload = function(){
                 
@@ -23,7 +17,6 @@
 				   			}
 				  });
 				  
-				
 			}
         	
         	function updateSelectedUser(e) {
@@ -96,75 +89,10 @@
 </head>
 
 <body>
-  <div id="header">
-  	<div class="container_24">
-      <span>
-      		<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
-      </span>
-      <span>
-	      <ul class="links">
-	      	<li><a href="#">About Spine</a></li>
-	      	<li><a href="#">How it works</a></li>
-	      	<li><a href="#">Terms and conditions</a></li>
-	      	<li><a href="#">Disclaimer</a></li>
-	        <li><g:link controller="user"  action="doLogout">Logout</g:link ></li>
-	      </ul>
-    	     
-      <p class="news">
-          <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
-          <span id="message">You've got 7 new tags and 1 new badge.</span>
-      </p>       
-    </div>
-  </div>
   
-  <div id="nav">
-    <div class="container_24" id="hot_tags">
-    
-      <ul >
-        <li><img src="/spine/images/home/hot_tags.png" width="75" height="23" alt="Hot Tags" ></li>
-        <li class="hot_tags" id="hot_tags_soap"><a href="#">#soap</a></li>
-        <li><a href="#">#cloud</a></li>
-        <li><a href="#">#html</a></li>
-        <li><a href="#">#xhtml</a></li>
-        <li><a href="#">#java</a></li>
-      </ul>
-      <script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
-    </div>
-  </div>
-  
-  <!-- BEGIN : container -->
-  <div id="container" class="container_24">
   	
     <!-- START : LEFT menu -->
-    <div class="grid_4" id="left">
-      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" />
-     
-	  <ul class="description">
-          <li class="name">${user.firstName} ${user.lastName}</li>
-          <li class="company">tbd</li>
-          <li class="city">${user.country}</li>
-	  </ul>
-      
-      <div class="grid_8 omega badges">
-        <ul>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-        </ul>
-      </div>
-      <br/>
-      <ul class="menu">
-        <li><a href="#"><span>13</span> Badges</a></li>
-        <li><a href="#"><span>146</span> Tags</a></li>
-        <li><a href="#"><span>3</span> Events</a></li>
-        <li><a href="#"><span>11</span> My Notes</a></li>
-        <li><a href="#"><span>56</span> Messages</a></li>
-        <li><a href="#"><span>2</span> Last Jobs</a></li>
-      </ul>
-    </div>
+    <g:render template="menu_left"></g:render>
     <!-- END : LEFT menu -->
     
     
@@ -208,66 +136,9 @@
           </div>
            <!-- END : filter & my updates -->          
          
-          <g:each in="${neighbours}" var="n">          	  
-	          <!-- BEGIN : 1 person -->
-	          <div class="grid_14 alpha omega contact" id="${n.email}" >
-	          <script>
-
-	          	var mydrag = new Draggable('${n.email}', { revert: true });
-
-		        Droppables.add('${n.email}', { 
-				    accept: 'hot_tags',
-				    hoverclass: 'hover',
-				    onDrop: function(dragged, dropped, event) { 
-				    			//alert('Dragged: ' + dragged.id);
-				    		    //alert('Dropped onto: ' + dropped.id);
-				    		    //alert('Held ctrl key: ' + event.ctrlKey);			    
-				    			
-				    			new Ajax.Request('/spine/network/addTag/'+dropped.id, {asynchronous:true,evalScripts:true,parameters:'e='+dragged.id});
-					    	
-				   			}
-				});
-	          </script>
-	          	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
-	            <div class="grid_10 description omega">
-	              <ul class="badges">
-	                <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
-	                <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
-	              </ul>
-	             
-	              <h3><g:remoteLink action="getUser" id="${n.email}" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>
-	              <p class="company">Accenture GmbH, ${user.city}, ${user.country}<br> </p>
-	              
-	              <div class="grid_7 alpha">
-	              	<p class="quote"><span>„</span>Looking forward to new challenges<span>„</span></p>
-	                <ul class="tags">           		
-	                		
-		               		<g:each in="${n.tags}" var="t">    	        	  
-			                    <li>	                    
-				                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver();" onmouseout="javascript:tagsMinusOnMouseOut();">${t.key}</a>
-				                    <span id="minus" style="{display: none;}">
-				                    	<g:remoteLink action="removeTag" id="1" update="[success:'message',failure:'error']">-</g:remoteLink>
-				                    </span>
-			                    </li>
-		                   	</g:each>
-	                  
-	                    <li>&nbsp;</li>
-	                    <li> 	                    	
-		                    <span class="plus">
-		                    	<g:remoteLink action="setTag" id="1" update="[success:'message',failure:'error']">+</g:remoteLink>
-		                    </span>
-		                 </li>
-	                </ul>
-	              </div>
-	              <div class="grid_3 omega">
-	              	<p class="distance">${n.distance}</p>
-	                <div class="distance_arrows"></div>
-	              </div>
-	            </div>
-	          </div>
-	          <div class="grid_14 alpha omega"><div class="separator"></div></div>
-	          <!-- END : 1 personne -->
-          </g:each>
+          <!--  BEGIN Flux -->
+          <g:render template="page"></g:render>
+          <!-- END Flux -->
           
                   
           <!-- BEGIN : pagination -->
@@ -363,14 +234,10 @@
       
     </div>
     <!-- END : Right column -->
-    
-  </div>
-  <!-- END : container -->
+
   
   
-  
-  <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
+	
   
 </body>
 
