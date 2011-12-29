@@ -26,7 +26,7 @@
 		<link>
 			<name>.link_to_grails_plugins</name>
 			<type>2</type>
-			<location>C:/Users/jure.zakotnik/.grails/1.3.7/projects/spine/plugins</location>
+			<locationURI>GRAILS_ROOT/1.3.7/projects/spine/plugins</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
