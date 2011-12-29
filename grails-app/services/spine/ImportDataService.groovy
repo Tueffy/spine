@@ -35,7 +35,15 @@ class ImportDataService {
             props['city'] = fields[4]
             props['country'] = fields[5]
             props['image'] = fields[6]
-            props['freeText'] = 'Madness? This is Sparta!'
+            props['freeText'] = fields[7]
+			props['company'] = fields[8]
+			props['department'] = fields[9]
+			props['jobTitle'] = fields[10]
+			props['gender'] = fields[11]
+			props['birthday'] = fields[12]
+			props['phone'] = fields[13]
+			props['mobile'] = fields[14]
+			props['status'] = fields[15]
             networkService.createNode(props)
         }
         println "Nodes created!"
