@@ -19,28 +19,11 @@
 </head>
 <body>
 	<div id="header">
-		<div class="container_24">
-			<span> 
-				<img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
-			</span> 
-			<span>
-				<ul class="links">
-					<li><a href="#">About Spine</a></li>
-					<li><a href="#">How it works</a></li>
-					<li><a href="#">Terms and conditions</a></li>
-					<li><a href="#">Disclaimer</a></li>
-					<li><g:link controller="user" action="doLogout">Logout</g:link></li>
-				</ul>
-				<p class="news">
-					<img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" /> 
-					<span id="message">You've	got 7 new tags and 1 new badge.</span>
-				</p>
-			</span>
-		</div>
-	</div>
+    	<g:render template="/inc/header"></g:render>
+    </div>
 	<div id="nav">
-		<div class="container_24" id="hot_tags"></div>
-	</div>
+   		&nbsp;
+    </div>
 	<!-- BEGIN : container -->
 	<div id="container" class="container_24">
 		<div class="landing">
