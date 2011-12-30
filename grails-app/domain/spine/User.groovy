@@ -1,3 +1,4 @@
+
 package spine
 
 class User {
@@ -13,6 +14,14 @@ class User {
 	String city
 	String imagePath
 	String freeText
+	String department
+	String jobTitle
+	String gender
+	String phone
+	String mobile
+	String birthday
+	String status
+
 	//@TODO: Temporary solution to iterate tags 
 	HashMap tags
 	Long distance
