@@ -26,7 +26,7 @@
   <!-- BEGIN : container -->
   <div id="container" class="container_24">  	   
   	<div class="grid_21 landing" id="left">
-      <h2>How it works</h2> 
+      <h2>Terms & Conditions</h2> 
     </div>
   	<br/>
     <!-- START : LEFT menu -->
