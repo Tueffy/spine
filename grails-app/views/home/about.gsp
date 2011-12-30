@@ -48,25 +48,28 @@
     <!-- BEGIN : RIGHT COLUMN -->
     <div id="right" class="grid_19 feed">  
     	<div class="grid_19 feed"> 
-	    	<div class="grid_6 content">  
-	    		The Team
+	    	<div class="grid_6 content" style="text-align:center">  
+	    		<img src="${resource(dir:'images/home/aboutus',file:'thomas.jpg')}" alt="Thomas Michelbach" style="width:150px">
+	    		<img src="${resource(dir:'images/home/aboutus',file:'christian.jpg')}" alt="Christian" style="margin-top:40px;width:150px">
+	    		<img src="${resource(dir:'images/home/aboutus',file:'jure.jpg')}" alt="Jure" style="margin-top:40px;width:150px">
+	    		<img src="${resource(dir:'images/home/aboutus',file:'ingmar.jpg')}" alt="Ingmar" style="margin-top:40px;width:150px">
 	    	</div>
 	    	<div class="grid_12 content">  
 		    	Thomas M. Michelbach is a German/Brazilian technology enthusiast.  Right now he is a senior technology architect with vast experience in system integration projects for the banking and public services industry. Since 2000, Thomas has worked for internet agencies around the world and finally settled on enterprise consulting at Accenture in the year 2006. Thomas is passionate about making the difference through daring ideas and emerging technologies. <br/>
 		    	
-		    	<br/><br/>
+		    	<br/><br/><br/><br/><br/><br/><br/>
 		    	Christian Tüffers is a cloud computing guru in Germany. As such he has led the Accenture Cloud Computing capabilities for ASG (Austria / Switzerland / Germany) for the last two years. Since 1998 Christian is leading multiple international project engagements as responsible project manager and technical architect. He is a certified Master Technical Architect within Accenture.<br/>
 		    	
-		    	<br/><br/>
+		    	<br/><br/><br/><br/><br/><br/>
 		    	Dr. Jure Zakotnik is an agile development evangelist, who worked in a variety of innovation projects in Accenture. He is a known expert for integration solutions and agile management of geographically distributed teams with different skills and cultural backgrounds. Since 2002, he is involved in data mining algorithms, NoSQL technologies and architecture.<br/>
 		    	
-		    	<br/><br/>
+		    	<br/><br/><br/><br/><br/><br/><br/>
 		    	Ingmar Müller <br/>
 		    	
-		    	<br/><br/>
+		    	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 		    	Alexander Michelbach <br/>
 		    	
-		    	<br/><br/>
+		    	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>s
 		    	Raphael Schmid <br/>
 	    	</div>
 	    </div>
