@@ -6,6 +6,7 @@ class SpineService {
     def  networkService
     def badgeService
 
+	
     /**
      * take the email address and the password and verify, if exist in database and correct
      * if yes then instantiate the loggedInUser object, if not, return null
@@ -31,11 +32,21 @@ class SpineService {
                 // copy over the values from the hash map into the user object
                 user.firstName = userNode.firstName
                 user.lastName = userNode.lastName
+				user.password = userNode.password
                 user.email = userNode.email
                 user.country = userNode.country
                 user.city = userNode.city
                 user.imagePath = userNode.image
-                user.freeText = 'My biography'
+        		user.freeText = userNode.freeText
+				user.company = userNode.company
+				user.department = userNode.department
+				user.jobTitle = userNode.jobTitle
+				user.phone = userNode.phone
+				user.mobile = userNode.mobile
+				user.gender = userNode.gender
+				user.birthday = userNode.birthday
+				user.status = userNode.status
+        				
                 user.tags = networkService.getIncomingTagsForNode(userNode.email)
                 if (user.tags != null)
                     user.badges = badgeService.evaluateTags(user.tags)
@@ -45,6 +56,7 @@ class SpineService {
         return user
     }
 
+	
     /**
      *
      * @param contextUser
@@ -69,7 +81,8 @@ class SpineService {
 
             // first step is to tokenize the filter string
             def tokens = " ,;"
-            def wordList = []
+            def wordList = [] 
+			
             wordList = filter.tokenize(tokens)
 
             println "search filter: " + wordList
@@ -89,8 +102,19 @@ class SpineService {
             user.country = it.country
             user.city = it.city
             user.imagePath = it.image
-            user.freeText = 'My biography'
+            user.freeText = it.freeText
             user.tags = networkService.getIncomingTagsForNode(it.email)
+            user.freeText = it.freeText
+			user.company = it.company
+			user.department = it.department
+			user.jobTitle = it.jobTitle
+			user.phone = it.phone
+			user.mobile = it.mobile
+			user.gender = it.gender
+			user.birthday = it.birthday
+			user.status = it.status
+			
+			user.tags = networkService.getIncomingTagsForNode(it.email)
             user.distance = it.distance
             if (user.tags != null)
                 user.badges = badgeService.evaluateTags(user.tags)
@@ -122,6 +146,16 @@ class SpineService {
         user.city = userNode.city
         user.imagePath = userNode.image
         user.freeText = userNode.freeText
+        user.freeText = userNode.freeText
+		user.company = userNode.company
+		user.department = userNode.department
+		user.jobTitle = userNode.jobTitle
+		user.phone = userNode.phone
+		user.mobile = userNode.mobile
+		user.gender = userNode.gender
+		user.birthday = userNode.birthday
+		user.status = userNode.status
+		
         user.tags = networkService.getIncomingTagsForNode(userNode.email)
 		// TODO: does not look good, have to rethink the way we manage user in the code
 		user.password = userNode.password
@@ -141,12 +175,9 @@ class SpineService {
      * @return userTagMap
      */
     def getUserTags(User user) {
-
         def userTagMap = [:]
-
         // get the tags
         userTagMap = networkService.getIncomingTagsForNode(user.email)
-
         return userTagMap
     }
 
@@ -170,7 +201,15 @@ class SpineService {
         newUser.city = userparams.city
         newUser.country = userparams.country
         newUser.imagePath = userparams.image
-        newUser.freeText = userparams.freetext
+		newUser.freeText = userparams.freetext
+		newUser.company = userparams.company
+		newUser.department = userparams.department
+		newUser.jobTitle = userparams.jobTitle
+		newUser.phone = userparams.phone
+		newUser.mobile = userparams.mobile
+		newUser.gender = userparams.gender
+		newUser.birthday = userparams.birthday
+		newUser.status = userparams.status
 
         // set over into map for call
         def userProps = ['firstName': newUser.firstName,
@@ -179,7 +218,17 @@ class SpineService {
                 'country': newUser.country,
                 'email': newUser.email,
                 'password': newUser.password,
-                'image': newUser.imagePath]
+                'image': newUser.imagePath,
+				'freeText': newUser.freeText,
+				'company' : newUser.company,
+				'department' : newUser.department,
+				'jobTitle' : newUser.jobTitle,
+				'phone' : newUser.phone,
+				'mobile' : newUser.mobile,
+				'gender' : newUser.gender,
+				'birthday' : newUser.birthday,
+				'status' : newUser.status
+				]
 
         // verify if node with same email does not exist already
         if (networkService.readNode(newUser.email) != null)
@@ -210,28 +259,31 @@ class SpineService {
      *
      * @param loggedInUser
      * @param properties
-     * @return success
+     * @return Boolean success
      */
     def updateUserProfile(User loggedInUser, HashMap properties) {
 
         def success = false
 		
-		def userProps = [
-			'email': loggedInUser.email,
-			'firstName': properties.firstName ? properties.firstName : loggedInUser.firstName, 
-			'lastName': properties.lastName ? properties.lastName : loggedInUser.lastName,
-			'city': properties.city ? properties.city : loggedInUser.city,
-			'country': properties.country ? properties.country : loggedInUser.country,
-			'imagePath': properties.imagePath ? properties.imagePath : loggedInUser.imagePath,
-			'freeText': properties.freeText ? properties.freeText : loggedInUser.freeText,
-			'password': properties.password ? properties.password : loggedInUser.password 
-			]
+        		def userProps = [
+	     			'email': loggedInUser.email,
+	     			'firstName': properties.firstName ? properties.firstName : loggedInUser.firstName, 
+	     			'lastName': properties.lastName ? properties.lastName : loggedInUser.lastName,
+	     			'city': properties.city ? properties.city : loggedInUser.city,
+	     			'country': properties.country ? properties.country : loggedInUser.country,
+	     			'imagePath': properties.imagePath ? properties.imagePath : loggedInUser.imagePath,
+	     			'freeText': properties.freeText ? properties.freeText : loggedInUser.freeText,
+	     			'password': properties.password ? properties.password : loggedInUser.password,
+	     			'company': properties.company ? properties.company : loggedInUser.company,
+	     			'department': properties.department ? properties.department : loggedInUser.department,
+	     			'jobTitle': properties.jobTitle ? properties.jobTitle : loggedInUser.jobTitle,
+	     			'phone': properties.phone ? properties.phone : loggedInUser.phone,
+	     			'mobile': properties.mobile ? properties.mobile : loggedInUser.mobile,
+	     			'gender': properties.gender ? properties.gender : loggedInUser.gender,
+	     			'birthday': properties.birthday ? properties.birthday : loggedInUser.birthday,
+	     			'status': properties.status ? properties.status : loggedInUser.status
+	     			]
 		
-		println ""
-		println ""
-		println ""
-		println ""
-		println ""
 		networkService.updateNode(loggedInUser.email, userProps)
 		
 		success = true
@@ -248,61 +300,79 @@ class SpineService {
      */
     def addTag(User loggedInUser, String targetUser, String tags) {
 
-        // tokenize taglist, then check, if relationship exists, if yes then update, if not then create new one
-
-        def success = new Boolean()
-        def parameters = new HashMap()
+        Boolean success = false
+        HashMap parameters = [:]
 
         parameters.put('startNode', loggedInUser.email)
         parameters.put('endNode', targetUser)
         parameters.put('tags', tags)
 
-        //Todo: Relationship exists?
-        if (networkService.readRelationship() == null) {
+        // If the relationship doesn't exists we create it
+        if (!networkService.readRelationship(parameters)) {
             networkService.createRelationship(parameters)
         }
         networkService.setProperty(parameters)
 
         return success = true
     }
+	
+	def addTag(User loggedInUser, User targetUser, String tags) {
+		addTag(loggedInUser, targetUser.email, tags)
+	}
 
     /**
-     * Remove a tag from relationship and delete, if non left
+     * Remove a tag from relationship and delete, if none left
      *
      * @param loggedInUser
      * @param targetUser
      * @param taglist
-     * @return sucess
+     * @return Boolean success
      */
-    def removeTag(User loggedInUser, User targetUser, String tag) {
+    def removeTag(User loggedInUser, User targetUser, String tags) {
+        Boolean success = false
+        Map parameters = [:]
 
-        // remove tag from relationship properties; if no property left, delete relationship
+        parameters.put('startNode', loggedInUser.email)
+        parameters.put('endNode', targetUser.email)
+        parameters.put('tags', tags)
 
-        def success = new Boolean()
-        def parameters = new HashMap()
-
-        parameters.put('startNode', loggedInUser)
-        parameters.put('endNode', targetUser)
-        parameters.put('tag', tag)
-
-        success = networkService.deleteProperty(parameters)
-
-
+        success = (networkService.deleteProperty(parameters))
         return success
     }
 
     /**
      * Calls the method evaluateBadgeRules from the badge service based on a list of tags provided
      *
-     * @param user
-     * @return badgeList
+     * @param Map tags
+     * @return List badgeList (List on Badge objects)
      */
-    def getBadges(TreeMap tags) {
-
+    def getBadges(Map tags) {
         def badgeList = ['javahero', 'godofhtml']
-
-        // retrieve list of badges, actually just a list of imagepaths
-
+		badgeList = badgeService.evaluateTags(tags)
         return badgeList
     }
+	
+	def getBadges(User user)
+	{
+		def userTags = getUserTags(user)
+		return getBadges(userTags)
+	}
+	
+	/**
+	* Get a list of hot tags
+	*
+	* @param 
+	* @return tagList
+	*/
+   def getHotTags() {
+	   def tagList = ['Java', 'London', 'Cloud', 'Equities', 'IT', 'Trading', 'Innovation', 'Leadership', 'Wine', 'Agile']
+	   return tagList
+   }
+	
+	def filterRelationShip (Map queryObject)
+	{
+		return networkService.queryRelationship(queryObject)
+	}
+	
+	def search
 }
