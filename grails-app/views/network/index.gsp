@@ -197,9 +197,9 @@
     <!-- BEGIN : RIGHT COLUMN -->
     <div class="grid_19" id="right">    
       <!-- BEGIN : Feed & Details blocks -->
-      <div class="grid_19 feed_and_details">
+      <div class="grid_19 feed separator">
       <!-- BEGIN : Feed block -->
-      <div class="grid_14 alpha feed">
+      <div class="grid_14 alpha">
           <!-- BEGIN : filter & my updates -->
           <div class="grid_10 alpha filter">
             <g:form name="filterByTag" method="post" action="index">
@@ -245,8 +245,7 @@
       <!-- END : Feed & Details blocks -->  
       <div class="grid_19 alpha omega close">
         &nbsp;
-      </div>
-      
+      </div>      
       <!-- BEGIN : Copyright -->
       <!-- > -->
       <div class="grid_19 alpha omega copyright">
