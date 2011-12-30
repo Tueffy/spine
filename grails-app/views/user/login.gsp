@@ -15,11 +15,11 @@
    		&nbsp;
   </div>
   <!-- BEGIN : CONTAINER -->
-  <div id="container" class="container_24" style="margin-top:80px">
-    <div class="grid_10 omega knowledge">
+  <div id="container" class="container_24">
+    <div class="grid_10 omega knowledge" style="padding-top:80px">
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
     </div>  
-    <div class="grid_14 alpha landing">
+    <div class="grid_14 alpha landing" style="padding-top:40px">
     	<h2 style="font-size:36pt;color:#000000">Login and do not loose time connecting...</h2>
         <g:if test="flash['message']">
 			${flash['message']}

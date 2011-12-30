@@ -16,27 +16,20 @@
 </head>
 
 <body>
-  <div id="header">
-    <div class="container_24">
-      <img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" />
-    
-     <ul class="links">
-      	<li><a href="#">About Spine</a></li>
-      	<li><a href="#">How it works</a></li>
-      	<li><a href="#">Terms and conditions</a></li>
-      	<li><a href="#">Disclaimer</a></li>
-        <li><a href="/spine/user/login">Log in</a></li>
-      </ul>
-    </div>
-  </div>
+   <div id="header">
+    	<g:render template="/inc/header"></g:render>
+  </div> 
   <div id="nav">
-    <div class="container_24"></div>
+   		&nbsp;
   </div>
   <!-- BEGIN : container -->
   <div id="container" class="container_24">
-  	<div class="grid_14 alpha landing">
-    	<h2>Connect with your co-workers</h2>
-        <p class="subtitle">Register yourself to join Spine!</p>
+  	<div class="grid_10 omega knowledge" style="padding-top:80px">
+    	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
+    </div>  
+  	<div class="grid_14 alpha landing" style="padding-top:40px">
+    	<h2 style="font-size:36pt;color:#000000">Register</h2>
+        <p class="subtitle">Join Spine now!</p>
         <g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
@@ -167,9 +160,10 @@
 		
 		</g:form>
     </div>
-    <div class="grid_10 omega knowledge"><img src="${resource(dir:'images/home',file:'knowledge.png')}" width="399" height="299" alt="Knowledge"></div>
+
   </div>
   <!-- END : container -->
   
 </body>
 </html>
+
