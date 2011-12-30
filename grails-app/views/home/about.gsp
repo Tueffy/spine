@@ -37,41 +37,44 @@
     </div>
   	<br/>
     <!-- START : LEFT MENU -->
-    <div class="grid_5">
-     
+    <div id="left" class="grid_5">     
        <ul class="menu">
         <li><a href="#">Who we are</a></li>
         <li><a href="#">What we do</a></li>
         <li><a href="#">Why Spine</a></li>
       </ul>   
-      
     </div>
     <!-- END : LEFT MENU -->    
     <!-- BEGIN : RIGHT COLUMN -->
-    <div class="grid_19" style="background-color:white">  
-    	<div class="grid_6" style="background-color:white;">  
-    	The Team
-    	</div>
-    	<div class="grid_12" style="background-color:white;">  
-    	Thomas M. Michelbach<br/>
-    	
-    	<br/><br/>
-    	Christian Tueffers <br/>
-    	
-    	<br/><br/>
-    	Jure Zakotnik <br/>
-    	
-    	<br/><br/>
-    	Ingmar Müller <br/>
-    	
-    	<br/><br/>
-    	Alexander Michelbach <br/>
-    	
-    	<br/><br/>
-    	Raphael Schmid <br/>
-    	</div>
-    </div>
-    <!-- END : Right COLUMN -->    
+    <div id="right" class="grid_19 feed">  
+    	<div class="grid_19 feed"> 
+	    	<div class="grid_6 content">  
+	    		The Team
+	    	</div>
+	    	<div class="grid_12 content">  
+		    	Thomas M. Michelbach is a German/Brazilian technology enthusiast.  Right now he is a senior technology architect with vast experience in system integration projects for the banking and public services industry. Since 2000, Thomas has worked for internet agencies around the world and finally settled on enterprise consulting at Accenture in the year 2006. Thomas is passionate about making the difference through daring ideas and emerging technologies. <br/>
+		    	
+		    	<br/><br/>
+		    	Christian Tüffers is a cloud computing guru in Germany. As such he has led the Accenture Cloud Computing capabilities for ASG (Austria / Switzerland / Germany) for the last two years. Since 1998 Christian is leading multiple international project engagements as responsible project manager and technical architect. He is a certified Master Technical Architect within Accenture.<br/>
+		    	
+		    	<br/><br/>
+		    	Dr. Jure Zakotnik is an agile development evangelist, who worked in a variety of innovation projects in Accenture. He is a known expert for integration solutions and agile management of geographically distributed teams with different skills and cultural backgrounds. Since 2002, he is involved in data mining algorithms, NoSQL technologies and architecture.<br/>
+		    	
+		    	<br/><br/>
+		    	Ingmar Müller <br/>
+		    	
+		    	<br/><br/>
+		    	Alexander Michelbach <br/>
+		    	
+		    	<br/><br/>
+		    	Raphael Schmid <br/>
+	    	</div>
+	    </div>
+	    <div class="grid_19 alpha omega close">
+        	&nbsp;
+   		</div>   
+    </div>    
+    <!-- END : RIGHT COLUMN -->    
   </div>
   <!-- END : CONTAINER -->  
 </body>
