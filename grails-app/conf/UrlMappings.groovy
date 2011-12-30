@@ -13,6 +13,7 @@ class UrlMappings {
 		"/disclaimer"(view:"/home/disclaimer")
 		"/terms"(view:"/home/terms")
 		"/user/forgot"(view:"/user/forgot")
+		"/user/activate"(view:"/user/activate")
 		"500"(view:'/error')
 	}
 }
