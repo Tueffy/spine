@@ -4,11 +4,14 @@ import grails.test.GrailsUnitTestCase
 
 class SpineServiceTests extends GrailsUnitTestCase {
 
-    def spineService
+    def SpineService spineService
     def u1 = new User()
     def u2 = new User()
     def u3 = new User()
     def u4 = new User()
+	
+	def ImportDataService importDataService
+	def checkDbResults
 
     protected void setUp() {
         super.setUp()
@@ -19,10 +22,15 @@ class SpineServiceTests extends GrailsUnitTestCase {
         u3.email = 'christian.tueffers@techbank.com'
         u4.email = 'fero.bacak@techbank.com'
 
+		checkDbResults = importDataService.checkDB()
     }
 
+    /**
+	* Checks the status of the test database. This checks: number of nodes, relationships, properties, indices
+	*/
     protected void tearDown() {
         super.tearDown()
+		assert checkDbResults == importDataService.checkDB()
     }
 
     // tests for loginUser
@@ -60,21 +68,21 @@ class SpineServiceTests extends GrailsUnitTestCase {
         assert success.city == 'Hamburg'
         assert success.email == 'markus.long@techbank.com'
         assert success.imagePath == 'markus.long@techbank.com.jpg'
-        assert success.tags.size() == 5
-        assert success.badges.size() == 1
+        assert success.tags.size() == 7
+        assert success.badges.size() == 2
     }
 
     // tests for getUserNetwork
 
     void testGetUserNetwork1() {
 
-        def result = spineService.getUserNetwork(u1, '', 0)
+        def result = spineService.getUserNetwork(u1, '', 0, 10)
         assert result.size() == 10
     }
 
     void testGetUserNetwork2() {
 
-        def result = spineService.getUserNetwork(u2, '', 0)
+        def result = spineService.getUserNetwork(u2, '', 0, 10)
         assert result.size() == 10
     }
 
@@ -92,20 +100,18 @@ class SpineServiceTests extends GrailsUnitTestCase {
     void testGetUserTags1() {
 
         def output = spineService.getUserTags(u1)
-        assert output == ['ITIL': 4, 'Help': 3, 'Operations': 5, 'Desk': 3, 'IT': 3]
+        assert output == ['Help':3, 'ITIL':5, 'Operations':6, 'Desk':3, 'IT':4, 'Java':2, 'SOA':1]
 
     }
 
     void testGetUserTags2() {
-
         def output = spineService.getUserTags(u2)
-        assert output == ['Spring': 4, 'Java': 8, 'IT': 9, 'Agile': 11, 'Cloud': 1, 'BPM': 1, 'RPG': 2, 'Operations': 2, 'Bielefeld': 5, 'Development': 1, 'Warhammer': 1, 'SSL': 1, 'Munich': 2, 'Jax': 2, '2011': 2, 'Wine': 1, 'Soccer': 1]
+        assert output ==  ['Agile':15, 'IT':11, 'Java':12, 'SOA':1, 'Spring':4, 'Cloud':1, 'BPM':1, 'RPG':2, 'Operations':2, 'Bielefeld':5, 'Development':1, 'Warhammer':1, 'SSL':1, 'Munich':2, 'Jax':2, '2011':2, 'Wine':1, 'Soccer':1]
     }
 
     void testGetUserTags3() {
-
         def output = spineService.getUserTags(u3)
-        assert output == [:]
+        assert output == ['Love':1, 'ProjectX':1]
     }
 
     void testGetUserTags4() {
@@ -113,12 +119,35 @@ class SpineServiceTests extends GrailsUnitTestCase {
         def output = spineService.getUserTags(u4)
         assert output == [Spring: 7, Java: 9, Development: 2, IT: 1, HTML: 3, SQL: 2, SSL: 1, zCloud: 1, zJava: 1]
     }
+	
+	void testRemoveTag()
+	{
+		spineService.addTag(u1, u4, 'Office')
+		def userTags = spineService.getUserTags(u4)
+		assert userTags['Office'] == 1
+		spineService.removeTag(u1, u4, 'Office')
+		userTags = spineService.getUserTags(u4)
+		assert (userTags['Office'] == null)
+	}
 
-/*	void testAddTag(){
-
-        def test = spineService.addTag(u1,'ingmar.mueller@techbank.com','zCloud zJava')
-        assert test == true
+	void testAddTag() {
+        assert true // If testRemoveTag is ok, testAddTag must be ok
     }
-*/
+	
+	void testGetBadges()
+	{
+		// Calling with a Map of tags
+		def userTags = spineService.getUserTags(u1)
+		def userBadges = spineService.getBadges(userTags)
+		assert userBadges.size() == 2
+		assert userBadges[0].name == "ITIL Champ"
+		assert userBadges[1].name == "The Operator"
+		
+		// Calling with a user object
+		userBadges = spineService.getBadges(u1)
+		assert userBadges.size() == 2
+		assert userBadges[0].name == "ITIL Champ"
+		assert userBadges[1].name == "The Operator"
+	}
 
 }
