@@ -13,6 +13,46 @@ class NetworkController {
 	def spineService
 	def smtpService
 
+	/**
+	 * 
+	 * 
+	 */
+	def index = {
+		
+		// Get the user
+		User user = new User()
+		if(params.user !=null)
+			user.email = params.user			
+		else
+			user.email = session.user
+		
+		user = spineService.getUser(user.email);
+		user.tags = [];
+		user.tags = spineService.getUserTags(user);
+				
+		// Get user network (get the first page)
+		def n = null
+		n  = spineService.getUserNetwork(user, null, 0, config.network.itemsPerPage)
+		for ( i in n ) {
+				def userFromList = new User()
+				userFromList.email = i.email
+				def tags = spineService.getUserTags(userFromList)
+				i.tags = tags
+		}
+		
+		//Get stastistics for tags and badges
+		def badges = spineService.getBadges(user);
+		def hotTags = spineService.getHotTags();
+		
+		//Top 5 hot tags
+		hotTags= [hotTags[1], hotTags[2], hotTags[3], hotTags[4], hotTags[5]]		
+				
+		[param : params.filter, user : user, neighbours : n, badges: badges, hotTags: hotTags]
+	}
+	
+	/**
+	 * 
+	 */
 	def ajaxAutoComplete = {
 		println "test.."
 		//def test = networkService.getProps()
@@ -33,49 +73,12 @@ class NetworkController {
 		choices = choices + '</ul>'
 		render choices
 	}
-			
 	
-	
-	def index = {
-		// Get the user
-		User user = new User()
-		if(params.user !=null)
-			user.email = params.user			
-		else
-			user.email = session.user
-		
-		user = spineService.getUser(user.email)
-			
-		// Get user network (get the first page)
-		def n = null
-		n  = spineService.getUserNetwork(user, null, 0, config.network.itemsPerPage)
-		for ( i in n ) {
-				def userFromList = new User()
-				userFromList.email = i.email
-				def tags = spineService.getUserTags(userFromList)
-				i.tags = tags
-				println i
-		}
-		
-		
-		//println params.user
-		/*
-		def neighbourParameters = ['userCenter' : session.user, 'filter' : params.filter]
-		def n  = spineService.getNeighbours(neighbourParameters)
-		
-		def allusers = []
-		n.each {
-			def neighbour = spineService.getPropertiesByEmail(it.key)
-			neighbour["distance"] = it.value
-			allusers.add(neighbour)
-		}
-		*/
-		//println allusers
-		[param : params.filter, user : user, neighbours : n]
-		//[param : params.filter, user : session.user]
-	}
-	
+	/**
+	 * 
+	 */
 	def ajaxPage = {
+		
 		// Get the user
 		User user = new User()
 		if(params.user !=null)
@@ -88,16 +91,26 @@ class NetworkController {
 		int offset = params.page.toInteger() - 1
 		offset *= config.network.itemsPerPage
 		def n  = spineService.getUserNetwork(user, null, offset, config.network.itemsPerPage)
+		
 		render( template: "page", model: [neighbours: n]);
+		
 	}
 	
+	/**
+	 * 
+	 */
 	def linkProperties = {
+		
 		def allProperties = spineService.getProperties('*')
 		[param : allProperties, user : session.user]
 	}
 	
+	/**
+	 * 
+	 */
 	def connectPeople = {
-		println "Connect: " + params
+		
+		//println "Connect: " + params
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
 			def result = spineService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
 			[param : 'Successfully connected', user : session.user]
@@ -107,20 +120,33 @@ class NetworkController {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	def filterGraph = {
+		
 		//println params.filterProperty
 		redirect(controller:'network', action:'index', params : ['filter':params.filterProperty])
 	} 
 	
-	def graphJSON = { //callback used by visualisation
+	/**
+	 * Callback used by visualisation
+	 * 
+	 */
+	def graphJSON = {
+				
 		//TODO Jure, merge filter and properties
-		println "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
+		//println "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
 		def edges = spineService.getUserEdges(params.userID.toString(), params.filter.toString().tokenize(','), 2)
 		render (text:spineService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
 	}
 	
+	/**
+	 * 
+	 */
 	def graphEdgesJSON = {
-		println params.source + params.target
+		
+		//println params.source + params.target
 		
 		def sourceNode = spineService.findNodeByName(params.source)
 		def targetNode = spineService.findNodeByName(params.target)
@@ -133,7 +159,11 @@ class NetworkController {
 		
 	}
 	
+	/**
+	 * 
+	 */
 	def importGraph = {
+		
 		def String fileContent
 		if (params.edgesFile != null) {
 			println "Loading Edges file now.."
@@ -150,6 +180,7 @@ class NetworkController {
 
 	// need to be shifted to the user service
 	def checkUser() {
+		
 		if(!session.user) {
 			// i.e. user not logged in
 			redirect(controller:'user',action:'login')
@@ -165,19 +196,20 @@ class NetworkController {
 	def getUser  = {
 		
 		def user = new User()
-		user.email = params.id
+		//user.email = params.id
+		user = spineService.getUser(params.id);
 	
 		//@TODO: Optimize with direct call to getUser
 		def n = null
-		n  = spineService.getUserNetwork(user, null, 0, 20)
+		n  = spineService.getUserNetwork(user, null, 0, 30)		
 		
+		println user
 		
 		for ( i in n ) {
 				def email1 = params.id;
 				def email2 = i.email;
 				if(email1.equalsIgnoreCase(email2)){					
 					user = i
-					println "TEST"
 					break
 				}
 		}		
@@ -193,12 +225,9 @@ class NetworkController {
 	def getTags = {
 		
 		def user = new User()
-		user.email = params.id		
-		
-		def tags = spineService.getUserTags(user)
-		
-		println tags
-		
+		user.email = params.id				
+		def tags = spineService.getUserTags(user)		
+				
 		render tags as JSON
 	}	
 	
@@ -208,13 +237,11 @@ class NetworkController {
 	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
 	 */
 	def removeTag = {
+		
 		def user = new User()
-		user.email = params.user
-		
-		//println params.user
-		//println params.tag
-		
+		user.email = params.user		
 		def tags = spineService.removeTag(session.user, user, params.tag)
+		
 		render user as JSON
 	}
 	
@@ -224,8 +251,10 @@ class NetworkController {
 	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
 	 */
 	def setTag = {
+		
 		def user = new User()
 		user.email ="test@test.com"
+		
 		render user as JSON
 	}
 	
@@ -237,8 +266,7 @@ class NetworkController {
 	def addTag = {
 		
 		def user = new User()
-		println params.e
-		
+		println params.e		
 		//spineService.addTag(session.user, params.id, params.e)
 		
 		render user as JSON
@@ -246,7 +274,7 @@ class NetworkController {
 
 	
 	/**
-	*
+	* TODO: Check if needed. Right now feature is impleted in the index method in this controller
 	*
 	* @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
 	*/
@@ -265,11 +293,8 @@ class NetworkController {
    */
   def inviteNewUser = {
 	  
-	  smtpService.sendUserInvitationMail("t.michelbach@gmail.com", "t.michelbach@gmail.com")
-	  
+	  smtpService.sendUserInvitationMail("t.michelbach@gmail.com", "t.michelbach@gmail.com")	  
 	  def status = [success : "true"]
-	  
-	  println status
 	  
 	  render status as JSON
   }

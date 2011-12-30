@@ -3,16 +3,19 @@ package spine
 import java.io.File;
 
 import org.codehaus.groovy.grails.web.context.ServletContextHolder;
-
 import com.sun.net.httpserver.Authenticator.Success;
-
 import grails.converters.JSON
 import groovy.text.SimpleTemplateEngine
 import pl.burningice.plugins.image.BurningImageService
 import spine.FileService
 import spine.SmtpService
 
-
+/**
+ * User Controller
+ * 
+ * @author Thomas M. Michelbach, Jure Zakotnik, Christian Tueffers, Ingmar Müller, Paul-Julien Leward
+ *
+ */
 class UserController {
 
 	SpineService spineService
@@ -28,6 +31,9 @@ class UserController {
 	}
 
 	
+	/**
+	 * 
+	 */
 	def forgot = {
 		redirect (controller : 'user' , action : 'forgot')
 	}
@@ -39,10 +45,30 @@ class UserController {
 		//to do: delete email via session, but to differently
 		[tmp_email : session.email]
 	}
-
-
+	
 	/**
-	 * login user and create the user object for the logged in user
+	* Activate user and forward him to the login page
+	*/
+    def activate = {		
+		//println params.id
+		//TODO: Add method to activate user		
+		//spineService.activateUser(params.id);
+		flash['message'] = "User activated"
+		redirect(controller:'user', action:'login')	   
+    }
+
+	
+	/**
+	* Select user in the session for profile view
+	*/
+	def profile = {		   
+		def user = session.user
+		println session
+		return [ user: session.user ]
+	}
+   
+	/**
+	 * Login user and create the user object for the logged in user
 	 */
 	def doLogin = {
 		
@@ -61,27 +87,12 @@ class UserController {
 			flash['message'] = "Invalid user/password combination"
 			redirect(controller:'user',action:'login')
 		}
+		
 	}
 	
-	/**
-	* Send email to user for password recovery
-	*/
-   def doPasswordRecovery = {
-	   
-	   // create map with parameters
-	   def userparams = [
-		   'email' : params.email
-	   ]
-	   
-	  smtpService.sendPasswordRecoveryMail("t.michelbach@gmail.com","t.michelbach@gmail.com");
-	  
-	  flash['message'] = "Password recovery procedure was sent to your email address!"
-	  redirect(controller:'user',action:'login')
-   }
-
 	
 	/**
-	 * register user calls spine service to create a user without any tag yet
+	 * Register user calls spine service to create a user without any tag yet
 	 */
 	def doRegister = {	
 		
@@ -105,10 +116,8 @@ class UserController {
 		
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {
-			flash['message'] = "New user has been created"
-			
-			smtpService.sendRegistrationEmail("t.michelbach@gmail.com","t.michelbach@gmail.com")
-			
+			flash['message'] = "New user has been created"			
+			smtpService.sendAccountActivationMail("t.michelbach@gmail.com","t.michelbach@gmail.com")			
 			redirect(controller:'user', action:'login')
 		}
 		else {
@@ -117,18 +126,39 @@ class UserController {
 			redirect(controller:'user', action:'register')
 		}
 	}
+	
+	
+   
+   /**
+   * Send email to user for password recovery
+   */
+   def doPasswordRecovery = {
+	  
+	  // create map with parameters
+	  def userparams = [
+		  'email' : params.email
+	  ]
+	  
+	  smtpService.sendPasswordRecoveryMail("t.michelbach@gmail.com","t.michelbach@gmail.com");
+	 
+	  flash['message'] = "Password recovery procedure was sent to your email address!"
+	  redirect(controller:'user',action:'login')
+    }
 
 	
 	/**
-	 * logout deletes the session object and redirects to the login page
+	 * Logout deletes the session object and redirects to the login page
 	 */
 	def doLogout = 	{
 		session.user = null
 		redirect(controller:'user', action:'login')
 	}
 	
-	private Boolean cropUserPicture()
-	{
+	/**
+	 * 
+	 * @return
+	 */
+	private Boolean cropUserPicture(){
 		if(params.email == null) params.email = session.user.email
 		int minHeightWidhth = 50
 		if(params.crop_w.toInteger() < minHeightWidhth || params.crop_h.toInteger() < minHeightWidhth)
@@ -170,17 +200,11 @@ class UserController {
 		return fileMoved
 	}
 	
-	def profile = {
-		
 	
-		
-		def user = session.user
-		
-		println session
-		
-		return [ user: session.user ]
-	}
 	
+	/**
+	 * Update user profile
+	 */
 	def updateProfile = {
 		// Get the current user
 		User user = session.user
@@ -198,8 +222,7 @@ class UserController {
 		
 		// If an image has been sent, apply cropping
 		println "picture = ${params.picture}"
-		if(params.picture != "")
-		{
+		if(params.picture != ""){
 			cropUserPicture()
 			userparams.imagePath = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}
@@ -207,8 +230,7 @@ class UserController {
 		Boolean success = spineService.updateUserProfile(user, userparams)
 		[ user: userparams ]
 		
-		if(success)
-		{
+		if(success){
 			// Reload the user in the session
 			session.user = spineService.getUser(user.email) 
 			flash.message = "Profile updated ! ";
@@ -217,7 +239,6 @@ class UserController {
 		else
 			render(view:"profile")
 	}
-	
 	
 	
 }
