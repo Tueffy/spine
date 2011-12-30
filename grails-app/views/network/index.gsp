@@ -28,7 +28,7 @@
 				   		}
 				  });
 								  
-				  
+				  /*				  
 				  new Ajax.Request('/spine/network/getUserStatistics/${user.email}', {
     				asynchronous:true,
     				evalScripts:true,
@@ -41,8 +41,8 @@
 				   		}			    		  
 				   		
 					}
-    			});		
-				
+				  });		
+				*/
 			}
 			
 			var firstUser = null;
@@ -152,11 +152,9 @@
     <div id="hot_tags" class="container_24">    
       <ul>
         <li><img src="/spine/images/home/hot_tags.png" width="75" height="23" alt="Hot Tags" ></li>
-        <li class="hot_tags" id="hot_tags_soap"><a href="#">#soap</a></li>
-        <li><a href="#">#cloud</a></li>
-        <li><a href="#">#html</a></li>
-        <li><a href="#">#xhtml</a></li>
-        <li><a href="#">#java</a></li>
+        <g:each in="${hotTags}" var="t" >    	
+	        <li class="hot_tags" id="hot_tags_soap"><a href="#">#${t}</a></li>
+	    </g:each>
       </ul>
       <script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
     </div>
@@ -183,8 +181,8 @@
         </ul>
       </div>
       <ul class="menu">
-        <li><a href="#"><span id="badgesNumber"></span> Badges</a></li>
-        <li><a href="#"><span id="tagsNumber"></span> Tags</a></li>
+        <li><a href="#"><span id="badgesNumber">${user.badges.size()}</span> Badges</a></li> 
+        <li><a href="#"><span id="tagsNumber">${user.tags.size()}</span> Tags</a></li>
       </ul>   
       <br/>   
       <p>
