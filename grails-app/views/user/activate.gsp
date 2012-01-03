@@ -1,19 +1,18 @@
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Spine Landing</title>
-  <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+  <g:render template="/common/inc/html-head"></g:render>
 </head>
 <body>
+  <!-- BEGIN : HEADER -->
   <div id="header">
-    	<g:render template="/inc/header"></g:render>
+  	 <g:render template="/common/inc/header"></g:render>
   </div>
+  <!-- END : HEADER -->
+  <!-- BEGIN : NAV -->
   <div id="nav">
-   		&nbsp;
-  </div>
+    &nbsp;
+  </div>  
+  <!-- END : NAV -->
   <!-- BEGIN : CONTAINER -->
   <div id="container" class="container_24" style="margin-top:80px">
     <div class="grid_10 omega knowledge">

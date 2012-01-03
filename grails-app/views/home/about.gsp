@@ -1,25 +1,11 @@
 <html>
 <head>
-  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  	<title>My Spine</title>
-  	<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">  
-  	<g:javascript src="jquery/jquery-1.7.min.js" />
-  	<g:javascript>
-  		jQuery.noConflict();
-  	</g:javascript>
-  	<g:javascript src="main.js" />
-  	<g:javascript library='scriptaculous' />
-  	<g:javascript src="app/scroll.js" />
-  	<g:javascript></g:javascript>
+  <g:render template="/common/inc/html-head"></g:render>
 </head>
 <body>
   <!-- BEGIN : HEADER -->
   <div id="header">
-  	 <g:render template="/inc/header"></g:render>
+  	 <g:render template="/common/inc/header"></g:render>
   </div>
   <!-- END : HEADER -->
   <!-- BEGIN : NAV -->
@@ -61,15 +47,15 @@
 		    	Christian Tüffers is a cloud computing guru in Germany. As such he has led the Accenture Cloud Computing capabilities for ASG (Austria / Switzerland / Germany) for the last two years. Since 1998 Christian is leading multiple international project engagements as responsible project manager and technical architect. He is a certified Master Technical Architect within Accenture.<br/>
 		    	
 		    	<br/><br/><br/><br/><br/><br/>
-		    	Dr. Jure Zakotnik is an agile development evangelist, who worked in a variety of innovation projects in Accenture. He is a known expert for integration solutions and agile management of geographically distributed teams with different skills and cultural backgrounds. Since 2002, he is involved in data mining algorithms, NoSQL technologies and architecture.<br/>
+		    	Jure Zakotnik is an agile development evangelist, who worked in a variety of innovation projects in Accenture. He is a known expert for integration solutions and agile management of geographically distributed teams with different skills and cultural backgrounds. Since 2002, he is involved in data mining algorithms, NoSQL technologies and architecture.<br/>
 		    	
 		    	<br/><br/><br/><br/><br/><br/><br/>
 		    	Ingmar Müller <br/>
 		    	
 		    	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-		    	Alexander Michelbach <br/>
+		    	Alexander B. Michelbach is a German/Brazilian creative minded guy and digital artist. At the moment he lives in Switzerland, working as a freelancer for different clients around the globe. Started in 1999 as Flash instructor and since then worked for big clients in Brazil, USA, Germany and Switzerland, creating  creative solutions from websites to crossmedia campaigns. <br/>
 		    	
-		    	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>s
+		    	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 		    	Raphael Schmid <br/>
 	    	</div>
 	    </div>

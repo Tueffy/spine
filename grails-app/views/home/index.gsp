@@ -1,15 +1,10 @@
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Spine Landing</title>
-  <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+  <g:render template="/common/inc/html-head"></g:render>
 </head>
 <body>
   <div id="header">
-    	<g:render template="/inc/header"></g:render>
+    	<g:render template="/common/inc/header"></g:render>
   </div>
   <div id="nav">
    		&nbsp;

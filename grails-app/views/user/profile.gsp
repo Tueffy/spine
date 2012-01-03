@@ -18,13 +18,17 @@
 	<cropper:head />
 </head>
 <body>
-	<div id="header">
-    	<g:render template="/inc/header"></g:render>
-    </div>
-	<div id="nav">
-   		&nbsp;
-    </div>
-	<!-- BEGIN : container -->
+	<!-- BEGIN : HEADER -->
+  	<div id="header">
+  	 	<g:render template="/common/inc/header"></g:render>
+  	</div>
+  	<!-- END : HEADER -->
+  	<!-- BEGIN : NAV -->
+  	<div id="nav">
+    	&nbsp;
+  	</div>  
+  	<!-- END : NAV -->
+	<!-- BEGIN : CONTAINER -->
 	<div id="container" class="container_24">
 		<div class="landing">
 			<h2>My Profile</h2>

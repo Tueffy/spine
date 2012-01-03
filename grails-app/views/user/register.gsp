@@ -14,15 +14,18 @@
   <uploader:head />
   <cropper:head />
 </head>
-
 <body>
-   <div id="header">
-    	<g:render template="/inc/header"></g:render>
-  </div> 
-  <div id="nav">
-   		&nbsp;
+  <!-- BEGIN : HEADER -->
+  <div id="header">
+  	 <g:render template="/common/inc/header"></g:render>
   </div>
-  <!-- BEGIN : container -->
+  <!-- END : HEADER -->
+  <!-- BEGIN : NAV -->
+  <div id="nav">
+    &nbsp;
+  </div>  
+  <!-- END : NAV -->
+  <!-- BEGIN : CONTAINER -->
   <div id="container" class="container_24">
   	<div class="grid_10 omega knowledge" style="padding-top:80px">
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
@@ -33,9 +36,7 @@
         <g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
-		<g:form action="doRegister" method="post" name="registration_form">
-		
-		
+		<g:form action="doRegister" method="post" name="registration_form">		
 			<!--  BEGIN : First Slide -->
 			<div class="form_slide dialog current">
 				<table class="userForm">
@@ -94,13 +95,9 @@
 				</div>
 			</div>
 			<!--  END : First slide -->
-			
-			
 			<!--  BEGIN : Second slide -->
 			<div class="form_slide dialog">
-				
 				<h3>Upload a picture of you  (Optional)</h3>
-				
 				<div class="upload_box">
 					<uploader:uploader id="picture" multiple="false">
 						<uploader:onComplete>
@@ -122,8 +119,7 @@
 							);
 						</uploader:onComplete>
 					</uploader:uploader>
-				</div>
-				
+				</div>				
 				<div id="cropper" style="display: none;">
 <%--					<cropper:crop imageId="cropper-img" />	--%>
 					<img id="cropper-img" />
@@ -135,21 +131,17 @@
 					<input type="hidden" name="crop_w" id="crop_w" value="0" />
 					<input type="hidden" name="picture" id="picture_field" />
 				</div>
-				
 				<br />
 				<div class="buttons">
 					<span class="formButton"><input type="button" value="Previous" class="prev" /></span>
 					<span class="formButton"><input type="button" value="Next" class="next" /></span>
 				</div>
 			</div>
-			<!--  END : Second slide -->
-			
+			<!-- END : Second slide -->		
 			<!-- BEGIN : Third slide -->
 			<div class="form_slide dialog">
 				<p>Tell us more about yourself (Optional) </p>
-				
 				<textarea name="freeText">...</textarea>
-				
 				<div class="buttons">
 					<br />
 					<span class="formButton"><input type="button" value="Previous" class="prev" /></span>
@@ -157,13 +149,10 @@
 				</div>
 			</div>
 			<!--  END : Third slide -->
-		
 		</g:form>
     </div>
-
   </div>
   <!-- END : container -->
-  
 </body>
 </html>
 

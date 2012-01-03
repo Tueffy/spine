@@ -8,12 +8,16 @@
   <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+  <!-- BEGIN : HEADER -->
   <div id="header">
-    	<g:render template="/inc/header"></g:render>
+  	 <g:render template="/common/inc/header"></g:render>
   </div>
+  <!-- END : HEADER -->
+  <!-- BEGIN : NAV -->
   <div id="nav">
-   		&nbsp;
-  </div>
+    &nbsp;
+  </div>  
+  <!-- END : NAV -->
   <!-- BEGIN : CONTAINER -->
   <div id="container" class="container_24">
     <div class="grid_10 omega knowledge" style="padding-top:80px">
