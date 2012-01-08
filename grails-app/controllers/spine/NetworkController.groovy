@@ -1,5 +1,7 @@
 package spine
 
+import java.lang.ref.ReferenceQueue.Null;
+
 import grails.converters.JSON
 import org.codehaus.groovy.grails.commons.*
 import spine.SmtpService 
@@ -18,7 +20,7 @@ class NetworkController {
 	 * 
 	 */
 	def index = {
-		
+				
 		// Get the user
 		User user = new User()
 		if(params.user !=null)
@@ -29,10 +31,15 @@ class NetworkController {
 		user = spineService.getUser(user.email);
 		user.tags = [];
 		user.tags = spineService.getUserTags(user);
-				
+		
+		
+		def filter = params.filter
+		
+		
+		
 		// Get user network (get the first page)
 		def n = null
-		n  = spineService.getUserNetwork(user, null, 0, config.network.itemsPerPage)
+		n  = spineService.getUserNetwork(user, filter , 0, config.network.itemsPerPage)
 		for ( i in n ) {
 				def userFromList = new User()
 				userFromList.email = i.email
