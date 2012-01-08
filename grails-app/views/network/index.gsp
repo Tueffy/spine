@@ -209,19 +209,17 @@
                 <li>Filter by</li>
                 <li><a href="#">Expertise</a></li>
                 <li><a href="#">Distances</a></li>
-            </ul>
+              </ul>
             </g:form>            
           </div>
           <div class="grid_4 omega my_updates" id="test1">
             <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
             <p><a href="#">My Spine Updates</a></p>
           </div>
-           <!-- END : filter & my updates -->          
-         
+          <!-- END : filter & my updates -->                   
           <!--  BEGIN Flux -->
-          <g:render template="page"></g:render>
+          <g:render template="inc/page"></g:render>
           <!-- END Flux -->
-          
         </div>
         <!-- END : Feed block -->
         
@@ -235,8 +233,7 @@
             <li class="company" id="selectedCompany"></li>
             <li class="city" id="selectedCity"></li>
           </ul>          
-          <ul class="tags" id="selectedTags">
-           
+          <ul class="tags" id="selectedTags">           
           </ul>          
           <p class="all_tags"><a href="#">All tags</a></p>
         </div> 
