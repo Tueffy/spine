@@ -78,8 +78,7 @@ class SpineService {
             // get the neighbours in batches of 20
             queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
 
-        }
-        else {
+        } else {
 
             // first step is to tokenize the filter string
             def tokens = " ,;"
@@ -90,7 +89,7 @@ class SpineService {
             println "search filter: " + wordList
 
             // now we need to wait until the network service queryNode is ready, as this is not the case yet, use the same service as in the if
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
+            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit, wordList)
         }
 
         // loop through the list and instantiate the user objects incl. tags
