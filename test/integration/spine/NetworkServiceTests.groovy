@@ -86,6 +86,41 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		}
 		assert resultList.containsAll(targetResultList)
 	}
+	
+	void testQueryForNeighbourNodes6()
+	{
+		def tagsToSearchFor = ['Agile', 'IT', 'Operations']
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def targetResultList = [
+			'jure.zakotnik@techbank.com', 
+			'markus.long@techbank.com', 
+			'michaela.pfeffer@techbank.com', 
+			'alice.weisse@techbank.com', 
+			'bernhard.mainburger@techbank.com', 
+			'melanie.murrende@techbank.com', 
+			'jim.stooge@techbank.com', 
+			'peter.boll@techbank.com', 
+			'fero.bacak@techbank.com', 
+			'steve.hill@techbank.com', 
+			'jeanluc.greedy@techbank.com']
+		def resultList = []
+		result.each {
+			resultList.add(it.email)
+		}
+		assert resultList.containsAll(targetResultList)
+	}
+	
+	void testQueryForNeighbourNodes7()
+	{
+		def tagsToSearchFor = ['Agile']
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def targetResultList = ['jure.zakotnik@techbank.com']
+		def resultList = []
+		result.each {
+			resultList.add(it.email)
+		}
+		assert resultList.containsAll(targetResultList)
+	}
 
 	void testGetNodeURIFromEmail() {
         assert networkService.getNodeURIFromEmail('jure.zakotnik@techbank.com') == 'http://localhost:7474/db/data/node/4'
@@ -115,6 +150,15 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
 	void testCreateAndDeleteRelationship() {
 		def props = ['startNode': 'christian.tueffers@techbank.com', 'endNode': 'ingmar.mueller@techbank.com']
+		def output = networkService.createRelationship(props)
+		println 'Create relationship output: ' + output
+		assert output
+		networkService.deleteRelationship(props)
+		assert networkService.readRelationship(props) == []
+	}
+	
+	void testCreateAndDeleteRelationship2() {
+		def props = ['startNode': 'christian.tueffers@techbank.com', 'endNode': 'ingmar.mueller@techbank.com', 'tags': ['Prototype']]
 		def output = networkService.createRelationship(props)
 		println 'Create relationship output: ' + output
 		assert output
@@ -157,7 +201,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
         def queryObject = [email: 'm*']
         def data = networkService.queryNode(queryObject)
         println data
-        assert data == ['monika.hoppe@techbank.com', 
+		assert data.containsAll(['monika.hoppe@techbank.com', 
 			'matthias.miller@techbank.com', 
 			'markus.long@techbank.com', 
 			'michael.arlt@techbank.com', 
@@ -173,7 +217,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 			'mick.jugger@techbank.com', 
 			'manuel.neiner@techbank.com', 
 			'matthias.ossler@techbank.com', 
-			'mario.drache@eurobank.int']
+			'mario.drache@eurobank.int'])
     }
 
     void testQueryNodeWithSingleParameter2() {

@@ -149,5 +149,26 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		assert userBadges[0].name == "ITIL Champ"
 		assert userBadges[1].name == "The Operator"
 	}
+	
+	void testAutocompleteTags()
+	{
+		def results = spineService.autocompleteTags('Clou')
+		def expectedRestults = ['Cloud' : 6, 'zCloud' : 1]
+		assert results.sort() == expectedRestults.sort()
+	}
+	
+	void testActivateUser()
+	{
+		def user = spineService.getUser(u1.email)
+		spineService.updateUserProfile(user, ['status' : 'inactive'])
+		spineService.activateUser(user)
+	} 
+	
+	void testGetHotTags()
+	{
+		def hotTags = spineService.getHotTags()
+		def tagsToTest = ['IT', 'Java', 'Agile', 'Operations', 'Front', 'Office', 'ProjectX', 'Trading', 'Spring', 'Soccer']
+		assert hotTags == tagsToTest
+	}
 
 }

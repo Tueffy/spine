@@ -54,24 +54,8 @@ class NetworkController {
 	 * 
 	 */
 	def ajaxAutoComplete = {
-		println "test.."
-		//def test = networkService.getProps()
-		//println "New props function: " + test
-		println "auto complete executed with: " + params.filter
-		def inputText = params.filter
-		def allProperties = spineService.getProperties('*')
-		//lookup properties with filter
-		def choices = '<ul>' //ajax list
-		allProperties.each {
-			def choice = it.substring(0,Math.min(inputText.length(),it.length()))
-			println 'Choice is: ' + choice
-			if (choice.compareToIgnoreCase(inputText) == 0) {
-				//println it
-				choices = choices + '<li>' + it + '</li>'
-			}
-		}
-		choices = choices + '</ul>'
-		render choices
+		def results = spineService.autocompleteTags(params.filter)
+		[ tags: results ]
 	}
 	
 	/**

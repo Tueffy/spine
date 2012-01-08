@@ -146,47 +146,102 @@ class NetworkService {
      * @param limit max of how many neighbours are searched
      * @return The found nodes data. If no neighbours are found, returns null.
      */
-    def queryForNeighbourNodes(String email, int offset, int limit) {
-
-        def json = graphCommunicatorService.neoPost('/db/data/ext/CypherPlugin/graphdb/execute_query', '{"query": "start n=node:names(email={SP_user}) match p=n-[:connect*1..5]->(x) return distinct x, min(length(p)) order by min(length(p)) skip ' + offset + ' limit ' + limit + '","params": {"SP_user":"' + email + '"}}')
-        def resultNodes = []
-        def neighbour = [:]
-        json.data.each {
-
-            neighbour = it[0].data
-            neighbour['distance'] = it[1]
-            println "Elem: " + neighbour
-
-            resultNodes.add(neighbour)
-        }
-        return resultNodes
-    }
-	
-	def queryForNeighbourNodes(String email, int offset, int limit, List filter)
+	def queryForNeighbourNodes(String email, int offset, int limit, List filter = [])
 	{
-		// At the moment we search for only one tag
-		// TODO : Add multi tag support
-		// TODO : Merge duplicated code about the queryForNeighbourNodes methodes
+		// TODO : Whant there is not enough result in the user network in case of search, complete with results from the whole network
+		// TODO : The function is becomming too complex, must be splitted into more atomic functions
+		// TODO : Refectoring - refactor the way search work to make it less complicated and more maintenable and to get more performances
+		// TODO : Pagination associated with search seems not to be working (need to propagate the search query)
 		
+		// Vars initialization
+		def resultNodes = []
+		def neighbour = [:]
+		
+		/*-------------------------------------------------------------
+		 * 
+		 * 	FIRST QUERY : Get results from the User Network
+		 * 
+		 * ----------------------------------------------------------- */
 		// Build the query
 		def query = "start n=node:names(email={SP_user}) match p=n-[:connect*1..5]->(x) "
-		query += "where all(r in rels(p) WHERE r."+ filter[0] +") "
-		query += "return distinct x, min(length(p)) "
+		if(!filter.isEmpty()) {
+			query += "where all(r in rels(p) WHERE "
+			filter.each {
+				query += "r.`" + it + "` OR "
+			}
+			query += "1=0) "
+		}
+		query += "return distinct x, min(length(p)), count(*) AS nbResults "
 		query += "order by min(length(p)) skip " + offset + " limit " + limit + " "
+		
+		println "\n\n\n"
+		println query
+		println "\n\n\n"
 		
 		// Execute the query
 		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
 		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
 		
+		// How many results ? 
+		int firstQueryNbResults = 0
+		if(json.data) firstQueryNbResults = json.data[0][2]
+		
 		// Get results
-		def resultNodes = []
-		def neighbour = [:]
 		json.data.each {
 			neighbour = it[0].data
 			neighbour['distance'] = it[1]
 			println "Elem: " + neighbour
 			resultNodes.add(neighbour)
 		}
+		
+		
+		
+		/*-------------------------------------------------------------
+		*
+		* 	SECOND QUERY : Get results from the whole Spine Network 
+		*
+		* ----------------------------------------------------------- */
+		// We only execute the second query if there no more (or not enough) 
+		// result to get from the first one.  
+		if(resultNodes.size() < limit && !filter.isEmpty())
+		{
+			int newOffset = offset / limit + 1
+			int newLimit = limit - resultNodes.size()
+			
+			// TODO : Only support one tag search, add multi tag support
+			// Check here : https://groups.google.com/forum/?hl=fr#!topic/neo4j/dWOsK6meGHs 
+			
+			String luceneQuery = ''
+			for (i in 0..(filter.size() - 1)) 
+			{
+				luceneQuery += filter[i] + ':"tag" '
+				if(i < filter.size() - 1) luceneQuery += 'OR '
+			} // TODO : Use this for multi tag support (lucene query)
+			
+			query = 'start '
+			query += 'r=relationship:edges('+ filter[0] +'="tag"), n=node:names(email={SP_USER})  '
+			query += 'a-[r:connect]->b, a-[r2:connect*1..5]->c '
+			query += 'where r2 is null '
+			query += 'return distinct b '
+			
+			println "\n\n\n"
+			println query
+			println "\n\n\n"
+			
+			// Execute the query
+			cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
+			json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
+			
+			// Get results
+			json.data.each {
+				neighbour = it[0].data
+				neighbour['distance'] = it[1]
+				println "Elem: " + neighbour
+				resultNodes.add(neighbour)
+			}
+		}
+		
+		
 		return resultNodes
 	}
 
@@ -307,15 +362,20 @@ class NetworkService {
      * @return data of the created relationship
      */
     def createRelationship(Map props) {
-        //TODO: check whether Rel exists. No: create Relationship.
         def from = getNodeURIFromEmail(props.startNode)
         def to = getNodeURIFromEmail(props.endNode)
-        def relationship = readRelationship(props)
+        def relationship = readRelationship(props)[0]
         println 'relationship to be created is:' + from + ' -> ' + to
+		
         def createdRelationship
-        if (relationship.size() == 0) {
-            createdRelationship = graphCommunicatorService.neoPost(from + '/relationships', ['to': to, 'type': 'connect']).self[0]
+        if (!relationship) {
+            createdRelationship = graphCommunicatorService.neoPost(from + '/relationships', ['to': to, 'type': 'connect']).self
+			// Apply tags to the newly created relationship 
+			if(props.tags) {
+				setProperty(['relationshipURI': createdRelationship, 'tags': props.tags])
+			}
         }
+		
         return createdRelationship
     }
 
@@ -341,40 +401,53 @@ class NetworkService {
     }
 
     /**
-     *
-     * @param props (relationship URI, tags)
+     * Add or reset properties to a relationship. 
+     * @param props (startNode, endNode, tags) or (relationshipURI, tags)
      * @return
      */
     def setProperty(Map props) {
         // tokenize tags and add to relationship if not yet exist for the later
-        def relationship = readRelationship(props)[0]
 		
-        def tokens = " ,;"
-        def tagList = []
-        def result = ''
-        tagList = props.tags.tokenize(tokens)
-        def allExistingTags = [:]
-        allExistingTags = graphCommunicatorService.neoGet(relationship + '/properties')
-        if (allExistingTags == null) { //no properties present
-            allExistingTags = [:]
-        }
-        tagList.each { allExistingTags[it] = 1 }
+		String relationship
+        if(props.relationshipURI) relationship = props.relationshipURI
+		else relationship = readRelationship(props)[0]
+		
+		// Update tag list
+		def allExistingTags = [:]
+		allExistingTags = graphCommunicatorService.neoGet(relationship + '/properties')
+		if (allExistingTags == null) allExistingTags = [:] // no property found
+		def tagList = []
+		
+		// We can deal with tags as String, Map, or List
+		if(props.tags instanceof String) 
+		{
+	        def tokens = " ,;"
+	        def result = ''
+	        tagList = props.tags.tokenize(tokens)
+		}
+		else if(props.tags instanceof Map) 
+		{
+			props.tags.each { key, value ->  tagList.add(key) }
+		}
+		else if (props.tags instanceof List) 
+		{
+			tagList = props.tags
+		}
+		else 
+		{
+			throw new Exception("tags type incompatible ! ")
+		}
+		
+		tagList.each { allExistingTags[it] = 1 }
+		
+		// Update in DB
         graphCommunicatorService.neoPut(relationship + '/properties', allExistingTags)
 		
         // add to index
-		List propsForIndexing = []
-		allExistingTags.each { propsForIndexing.add(it) }
-		result = setRelationshipIndex(relationship, propsForIndexing)
-//        def postBody
-//        def indexPath = '/db/data/index/relationship/edges/'
-//        allExistingTags.each {
-//            postBody = ['value': it.key, 'key': 'tag', 'uri': relationship]
-//            println 'Index put relationship: ' + postBody
-//            result = graphCommunicatorService.neoPost(indexPath, postBody)
-//        }
+		def result = setRelationshipIndex(relationship, allExistingTags)
         return result.data
     }
-
+	
     /**
      * Get properties for a list of relationships
      * @param relationships URIs (you can get these from readRelationship)
@@ -436,6 +509,7 @@ class NetworkService {
 	def setRelationshipIndex(String relationshipURI, Map newProps)
 	{
 		def indexPath = '/db/data/index/relationship/edges/'
+		println "relationshipURI" + relationshipURI
 		def relationshipID = getIdFromURI(relationshipURI)
 		def result = ''
 		
@@ -447,7 +521,7 @@ class NetworkService {
 		newProps.each {
 			key, value -> 
 			requestQuery = [ 'key' : key,
-			'value' : value,
+			'value' : 'tag',
 			'uri' : relationshipURI ]
 			result = graphCommunicatorService.neoPost(indexPath, requestQuery)
 		}
@@ -458,6 +532,17 @@ class NetworkService {
 	{
 		Map map = [:]
 		newProps.each { map[it] = 'tag' }
+		return setRelationshipIndex(relationshipURI, map)
+	}
+	
+	def setRelationshipIndex(String relationshipURI, String tags)
+	{
+		// Turn props.tag (String) into a proper List
+		def tagList = []
+		tagList = tags.tokenize(" ,;") // Use " ,;" to cut tags from each others
+		
+		Map map = [:]
+		tagList.each { map[it] = 'tag' }
 		return setRelationshipIndex(relationshipURI, map)
 	}
 	

@@ -1,5 +1,7 @@
 package spine
 
+import java.util.regex.*
+
 class SpineService {
 
     static transactional = false
@@ -253,6 +255,16 @@ class SpineService {
 
         return success
     }
+	
+	/**
+	 * Activate a user
+	 * @param User user
+	 * @return Boolean success
+	 */
+	def activateUser(User user)
+	{
+		return updateUserProfile(user, ['status' : 'active'])
+	}
 
     /**
      * Update node properties
@@ -298,12 +310,12 @@ class SpineService {
      * @param taglist = space , ; separated list
      * @return success
      */
-    def addTag(User loggedInUser, String targetUser, String tags) {
+    def addTag(String loggedInUser, String targetUser, String tags) {
 
         Boolean success = false
         HashMap parameters = [:]
 
-        parameters.put('startNode', loggedInUser.email)
+        parameters.put('startNode', loggedInUser)
         parameters.put('endNode', targetUser)
         parameters.put('tags', tags)
 
@@ -316,8 +328,15 @@ class SpineService {
         return success = true
     }
 	
+	/**
+	 * 
+	 * @param loggedInUser
+	 * @param targetUser
+	 * @param tags
+	 * @return
+	 */
 	def addTag(User loggedInUser, User targetUser, String tags) {
-		addTag(loggedInUser, targetUser.email, tags)
+		addTag(loggedInUser.email, targetUser.email, tags)
 	}
 
     /**
@@ -341,17 +360,22 @@ class SpineService {
     }
 
     /**
-     * Calls the method evaluateBadgeRules from the badge service based on a list of tags provided
+     * Get the badges based on a list of tags provided
      *
      * @param Map tags
-     * @return List badgeList (List on Badge objects)
+     * @return List badgeList (List of Badge objects)
      */
     def getBadges(Map tags) {
-        def badgeList = ['javahero', 'godofhtml']
+        def badgeList = []
 		badgeList = badgeService.evaluateTags(tags)
         return badgeList
     }
 	
+	/**
+	 * Get the badges based on a user object
+	 * @param User user
+	 * @return List List of Badge objects
+	 */
 	def getBadges(User user)
 	{
 		def userTags = getUserTags(user)
@@ -362,11 +386,38 @@ class SpineService {
 	* Get a list of hot tags
 	*
 	* @param 
-	* @return tagList
+	* @return List tagList
 	*/
    def getHotTags() {
-	   def tagList = ['Java', 'London', 'Cloud', 'Equities', 'IT', 'Trading', 'Innovation', 'Leadership', 'Wine', 'Agile']
+	   Map allTags = networkService.getAllProperties().sort { a,b -> b.value <=> a.value } // sort by value desc
+	   List tagList = []
+	   allTags.each {
+		   key, value -> 
+		   if(tagList.size() < 10) tagList.add(key)
+	   }
 	   return tagList
+   }
+   
+   /**
+    * 
+    * @param String query One tag to search for (No multitag autocompletion)
+    * @return Map Map of the matching tags : [tagName: number]
+    */
+   def autocompleteTags(String query)
+   {
+	   def allTheTags = networkService.getAllProperties()
+	   def correspondingTags = [:]
+	   Pattern pattern
+	   Matcher matcher
+	   
+	   // The idea is to go throw each tags and by applying a regexp determine the corresponding tags.
+	   allTheTags.each {
+		   tag, number -> 
+		   pattern = Pattern.compile("(.*)" + query + "(.*)")
+		   matcher = pattern.matcher(tag)
+		   if(matcher.find()) correspondingTags[tag] = number
+	  }
+	  return correspondingTags
    }
 	
 	def filterRelationShip (Map queryObject)
