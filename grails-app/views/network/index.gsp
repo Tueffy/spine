@@ -139,7 +139,7 @@
   <!-- BEGIN : HEADER -->
   <div id="header">
   	<div class="container_24">
-      <g:render template="/inc/header"></g:render>
+      <g:render template="/common/inc/header"></g:render>
       <p class="news">
           <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
           <span id="message">You've got 7 new tags and 1 new badge.</span>
@@ -251,12 +251,10 @@
       <div class="grid_19 alpha omega copyright">
         <div class="grid_5 omega">&copy; Spine 2011 - All rights reserved</div>
       </div>
-      <!-- END : Copyright -->
-      
+      <!-- END : Copyright -->      
     </div>
-    <!-- END : Right column -->
-    
+    <!-- END : RIGHT COLUMN -->    
   </div>
-  <!-- END : container -->  
+  <!-- END : CONTAINER -->  
 </body>
 </html>
