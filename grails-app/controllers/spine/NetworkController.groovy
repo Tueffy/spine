@@ -222,11 +222,17 @@ class NetworkController {
 	 */
 	def removeTag = {
 		
-		def user = new User()
-		user.email = params.user		
-		def tags = spineService.removeTag(session.user, user, params.tag)
+		def sessionUser = new User()
+		sessionUser = session.user
 		
-		render user as JSON
+		def selectedUser = new User()
+		selectedUser = spineService.getUser(params.user) 
+		
+		def tag = params.id
+		
+		def tags = spineService.removeTag(sessionUser, selectedUser, tag)
+		
+		render sessionUser as JSON
 	}
 	
 	/**
@@ -250,8 +256,11 @@ class NetworkController {
 	def addTag = {
 		
 		def user = new User()
-		println params.e		
-		//spineService.addTag(session.user, params.id, params.e)
+		//println "TAGS"
+		//println params.tag
+		user = session.user
+		
+		spineService.addTag(user.email, params.email, params.tag)
 		
 		render user as JSON
 	}
