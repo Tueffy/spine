@@ -31,13 +31,12 @@
              
              <div class="grid_7 alpha">
                <p class="quote">„Looking forward to new challenges„</p>
-               <ul class="tags">           		
-               		
+               <ul class="tags">               		
                		<g:each in="${n.tags}" var="t">    	        	  
 	                    <li>	                    
 		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${n.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${n.email}_${t.key}_minus');">${t.key}</a>
 		                    <span id="${n.email}_${t.key}_minus" style="{display: none;}">
-		                    	<g:remoteLink action="removeTag" id="1" update="[success:'message',failure:'error']">-</g:remoteLink>
+		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:n.email]">-</g:remoteLink>
 		                    </span>
 	                    </li>
                    	</g:each>
