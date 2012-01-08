@@ -45,7 +45,10 @@
                    <li>&nbsp;</li>
                    <li> 	                    	
                     <span class="plus">
-                    	<g:remoteLink action="setTag" id="1" update="[success:'message',failure:'error']">+</g:remoteLink>
+                    	<g:form action="addTag" controller="network">
+                    			<input name="email" type="hidden" value="${n.email}"/>
+						        <input name="tag" type="text" /> <g:submitToRemote  action="addTag" controller="network" value="+"/>
+						</g:form>
                     </span>
                  </li>
                </ul>
