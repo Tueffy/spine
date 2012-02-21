@@ -19,9 +19,9 @@ class HomeController {
 
 	def doSignup = {
 		session.email = params.email
-		println session.email
+		log.debug session.email
 		
-		redirect (controller : 'user', action : 'register')
+		redirect (controller : 'user', action : 'register', params:[ email: params.email])
 	}
 
 }

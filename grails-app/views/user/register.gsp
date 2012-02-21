@@ -1,32 +1,17 @@
 <%@page import="com.sun.xml.internal.bind.v2.TODO"%>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="layout" content="main">
   <title>Spine Landing</title>
-  <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-  <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
   <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="/spine/js/prototype/prototype.js"></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script type="text/javascript" src="/spine/js/prototype/event.simulate.js"></script>
-  <script type="text/javascript" src="/spine/js/prototype/scriptaculous.js"></script>
   <script type="text/javascript" src="/spine/js/app/landing.js"></script>
   <uploader:head />
   <cropper:head />
 </head>
+
 <body>
-  <!-- BEGIN : HEADER -->
-  <div id="header">
-  	 <g:render template="/common/inc/header"></g:render>
-  </div>
-  <!-- END : HEADER -->
-  <!-- BEGIN : NAV -->
-  <div id="nav">
-    &nbsp;
-  </div>  
-  <!-- END : NAV -->
-  <!-- BEGIN : CONTAINER -->
-  <div id="container" class="container_24">
   	<div class="grid_10 omega knowledge" style="padding-top:80px">
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
     </div>  
@@ -36,24 +21,28 @@
         <g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
-		<g:form action="doRegister" method="post" name="registration_form">		
+		
+		
+		<g:form action="doRegister" method="post" name="registration_form">
+		
+		
 			<!--  BEGIN : First Slide -->
 			<div class="form_slide dialog current">
 				<table class="userForm">
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'>
-							<label for='lastname'>Last Name:</label>
+							<label for='lastName'>Last Name:</label>
 						</td>
 						<td valign='top' style='text-align: left;' width='80%'>
-							<input id="lastname" type='text' name='lastname' value='${user?.lastname}' />
+							<input id="lastName" type='text' name='lastName' value='${user?.lastname}' />
 						</td>
 					</tr>
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'>
-							<label for='firstname'>First Name:</label>
+							<label for='firstName'>First Name:</label>
 						</td>
 						<td valign='top' style='text-align: left;' width='80%'>
-							<input id="firstname" type='text' name='firstname' value='${user?.firstname}' />
+							<input id="firstName" type='text' name='firstName' value='${user?.firstname}' />
 						</td>
 					</tr>
 					<tr class='prop'>
@@ -95,9 +84,13 @@
 				</div>
 			</div>
 			<!--  END : First slide -->
+			
+			
 			<!--  BEGIN : Second slide -->
 			<div class="form_slide dialog">
+				
 				<h3>Upload a picture of you  (Optional)</h3>
+				
 				<div class="upload_box">
 					<uploader:uploader id="picture" multiple="false">
 						<uploader:onComplete>
@@ -119,9 +112,9 @@
 							);
 						</uploader:onComplete>
 					</uploader:uploader>
-				</div>				
+				</div>
+				
 				<div id="cropper" style="display: none;">
-<%--					<cropper:crop imageId="cropper-img" />	--%>
 					<img id="cropper-img" />
 					<input type="hidden" name="crop_x1" id="crop_x1" value="0" />
 					<input type="hidden" name="crop_y1" id="crop_y1" value="0" />
@@ -131,17 +124,21 @@
 					<input type="hidden" name="crop_w" id="crop_w" value="0" />
 					<input type="hidden" name="picture" id="picture_field" />
 				</div>
+				
 				<br />
 				<div class="buttons">
 					<span class="formButton"><input type="button" value="Previous" class="prev" /></span>
 					<span class="formButton"><input type="button" value="Next" class="next" /></span>
 				</div>
 			</div>
-			<!-- END : Second slide -->		
+			<!--  END : Second slide -->
+			
 			<!-- BEGIN : Third slide -->
 			<div class="form_slide dialog">
 				<p>Tell us more about yourself (Optional) </p>
+				
 				<textarea name="freeText">...</textarea>
+				
 				<div class="buttons">
 					<br />
 					<span class="formButton"><input type="button" value="Previous" class="prev" /></span>
@@ -149,10 +146,10 @@
 				</div>
 			</div>
 			<!--  END : Third slide -->
+		
 		</g:form>
     </div>
-  </div>
-  <!-- END : container -->
+    <div class="grid_10 omega knowledge"><img src="${resource(dir:'images/home',file:'knowledge.png')}" width="399" height="299" alt="Knowledge"></div>
+  
 </body>
 </html>
-

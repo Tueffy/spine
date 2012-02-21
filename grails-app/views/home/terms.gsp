@@ -1,25 +1,19 @@
 <html>
 <head>
-  <g:render template="/common/inc/html-head"></g:render>
+  	<meta name="layout" content="main">
+	<title>Spine Landing</title>
+	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <!-- BEGIN : HEADER -->
-  <div id="header">
-  	 <g:render template="/common/inc/header"></g:render>
-  </div>
-  <!-- END : HEADER -->
-  <!-- BEGIN : NAV -->
-  <div id="nav">
-    &nbsp;
-  </div>  
-  <!-- END : NAV -->
-   <!-- BEGIN : CONTAINER -->
-  <div id="container" class="container_24">  	 
-    <div class="grid_5 landing">
+    <!-- <div class="grid_5 landing">
        &nbsp;
     </div>   
   	<div class="grid_19 landing" style="text-align:center">
       <h2>Terms & Conditions</h2>
+    </div>
+    -->
+    <div class="grid_21 landing" id="left">
+      <h2>How it works</h2> 
     </div>
   	<br/>
      <!-- START : LEFT MENU -->
@@ -52,7 +46,5 @@
    		</div>   
     </div>    
     <!-- END : RIGHT COLUMN -->  
-  </div>
-  <!-- END : container -->  
 </body>
 </html>

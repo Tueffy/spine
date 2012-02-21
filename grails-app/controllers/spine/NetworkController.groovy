@@ -34,9 +34,7 @@ class NetworkController {
 		
 		
 		def filter = params.filter
-		
-		
-		
+				
 		// Get user network (get the first page)
 		def n = null
 		n  = spineService.getUserNetwork(user, filter , 0, config.network.itemsPerPage)
@@ -81,9 +79,9 @@ class NetworkController {
 		if(params.page == null) params.page = 1
 		int offset = params.page.toInteger() - 1
 		offset *= config.network.itemsPerPage
-		def n  = spineService.getUserNetwork(user, null, offset, config.network.itemsPerPage)
+		def n  = spineService.getUserNetwork(user, params.filter, offset, config.network.itemsPerPage)
 		
-		render( template: "page", model: [neighbours: n]);
+		render( template: "inc/page", model: [neighbours: n]);
 		
 	}
 	
@@ -101,7 +99,8 @@ class NetworkController {
 	 */
 	def connectPeople = {
 		
-		//println "Connect: " + params
+		log.debug "Connect: ${params}"
+		
 		if ( (params.sourcePerson != null) &&  (params.targetPerson != null) && (params.linkProps != null) ) {
 			def result = spineService.connectPeople(params.sourcePerson, params.targetPerson, params.linkProps)
 			[param : 'Successfully connected', user : session.user]
@@ -109,6 +108,7 @@ class NetworkController {
 			def result = spineService.disconnectPeople(params.sourcePerson2, params.targetPerson2)
 			[param : result, user : session.user]
 		}
+		
 	}
 	
 	/**
@@ -116,8 +116,10 @@ class NetworkController {
 	 */
 	def filterGraph = {
 		
-		//println params.filterProperty
+		log.debug "Filter ${params.filterProperty}"
+		
 		redirect(controller:'network', action:'index', params : ['filter':params.filterProperty])
+		
 	} 
 	
 	/**
@@ -127,9 +129,11 @@ class NetworkController {
 	def graphJSON = {
 				
 		//TODO Jure, merge filter and properties
-		//println "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
+		log.debug "Filters used for rendering: " + params.filter.toString().tokenize(',') + params.userID.toString()
+		
 		def edges = spineService.getUserEdges(params.userID.toString(), params.filter.toString().tokenize(','), 2)
 		render (text:spineService.getGraphJSON(edges, session.username), contentType:"application/json", encoding:"UTF-8")
+		
 	}
 	
 	/**
@@ -137,14 +141,15 @@ class NetworkController {
 	 */
 	def graphEdgesJSON = {
 		
-		//println params.source + params.target
-		
 		def sourceNode = spineService.findNodeByName(params.source)
 		def targetNode = spineService.findNodeByName(params.target)
-		println "Source1 " + sourceNode
-		println "Source1 " + targetNode
+		
+		log.debug "Source node ${sourceNode}"
+		log.debug "Target node ${targetNode}"
+		
 		def edges = spineService.getAllEdges(sourceNode[0],targetNode[0])
-		println edges
+		
+		log.debug "Edges: ${edges}"
 		//edges = ["Test","test"]
 		render (text:spineService.getGraphEdgesJSON(edges), contentType:"application/json", encoding:"UTF-8")
 		
@@ -156,27 +161,37 @@ class NetworkController {
 	def importGraph = {
 		
 		def String fileContent
+		
 		if (params.edgesFile != null) {
-			println "Loading Edges file now.."
+			log.debug "Loading Edges file now.."
 			def f = request.getFile('edgesFile')
 			spineService.importEdges(f.getFileItem().getString())
 		}
 		if (params.nodesFile != null) {
-			println "Loading Nodes file now.."
+			log.debug "Loading Nodes file now.."
 			def f = request.getFile('nodesFile')
 			spineService.importNodes(f.getFileItem().getString())
 		}
+		
 		redirect(controller:'network', action:'index')
+		
 	}
 
-	// need to be shifted to the user service
+	/**
+	 * Need to be shifted to the user service
+	 * 
+	 * @return
+	 */
 	def checkUser() {
 		
 		if(!session.user) {
 			// i.e. user not logged in
 			redirect(controller:'user',action:'login')
 			return false
+		}else{
+			return true
 		}
+		
 	}
 	 
 	
@@ -194,7 +209,7 @@ class NetworkController {
 		def n = null
 		n  = spineService.getUserNetwork(user, null, 0, 30)		
 		
-		println user
+		log.debug "User: ${user}"
 		
 		for ( i in n ) {
 				def email1 = params.id;
@@ -220,6 +235,7 @@ class NetworkController {
 		def tags = spineService.getUserTags(user)		
 				
 		render tags as JSON
+		
 	}	
 	
 	/**
@@ -240,6 +256,7 @@ class NetworkController {
 		def tags = spineService.removeTag(sessionUser, selectedUser, tag)
 		
 		render sessionUser as JSON
+		
 	}
 	
 	/**
@@ -253,6 +270,7 @@ class NetworkController {
 		user.email ="test@test.com"
 		
 		render user as JSON
+		
 	}
 	
 	/**
@@ -263,8 +281,7 @@ class NetworkController {
 	def addTag = {
 		
 		def user = new User()
-		//println "TAGS"
-		//println params.tag
+		
 		user = session.user
 		
 		spineService.addTag(user.email, params.email, params.tag)
@@ -283,6 +300,7 @@ class NetworkController {
 	   def statistics = [badgesNumber : "10", tagsNumber: "50"]
 	   
 	   render statistics as JSON
+	   
    }
    
    
@@ -297,6 +315,7 @@ class NetworkController {
 	  def status = [success : "true"]
 	  
 	  render status as JSON
+	  
   }
    
 }

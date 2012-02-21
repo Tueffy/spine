@@ -1,167 +1,10 @@
 <html>
 <head>
-  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  	<title>My Spine</title>
-  	<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-  	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">  
-  	<g:javascript src="jquery/jquery-1.7.min.js" />
-  	<g:javascript>
-  		jQuery.noConflict();
-  	</g:javascript>
-  	<g:javascript src="main.js" />
-  	<g:javascript library='scriptaculous' />
+	<meta name="layout" content="main">
   	<g:javascript src="app/scroll.js" />
-  	<g:javascript>
-  			window.onload = function(){
-                
-                  new Ajax.Autocompleter("autocomplete", "autocomplete_choices", "/spine/network/ajaxAutoComplete",{});
-                                   
-                  Droppables.add('left', { 
-				    accept: 'contact',
-				    hoverclass: 'hover',
-				    onDrop: function(e) { 
-				    		//alert(e.id);				    
-				    		window.location = "index?user="+e.id;
-				    			
-				   		}
-				  });
-								  
-				  /*				  
-				  new Ajax.Request('/spine/network/getUserStatistics/${user.email}', {
-    				asynchronous:true,
-    				evalScripts:true,
-    				onSuccess: function(transport) {
-   						var tagsJSON = transport.responseText;
-   						var tags = eval("("+tagsJSON+")");		
-										   
-					    for (var key in tags) {						   
-			    		   $(key).innerHTML = tags[key];
-				   		}			    		  
-				   		
-					}
-				  });		
-				*/
-			}
-			
-			var firstUser = null;
-			
-			getFirstUser = function(){
-				return firstUser;
-			}
-			
-			setFirstUser = function(user){
-				firstUser = user;
-			}
-        	
-        	updateSelectedUser = function (e){
-        		//alert(e);
-        		// evaluate the JSON
-    			var user = eval("("+e.responseText+")");
-    			$("selectUser").fade();
-    			$("selectedUserName").innerHTML = user.firstName +' ' + user.lastName;
-    			$("selectedCity").innerHTML = user.city;
-    			//$("selectedCountry").innerHTML = user.country;
-    			$("selectedImage").appear();
-    			$("selectedImage").src = "/spine/images/profiles/"+ user.email + ".jpg";
-    			      			
-    			var container = $("selectedTags");
-							
-				var liList = container.childNodes;
-				
-				for(var i = 0;i < liList.length;i++){	
-					//alert (liList[i+1].nodeName);	
-					var li = liList[i];
-					if(li.nodeName == "LI"){
-						$(li).fade();
-					}
-    			}
-    			    			
-    			new Ajax.Request('/spine/network/getTags/'+ user.email, {
-    				asynchronous:true,
-    				evalScripts:true,
-    				onSuccess: function(transport) {
-   						var tagsJSON = transport.responseText;
-   						var tags = eval("("+tagsJSON+")");		
-						for (var key in tags) {						   
-						   var new_element = document.createElement('li');
-						   new_element.innerHTML = "#" + key;	
-						   container.insertBefore(new_element, container.firstchild);
-			    		   $(new_element).grow();
-				   		}
-					}
-    			});
-    			
-    			
-    			
-			}
-			
-			
-			tagsMinusOnMouseOver = function(e){
-				//alert(e);
-				$(e).appear();
-				$(e).onmouseout = function(){
-					$(this).fade();
-				}
-				return false;
-			}
-			
-			
-			tagsMinusOnMouseOut = function(e){
-				//alert("test");
-				$(e).fade({ duration: 7.0});
-				return false;
-			}
-					
-			tagsPlusOnMouseOver = function(){
-				//alert("test");
-				$('minus').appear(5); 
-				
-				return false;
-			}
-			
-			
-			tagsPlusOnMouseOut = function(){
-				//alert("test");
-				$('minus').fade();
-				return false;
-			}			
-			
-			
-			inviteNewUser = function (e) {
-				alert("dd");
-			}
-			
-    </g:javascript>
+	<g:javascript src="app/network.js" />
 </head>
 <body>
-  <!-- BEGIN : HEADER -->
-  <div id="header">
-  	<div class="container_24">
-      <g:render template="/common/inc/header"></g:render>
-      <p class="news">
-          <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
-          <span id="message">You've got 7 new tags and 1 new badge.</span>
-      </p>       
-    </div>
-  </div>  
-  <!-- END : HEADER -->
-  <!-- BEGIN : NAV -->
-  <div id="nav">
-    <div id="hot_tags" class="container_24">    
-      <ul>
-        <li><img src="/spine/images/home/hot_tags.png" width="75" height="23" alt="Hot Tags" ></li>
-        <g:each in="${hotTags}" var="t" >    	
-	        <li class="hot_tags" id="hot_tags_soap"><a href="#">#${t}</a></li>
-	    </g:each>
-      </ul>
-      <script>var mydrag = new Draggable('hot_tags_soap', { revert: true });</script>
-    </div>
-  </div>
-  <!-- END : NAV -->
-  <!-- BEGIN : CONTAINER -->
-  <div id="container" class="container_24">
     <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
       <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" style="margin-left:45px"/>     
@@ -194,12 +37,13 @@
       </p>
     </div>
     <!-- END : LEFT MENU -->    
+    
     <!-- BEGIN : RIGHT COLUMN -->
     <div class="grid_19" id="right">    
       <!-- BEGIN : Feed & Details blocks -->
-      <div class="grid_19 feed separator">
-      <!-- BEGIN : Feed block -->
-      <div class="grid_14 alpha">
+      <div class="grid_19 feed  ">
+      	<!-- BEGIN : Feed block -->
+      	<div class="grid_14 alpha columnSeparator">
           <!-- BEGIN : filter & my updates -->
           <div class="grid_10 alpha filter">
             <g:form name="filterByTag" method="post" action="index">
@@ -209,17 +53,20 @@
                 <li>Filter by</li>
                 <li><a href="#">Expertise</a></li>
                 <li><a href="#">Distances</a></li>
-              </ul>
+            </ul>
+            	<input type="hidden" value="${param}" id="filter_helper" />
             </g:form>            
           </div>
           <div class="grid_4 omega my_updates" id="test1">
             <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
             <p><a href="#">My Spine Updates</a></p>
           </div>
-          <!-- END : filter & my updates -->                   
+           <!-- END : filter & my updates -->          
+         
           <!--  BEGIN Flux -->
           <g:render template="inc/page"></g:render>
           <!-- END Flux -->
+          
         </div>
         <!-- END : Feed block -->
         
@@ -233,7 +80,8 @@
             <li class="company" id="selectedCompany"></li>
             <li class="city" id="selectedCity"></li>
           </ul>          
-          <ul class="tags" id="selectedTags">           
+          <ul class="tags" id="selectedTags">
+           
           </ul>          
           <p class="all_tags"><a href="#">All tags</a></p>
         </div> 
@@ -242,16 +90,17 @@
       <!-- END : Feed & Details blocks -->  
       <div class="grid_19 alpha omega close">
         &nbsp;
-      </div>      
+      </div>
+      
       <!-- BEGIN : Copyright -->
       <!-- > -->
       <div class="grid_19 alpha omega copyright">
         <div class="grid_5 omega">&copy; Spine 2011 - All rights reserved</div>
       </div>
-      <!-- END : Copyright -->      
+      <!-- END : Copyright -->
+      
     </div>
-    <!-- END : RIGHT COLUMN -->    
-  </div>
-  <!-- END : CONTAINER -->  
+    <!-- END : Right column -->
+    
 </body>
 </html>

@@ -43,18 +43,20 @@ class UserController {
 	 */
 	def register = {		
 		//to do: delete email via session, but to differently
-		[tmp_email : session.email]
+		[tmp_email : params.email]
 	}
 	
 	/**
 	* Activate user and forward him to the login page
 	*/
     def activate = {		
-		//println params.id
-		//TODO: Add method to activate user		
-		//spineService.activateUser(params.id);
+		log.info "Activate user: ${params.id}"
+		
+		//@TODO: Use unique IDs
+		spineService.activateUser(params.id)
+		
 		flash['message'] = "User activated"
-		redirect(controller:'user', action:'login')	   
+		redirect(controller:'user', action:'login')	   	
     }
 
 	
@@ -63,27 +65,36 @@ class UserController {
 	*/
 	def profile = {		   
 		def user = session.user
-		println session
 		return [ user: session.user ]
 	}
    
 	/**
-	 * Login user and create the user object for the logged in user
+	 * Login user, if user is active. This method creates the user object for the logged in user and populates the session
+	 * 
 	 */
 	def doLogin = {
 		
-		// call the spine service to validate login
-		def loggedInUser = spineService.loginUser(params.email, params.password)
+		log.info "Start login: ${params.email}"
+		
+		def user = new User();
+		user = spineService.getUser(params.email);
+		
+		def loggedInUser = null
+		
+		//Check if user is active
+		if(user.status == "active"){		
+			// call the spine service to validate login
+			loggedInUser = spineService.loginUser(params.email, params.password)
+		}else{
+			flash['message'] = "User not active!"
+			redirect(controller:'user',action:'login')
+		}
 		
 		// if login successful then send JSON user to page, otherwise show error message
 		if (loggedInUser != null) {
 			session.user = loggedInUser
-			
-			//[user : loggedInUser as JSON]
-			//println user
 			redirect(controller:'network',action:'index')
-		}
-		else {
+		}else {
 			flash['message'] = "Invalid user/password combination"
 			redirect(controller:'user',action:'login')
 		}
@@ -105,14 +116,13 @@ class UserController {
 			'email' : params.email,
 			'password' : params.password, 
 			'image' : "",
-			'freeText' : params.freetext ]
+			'freeText' : params.freeText ]
 		
 		// If an image has been sent, apply cropping
 		if(params.picture != ""){
 			cropUserPicture()
 			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
-		}
-		
+		}		
 		
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {
@@ -182,16 +192,16 @@ class UserController {
 			if(oldFileToDelete.exists() && !oldFileToDelete.directory)
 			{
 				oldFileDeleted = oldFileToDelete.delete();
-				println "\nFile deleted = ${oldFileDeleted}"
+				log.debug "\nFile deleted = ${oldFileDeleted}"
 			}
 		}
 		
 		// Finalize upload by putting the cropped picture to its right place
-		println "File renaming = "
+		log.debug "File renaming = "
 		File file = new File(outputDir + inputFilename)
 		String outputFileName = params.email + "." + inputFileExtension
 		Boolean fileMoved = file.renameTo(new File(outputDir + outputFileName))
-		println fileMoved.toString() + "\n" + outputDir + outputFileName
+		log.debug fileMoved.toString() + "\n" + outputDir + outputFileName
 		
 		// If moving failed, delete the tmp file
 		if(!fileMoved)
@@ -211,8 +221,8 @@ class UserController {
 		
 		// create map with parameters
 		def userparams = [
-			'firstName' : params.firstname,
-			'lastName' : params.lastname,
+			'firstName' : params.firstName,
+			'lastName' : params.lastName,
 			'city' : params.city,
 			'country' : params.country,
 			'email' : params.email,
@@ -221,7 +231,7 @@ class UserController {
 			'freeText' : params.freeText ]
 		
 		// If an image has been sent, apply cropping
-		println "picture = ${params.picture}"
+		log.debug "picture = ${params.picture}"
 		if(params.picture != ""){
 			cropUserPicture()
 			userparams.imagePath = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)

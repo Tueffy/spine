@@ -59,13 +59,9 @@ environments {
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
-		//Email address for test purposes
-		grails.mail.overrideAddress="t.michelbach@gmail.com"
     }
     test {
         grails.serverURL = "http://localhost:8080/${appName}"
-		//Email address for test purposes
-		grails.mail.overrideAddress="t.michelbach@gmail.com"
     }
 
 }

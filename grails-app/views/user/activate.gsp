@@ -1,18 +1,10 @@
 <html>
 <head>
-  <g:render template="/common/inc/html-head"></g:render>
+  <meta name="layout" content="main">
+  <title>Spine Landing</title>
+  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <!-- BEGIN : HEADER -->
-  <div id="header">
-  	 <g:render template="/common/inc/header"></g:render>
-  </div>
-  <!-- END : HEADER -->
-  <!-- BEGIN : NAV -->
-  <div id="nav">
-    &nbsp;
-  </div>  
-  <!-- END : NAV -->
   <!-- BEGIN : CONTAINER -->
   <div id="container" class="container_24" style="margin-top:80px">
     <div class="grid_10 omega knowledge">

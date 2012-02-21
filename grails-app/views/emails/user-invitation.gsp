@@ -52,8 +52,7 @@ to join Spine, your private <BR/>
 social network for <BR/>
 your company.</h2><BR/><BR/>
 <div class="callToAction"><a href="#" target="blank">Click here to  complete your subscription to Spine</a></div>
-<div class="link"><a href="#" target=blank> http://www.spine.de/subscribe/confirm?u=16b832d9ad4b28edf261f34df&id=62f9f9e407&e=6e42bace25/
-</a></div><BR/><BR/><div class="text">
+<div class="link"><a href="#" target=blank> http://localhost:8080/spine/user/register/${id}</a></div><BR/><BR/><div class="text">
 If you received this email by mistake, simply delete it. <BR/>
 You won't be subscribed if you don't complete the subscription process.<BR/>
 <BR/>

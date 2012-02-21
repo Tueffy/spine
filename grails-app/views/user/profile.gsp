@@ -1,47 +1,28 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="layout" content="main">
 	<title>My Spine</title>
-	<link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
-	<link href="/spine/css/960.css" rel="stylesheet" type="text/css">
-	<link href="/spine/css/design.css" rel="stylesheet" type="text/css">
-	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
-	<link href="/spine/css/ajax.css" rel="stylesheet" type="text/css">
+	<link href="${resource(dir:'css',file:'landing.css')}" rel="stylesheet" type="text/css" />
 	<g:javascript src="jquery/jquery-1.7.min.js" />
 	<g:javascript>jQuery.noConflict();</g:javascript>
-	<g:javascript src="main.js" />
-	<script type="text/javascript" src="/spine/js/prototype/prototype.js"></script>
-	<script type="text/javascript" src="/spine/js/prototype/event.simulate.js"></script>
-	<script type="text/javascript" src="/spine/js/prototype/scriptaculous.js"></script>
-	<script type="text/javascript" src="/spine/js/app/landing.js"></script>
+	<g:javascript src="app/landing.js" />
 	<uploader:head />
 	<cropper:head />
 </head>
 <body>
-	<!-- BEGIN : HEADER -->
-  	<div id="header">
-  	 	<g:render template="/common/inc/header"></g:render>
-  	</div>
-  	<!-- END : HEADER -->
-  	<!-- BEGIN : NAV -->
-  	<div id="nav">
-    	&nbsp;
-  	</div>  
-  	<!-- END : NAV -->
-	<!-- BEGIN : CONTAINER -->
-	<div id="container" class="container_24">
+
 		<div class="landing">
 			<h2>My Profile</h2>
         	<p class="subtitle">Update your profile details...</p>
 			<g:form action="updateProfile">
 				<table class="userForm" style="width:100%;">
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='lastname'>Last Name:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="lastname" type='text' name='lastname'	value='${user?.lastName}' /></td>
+						<td valign='top' style='text-align: left;' width='20%'><label for='lastName'>Last Name:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="lastName" type='text' name='lastName'	value='${user?.lastName}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='firstname'>First Name:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="firstname" type='text' name='firstname' value='${user?.firstName}' /></td>
+						<td valign='top' style='text-align: left;' width='20%'><label for='firstName'>First Name:</label></td>
+						<td valign='top' style='text-align: left;' width='80%'><input id="firstName" type='text' name='firstName' value='${user?.firstName}' /></td>
 					</tr>
 					<tr class='prop'>
 						<td valign='top' style='text-align: left;' width='20%'><label for='country'>Country:</label></td>
@@ -105,7 +86,6 @@
 				</div>
 			</g:form>
 		</div> 
-	</div>
-	<!-- END : container -->
+
 </body>
 </html>
