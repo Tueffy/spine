@@ -138,24 +138,24 @@ class SpineService {
 
         // retrieve the properties
         def userNode = networkService.readNode(email)
-
+		
         // copy over the values from the hash map into the user object
-        user.firstName = userNode.firstName
-        user.lastName = userNode.lastName
+        user.firstName = userNode?.firstName
+        user.lastName = userNode?.lastName
         user.email = userNode.email
-        user.country = userNode.country
-        user.city = userNode.city
-        user.imagePath = userNode.image
-        user.freeText = userNode.freeText
-        user.freeText = userNode.freeText
-		user.company = userNode.company
-		user.department = userNode.department
-		user.jobTitle = userNode.jobTitle
-		user.phone = userNode.phone
-		user.mobile = userNode.mobile
-		user.gender = userNode.gender
-		user.birthday = userNode.birthday
-		user.status = userNode.status
+        user.country = userNode?.country
+        user.city = userNode?.city
+        user.imagePath = userNode?.image
+        user.freeText = userNode?.freeText
+        user.freeText = userNode?.freeText
+		user.company = userNode?.company
+		user.department = userNode?.department
+		user.jobTitle = userNode?.jobTitle
+		user.phone = userNode?.phone
+		user.mobile = userNode?.mobile
+		user.gender = userNode?.gender
+		user.birthday = userNode?.birthday
+		user.status = userNode?.status
 		
         user.tags = networkService.getIncomingTagsForNode(userNode.email)
 		// TODO: does not look good, have to rethink the way we manage user in the code
@@ -202,7 +202,7 @@ class SpineService {
         newUser.city = userparams.city
         newUser.country = userparams.country
         newUser.imagePath = userparams.image
-		newUser.freeText = userparams.freetext
+		newUser.freeText = userparams.freeText
 		newUser.company = userparams.company
 		newUser.department = userparams.department
 		newUser.jobTitle = userparams.jobTitle
@@ -295,6 +295,7 @@ class SpineService {
 	     			'status': properties.status ? properties.status : loggedInUser.status
 	     			]
 		
+//		log.trace("UserPops : \n " + userProps.toString())
 		networkService.updateNode(loggedInUser.email, userProps)
 		
 		success = true
