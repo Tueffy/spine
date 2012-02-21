@@ -1,6 +1,6 @@
 package spine
 
-import grails.plugin.mail.MailService;
+import grails.plugin.mail.MailService
 import groovy.text.SimpleTemplateEngine
 
 
