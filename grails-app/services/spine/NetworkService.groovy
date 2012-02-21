@@ -2,6 +2,8 @@ package spine
 
 import java.util.regex.*
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.CeilingCall;
+
 class NetworkService {
     static transactional = false
 
@@ -60,8 +62,8 @@ class NetworkService {
             newProperties.(it.getKey()) = it.getValue()
         }
         //remove all old index entries
-//        removeNodeIndex(json.self[0])
-		graphCommunicatorService.neoDelete(json.self[0])
+        removeNodeIndex(json.self[0])
+//		graphCommunicatorService.neoDelete(json.self[0]) // actually we don't need to delete the node
         //add new properties to node
         graphCommunicatorService.neoPut(json.self[0] + '/properties', newProperties)
         //add new index entries
@@ -157,43 +159,67 @@ class NetworkService {
 		def resultNodes = []
 		def neighbour = [:]
 		
+		String luceneQuery = ''
+		if(!filter.isEmpty()) {
+//			println("Filter = ")
+//			println(filter.toString())
+			for (i in 0..(filter.size() - 1))
+			{
+				luceneQuery += 	'tag : ' + filter[i] + ' OR ' +
+								'badge : ' + filter[i] + ' OR ' +
+								'email : ' + filter[i] + ' OR ' +
+								'firstname : ' + filter[i] + ' OR ' +
+								'lastname : ' + filter[i] + ' OR ' +
+								'city : ' + filter[i]
+				if(i < filter.size() - 1) luceneQuery += ' OR '
+			}
+		}
+		else {
+			luceneQuery = '*:* '
+		}
+		
 		/*-------------------------------------------------------------
 		 * 
 		 * 	FIRST QUERY : Get results from the User Network
 		 * 
 		 * ----------------------------------------------------------- */
 		// Build the query
-		def query = "start n=node:names(email={SP_user}) match p=n-[:connect*1..5]->(x) "
-		if(!filter.isEmpty()) {
-			query += "where all(r in rels(p) WHERE "
-			filter.each {
-				query += "r.`" + it + "` OR "
-			}
-			query += "1=0) "
-		}
-		query += "return distinct x, min(length(p)), count(*) AS nbResults "
-		query += "order by min(length(p)) skip " + offset + " limit " + limit + " "
+		def query = 'start ' + 
+						'n = node:names(email={SP_user}), ' +
+						"m = node:super_index('" + luceneQuery + "') " + 
+					'match ' + 
+						'p = n-[r:connect*1..5]->m ' + 
+					'return ' + 
+						'distinct m, min(length(p)) ' + 
+					'order by min(length(p)) ' + 
+					'skip ' + offset + ' ' + 
+					'limit ' + limit + ' ' 
 		
-		println "\n\n\n"
-		println query
-		println "\n\n\n"
+		log.info("\n\n\n" + query + "\n\n\n");
 		
 		// Execute the query
 		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
 		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
 		
-		// How many results ? 
-		int firstQueryNbResults = 0
-		if(json.data) firstQueryNbResults = json.data[0][2]
-		
 		// Get results
 		json.data.each {
 			neighbour = it[0].data
 			neighbour['distance'] = it[1]
-			println "Elem: " + neighbour
 			resultNodes.add(neighbour)
 		}
 		
+		// How many results ? 
+		
+		int firstQueryNbTotalResults = 0;
+		query = 'start ' + 
+						'n = node:names(email={SP_user}), ' +
+						"m = node:super_index('" + luceneQuery + "') " + 
+					'match ' + 
+						'p = n-[r:connect*1..5]->m ' + 
+					'return ' + 
+						'count(distinct m) as nb '
+		json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
+		firstQueryNbTotalResults = (int) json.data[0][0]
 		
 		
 		/*-------------------------------------------------------------
@@ -205,28 +231,23 @@ class NetworkService {
 		// result to get from the first one.  
 		if(resultNodes.size() < limit && !filter.isEmpty())
 		{
-			int newOffset = offset / limit + 1
+			int newOffset = offset - firstQueryNbTotalResults + limit;
 			int newLimit = limit - resultNodes.size()
 			
-			// TODO : Only support one tag search, add multi tag support
-			// Check here : https://groups.google.com/forum/?hl=fr#!topic/neo4j/dWOsK6meGHs 
+			query = 'start ' + 
+						'n = node:names(email={SP_user}), ' +
+						"m = node:super_index('"+ luceneQuery +"') " + 
+					'match ' + 
+					 	'n-[r2:connect*1..5]->m ' + 
+					'where ' + 
+						'r2 is null ' + 
+					'return ' + 
+						'distinct m, count(*) AS nbResults ' + 
+					'skip ' + newOffset + ' ' + 
+					'limit ' + newLimit + ' '
+					
 			
-			String luceneQuery = ''
-			for (i in 0..(filter.size() - 1)) 
-			{
-				luceneQuery += filter[i] + ':"tag" '
-				if(i < filter.size() - 1) luceneQuery += 'OR '
-			} // TODO : Use this for multi tag support (lucene query)
-			
-			query = 'start '
-			query += 'r=relationship:edges('+ filter[0] +'="tag"), n=node:names(email={SP_USER})  '
-			query += 'a-[r:connect]->b, a-[r2:connect*1..5]->c '
-			query += 'where r2 is null '
-			query += 'return distinct b '
-			
-			println "\n\n\n"
-			println query
-			println "\n\n\n"
+			log.info(query)
 			
 			// Execute the query
 			cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
@@ -236,7 +257,7 @@ class NetworkService {
 			json.data.each {
 				neighbour = it[0].data
 				neighbour['distance'] = it[1]
-				println "Elem: " + neighbour
+//				println "Elem: " + neighbour
 				resultNodes.add(neighbour)
 			}
 		}
@@ -256,7 +277,7 @@ class NetworkService {
         def tagMap = [:]
         def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': '"' + email + '"'])
         //get incoming relationships from incoming_relationships
-        println json
+//		log.info(json)
         if (json.size() == 0) {
             return tagMap
         }
@@ -365,7 +386,7 @@ class NetworkService {
         def from = getNodeURIFromEmail(props.startNode)
         def to = getNodeURIFromEmail(props.endNode)
         def relationship = readRelationship(props)[0]
-        println 'relationship to be created is:' + from + ' -> ' + to
+        log.info('relationship to be created is:' + from + ' -> ' + to)
 		
         def createdRelationship
         if (!relationship) {
@@ -396,7 +417,7 @@ class NetworkService {
                 resultRelationship.add(it.self)
             }
         }
-        println 'Found relationship: ' + resultRelationship
+        log.info('Found relationship: ' + resultRelationship)
         return resultRelationship
     }
 
@@ -509,7 +530,7 @@ class NetworkService {
 	def setRelationshipIndex(String relationshipURI, Map newProps)
 	{
 		def indexPath = '/db/data/index/relationship/edges/'
-		println "relationshipURI" + relationshipURI
+		log.info("relationshipURI" + relationshipURI)
 		def relationshipID = getIdFromURI(relationshipURI)
 		def result = ''
 		
@@ -592,13 +613,22 @@ class NetworkService {
         def from = getNodeURIFromEmail(props.startNode)
         def to = getNodeURIFromEmail(props.endNode)
         def rel = readRelationship(props)[0]
-        println('Nodes to disconnect are: ' + from + ' -> ' + to + ', it is relationship with URI: ' + rel)
+        log.info('Nodes to disconnect are: ' + from + ' -> ' + to + ', it is relationship with URI: ' + rel)
         //TODO first remove all properties for this relationship from the index!
         //remove from graph
         graphCommunicatorService.neoDelete(rel)
         //assert that rel does not exist
-        println graphCommunicatorService.neoGet(rel)
+        log.info(graphCommunicatorService.neoGet(rel))
     }
+	
+	def reindexRelationships() {
+		def json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': '*:*'])
+		json.each {
+			def tags = []
+			it.data.each { tags.add(it.key) }
+		}
+	}
+	
 
     // *********************** old code starts here ***************************/
     // *********************** old code ***************************/
