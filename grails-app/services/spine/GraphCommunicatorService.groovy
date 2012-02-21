@@ -35,7 +35,7 @@ class GraphCommunicatorService {
     }
 
     private def internalRequest(Method method, String requestPath, requestQuery = null) {
-        log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
+//        log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
 
         return httpBuilder.request(method, groovyx.net.http.ContentType.JSON) {req ->
             uri.path = requestPath
@@ -47,7 +47,7 @@ class GraphCommunicatorService {
             }
 
             response.success = { resp, json ->
-                log.trace("Received response: ${json}")
+//                log.trace("Received response: ${json}")
                 return json
             }
 
