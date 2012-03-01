@@ -219,7 +219,10 @@ class NetworkService {
 					'return ' + 
 						'count(distinct m) as nb '
 		json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
-		firstQueryNbTotalResults = (int) json.data[0][0]
+		if(!json || !json.data || json.data.size() == 0)
+			firstQueryNbTotalResults = 0;
+		else
+			firstQueryNbTotalResults = (int) json.data[0][0]
 		
 		
 		/*-------------------------------------------------------------
