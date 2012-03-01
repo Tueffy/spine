@@ -31,8 +31,7 @@ class NetworkController {
 		user = spineService.getUser(user.email);
 		user.tags = [];
 		user.tags = spineService.getUserTags(user);
-		
-		
+				
 		def filter = params.filter
 				
 		// Get user network (get the first page)
