@@ -103,6 +103,41 @@ tagsPlusOnMouseOut = function() {
 	return false;
 }
 
+/**
+ * 
+ * @param e
+ */
 inviteNewUser = function(e) {
 	alert("dd");
+}
+
+
+/**
+ * 
+ * 
+ * @param e
+ */
+addTagUpdate = function(e, id){
+	
+	var response = eval("(" + e.responseText + ")");
+	
+	//alert(response.tag);
+	
+	var ul = $(id);
+	var li = document.createElement("li");
+	li.innerHTML = response.tag;
+	ul.insertBefore(li, ul.getElementsByTagName("li")[1]);
+	
+}
+
+
+/**
+ * 
+ * @param e
+ */
+removeTagUpdate = function(e){
+	
+	$(e).fade({
+		duration : 2.0
+	});
 }

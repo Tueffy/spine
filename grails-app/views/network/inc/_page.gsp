@@ -30,27 +30,26 @@
              <p class="company">Accenture GmbH, ${n.city}, ${n.country}<br> </p>
              
              <div class="grid_7 alpha">
-               <p class="quote">„Looking forward to new challenges„</p>
-               <ul class="tags">               		
+               	<p class="quote">„Looking forward to new challenges„</p>
+               	<ul class="tags" id="${n.email}_tags">               		
                		<g:each in="${n.tags}" var="t">    	        	  
-	                    <li>	                    
+	                    <li id="${n.email}_${t.key}">	                    
 		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${n.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${n.email}_${t.key}_minus');">${t.key}</a>
-		                    <span id="${n.email}_${t.key}_minus" style="{display: none;}">
-		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:n.email]">-</g:remoteLink>
+		                    <span id="${n.email}_${t.key}_minus">
+		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:n.email]" onComplete="removeTagUpdate('${n.email}_${t.key}')">-</g:remoteLink>
 		                    </span>
 	                    </li>
-                   	</g:each>
-                 
-                   <li>&nbsp;</li>
-                   <li> 	                    	
-                    <span class="plus">
-                    	<g:form action="addTag" controller="network">
+                   	</g:each>                 
+                   	<li>&nbsp;</li>
+                   	<li> 	                    	
+                    	<span class="plus">
+                    		<g:form action="addTag" controller="network"  >
                     			<input name="email" type="hidden" value="${n.email}"/>
-						        <input name="tag" type="text" /> <g:submitToRemote  action="addTag" controller="network" value="+"/>
-						</g:form>
-                    </span>
-                 </li>
-               </ul>
+						        <input name="tag" type="text" /> <a href="#"><g:submitToRemote  action="addTag" controller="network" value="+" onComplete="addTagUpdate(e,'${n.email}_tags')"/></a>
+							</g:form>
+                    	</span>
+                 	</li>
+               	</ul>
              </div>
              <div class="grid_3 omega">
              	<p class="distance">${n.distance}</p>

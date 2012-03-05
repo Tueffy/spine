@@ -15,16 +15,13 @@
 	  </ul>      
       <div class="badges"  style="margin-left:35px">
         <ul>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
-          <li><img src="/spine/images/badges/html.png" width="37" height="38" alt="HTML"></li>
+          <g:each in="${badges}" var="b"> 
+          	 <li><img src="/spine/images/badges/${b.image}" width="37" height="38" alt="${b.name}"></li>          
+          </g:each>
         </ul>
       </div>
       <ul class="menu">
-        <li><a href="#"><span id="badgesNumber">${user.badges.size()}</span> Badges</a></li> 
+        <li><a href="#"><span id="badgesNumber">${badges.size()}</span> Badges</a></li> 
         <li><a href="#"><span id="tagsNumber">${user.tags.size()}</span> Tags</a></li>
       </ul>   
       <br/>   
