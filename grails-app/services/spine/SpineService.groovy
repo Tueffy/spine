@@ -138,6 +138,8 @@ class SpineService {
 
         // retrieve the properties
         def userNode = networkService.readNode(email)
+		if(userNode == null)
+			return null;
 		
         // copy over the values from the hash map into the user object
         user.firstName = userNode?.firstName

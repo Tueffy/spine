@@ -53,7 +53,8 @@ class UserController {
 		log.info "Activate user: ${params.id}"
 		
 		//@TODO: Use unique IDs
-		spineService.activateUser(params.id)
+		def user = spineService.getUser(params.id)
+		spineService.activateUser(user)
 		
 		flash['message'] = "User activated"
 		redirect(controller:'user', action:'login')	   	
@@ -81,6 +82,14 @@ class UserController {
 		
 		def loggedInUser = null
 		
+		// Check if user exists
+		if(user == null)
+		{
+			flash['message'] = "User does not exist!"
+			redirect(controller:'user',action:'login')
+			return
+		}
+		
 		//Check if user is active
 		if(user.status == "active"){		
 			// call the spine service to validate login
@@ -88,6 +97,7 @@ class UserController {
 		}else{
 			flash['message'] = "User not active!"
 			redirect(controller:'user',action:'login')
+			return
 		}
 		
 		// if login successful then send JSON user to page, otherwise show error message
@@ -97,6 +107,7 @@ class UserController {
 		}else {
 			flash['message'] = "Invalid user/password combination"
 			redirect(controller:'user',action:'login')
+			return
 		}
 		
 	}
@@ -121,6 +132,7 @@ class UserController {
 		// If an image has been sent, apply cropping
 		if(params.picture != ""){
 			cropUserPicture()
+			
 			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}		
 		
@@ -186,13 +198,13 @@ class UserController {
 		
 		// Delete the old file
 		Boolean oldFileDeleted
-		if(session.user.imagePath != null)
+		if(session.user && session.user.imagePath != null)
 		{
 			File oldFileToDelete = new File(outputDir + session.user.imagePath)
 			if(oldFileToDelete.exists() && !oldFileToDelete.directory)
 			{
 				oldFileDeleted = oldFileToDelete.delete();
-				log.debug "\nFile deleted = ${oldFileDeleted}"
+				log.debug("\nFile deleted = ${oldFileDeleted}");
 			}
 		}
 		
