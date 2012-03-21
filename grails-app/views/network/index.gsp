@@ -44,7 +44,16 @@
           <!-- BEGIN : filter & my updates -->
           <div class="grid_10 alpha filter">
             <g:form name="filterByTag" method="post" action="index">
-              <input type="text" name="filter" id="autocomplete" value="Filter ${user.firstName}'s spine" default="Filter Christian‘s spine" onClick="javascript:this.value='';" />
+            
+              <!-- Input text : search Box -->
+              <g:if test="${param}">
+              	<input type="text" name="filter" id="autocomplete" value="${param}" default="${param}" onClick="javascript:this.value='';" />
+              </g:if>
+              <g:else>
+              	<input type="text" name="filter" id="autocomplete" value="Filter ${user.firstName}'s spine" default="Filter ${user.firstName}'s spine" onClick="javascript:this.value='';" />
+              </g:else>
+              
+              
               <div id="autocomplete_choices" class="autocomplete"></div>              
               <ul class="filter_list">
                 <li>Filter by</li>

@@ -9,7 +9,8 @@ class SuperIndexService {
 
 	static transactional = true
 	
-	def graphCommunicatorService
+	def GraphCommunicatorService graphCommunicatorService
+	def SpineService spineService
 
 	def addNodeToSuperIndex(String key, String value, String nodeURI) {
 		def indexPath = '/db/data/index/node/super_index/'
@@ -42,6 +43,7 @@ class SuperIndexService {
 	def addLastNameToIndex(String lastName, String nodeURI) {
 		addNodeToSuperIndex("lastname", lastName, nodeURI)
 	}
+
 	
 	/**
 	 * Insert / update the data aboute the node in the super index
@@ -56,7 +58,7 @@ class SuperIndexService {
 		
 		// Indexing tags of the node
 		def tags = []
-		def incomingRelationshipsJson = graphCommunicatorService.neoGet(json.incoming_relationships);
+		def incomingRelationshipsJson = graphCommunicatorService.neoGet(json.incoming_relationships)
 		incomingRelationshipsJson.each 
 		{
 			it.data.each { 
@@ -67,6 +69,18 @@ class SuperIndexService {
 			}
 		}
 		tags.each { addTagToIndex(it, nodeURI) }
+		
+		// Indexing the badges
+		if(json.data?.email) 
+		{
+			def badges = []
+			def user = spineService.getUser(json.data.email)
+			badges = spineService.getBadges(user)
+			badges.each {
+				addBadgeToIndex(it.toString(), nodeURI)
+			}
+		}
+		
 		
 		// Index user basic data
 		if(json.data?.email)  // adding email

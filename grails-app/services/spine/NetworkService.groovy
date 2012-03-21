@@ -148,9 +148,9 @@ class NetworkService {
      * @param limit max of how many neighbours are searched
      * @return The found nodes data. If no neighbours are found, returns null.
      */
-	def queryForNeighbourNodes(String email, int offset, int limit, List filter = [])
+	def queryForNeighbourNodes(String email, int offset, int limit, List filter = [], boolean extended_search = true)
 	{
-		// TODO : Whant there is not enough result in the user network in case of search, complete with results from the whole network
+		// TODO : If there is not enough result in the user network in case of search, complete with results from the whole network
 		// TODO : The function is becomming too complex, must be splitted into more atomic functions
 		// TODO : Refectoring - refactor the way search work to make it less complicated and more maintenable and to get more performances
 		// TODO : Pagination associated with search seems not to be working (need to propagate the search query)
@@ -185,17 +185,20 @@ class NetworkService {
 		 * ----------------------------------------------------------- */
 		// Build the query
 		def query = 'start ' + 
-						'n = node:names(email={SP_user}), ' +
-						"m = node:super_index('" + luceneQuery + "') " + 
-					'match ' + 
+						'n = node:names(email={SP_user}) '
+		if(!filter.isEmpty()) {
+			query += ", m = node:super_index('" + luceneQuery + "') "
+		}
+		query += 	'match ' + 
 						'p = n-[r:connect*1..5]->m ' + 
+					'where m != n ' +
 					'return ' + 
 						'distinct m, min(length(p)) ' + 
 					'order by min(length(p)) ' + 
 					'skip ' + offset + ' ' + 
 					'limit ' + limit + ' ' 
 		
-		log.info("\n\n\n" + query + "\n\n\n");
+		print("\n\n\n" + query + "\n\n\n");
 		
 		// Execute the query
 		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
@@ -211,13 +214,16 @@ class NetworkService {
 		// How many results ? 
 		
 		int firstQueryNbTotalResults = 0;
-		query = 'start ' + 
-						'n = node:names(email={SP_user}), ' +
-						"m = node:super_index('" + luceneQuery + "') " + 
-					'match ' + 
-						'p = n-[r:connect*1..5]->m ' + 
-					'return ' + 
-						'count(distinct m) as nb '
+		query = 'start ' +
+					'n = node:names(email={SP_user}) '
+		if(!filter.isEmpty()) {
+			query += ", m = node:super_index('" + luceneQuery + "') "
+		}
+		query += 'match ' +
+					'p = n-[r:connect*1..5]->m ' +
+				'where m != n '
+				'return ' +
+					'count(distinct m) as nb '
 		json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
 		if(!json || !json.data || json.data.size() == 0)
 			firstQueryNbTotalResults = 0;
@@ -232,18 +238,21 @@ class NetworkService {
 		* ----------------------------------------------------------- */
 		// We only execute the second query if there no more (or not enough) 
 		// result to get from the first one.  
-		if(resultNodes.size() < limit && !filter.isEmpty())
+		// AND the extended_search parameter must be set to true
+		if(extended_search && resultNodes.size() < limit && !filter.isEmpty())
 		{
 			int newOffset = offset - firstQueryNbTotalResults + limit;
 			int newLimit = limit - resultNodes.size()
 			
 			query = 'start ' + 
-						'n = node:names(email={SP_user}), ' +
-						"m = node:super_index('"+ luceneQuery +"') " + 
+						'n = node:names(email={SP_user}), '
+			if(!filter.isEmpty()) {
+				query += ", m = node:super_index('" + luceneQuery + "') "
+			}
 					'match ' + 
 					 	'n-[r2:connect*1..5]->m ' + 
 					'where ' + 
-						'r2 is null ' + 
+						'r2 is null AND m != n' + 
 					'return ' + 
 						'distinct m, count(*) AS nbResults ' + 
 					'skip ' + newOffset + ' ' + 

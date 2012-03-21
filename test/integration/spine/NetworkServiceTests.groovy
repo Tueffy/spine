@@ -22,7 +22,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	}
 
 	void testQueryForNeighbourNodes1() {
-		def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5)
+		// Do not look for extended network
+		def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5, [], false)
 				def targetResultList = ['jack.rumpsy@techbank.com',
                     'gudrun.mosters@techbank.com',
                     'john.holland@techbank.com',
@@ -37,7 +38,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	}
 
 	void testQueryForNeighbourNodes2() {
-		def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5)
+		// Do not look for extended network
+		def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5, [], false)
 		def targetResultList = ['michaela.pfeffer@techbank.com',
             'karina.wocek@techbank.com',
             'hope.soli@techbank.com',
@@ -51,7 +53,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	}
 
 	void testQueryForNeighbourNodes3() {
-		def result = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5)
+		// Do not look for extended network
+		def result = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5, [], false)
 		def targetResultList = []
 		def resultList = []
 		result.each {
@@ -62,8 +65,9 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	void testQueryForNeighbourNodes4()
 	{
+		// Do not look for extended network
 		def tagsToSearchFor = ['Agile']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
 		def targetResultList = ['jure.zakotnik@techbank.com']
 		def resultList = []
 		result.each {
@@ -74,8 +78,9 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	void testQueryForNeighbourNodes5()
 	{
+		// Do not look for extended network
 		def tagsToSearchFor = ['IT']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
 		def targetResultList = [
 			'jure.zakotnik@techbank.com',
 			 'markus.long@techbank.com'
@@ -89,8 +94,9 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	void testQueryForNeighbourNodes6()
 	{
+		// Do not look for extended network
 		def tagsToSearchFor = ['Agile', 'IT', 'Operations']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
 		def targetResultList = [
 			'jure.zakotnik@techbank.com', 
 			'markus.long@techbank.com', 
@@ -112,8 +118,9 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	
 	void testQueryForNeighbourNodes7()
 	{
+		// Do not look for extended network
 		def tagsToSearchFor = ['Agile']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor)
+		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
 		def targetResultList = ['jure.zakotnik@techbank.com']
 		def resultList = []
 		result.each {
