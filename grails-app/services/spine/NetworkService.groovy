@@ -8,6 +8,7 @@ class NetworkService {
     static transactional = false
 
     def graphCommunicatorService
+	def SuperIndexService superIndexService
     //def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 
     /*
@@ -191,7 +192,7 @@ class NetworkService {
 		}
 		query += 	'match ' + 
 						'p = n-[r:connect*1..5]->m ' + 
-					'where m != n ' +
+					'where m <> n ' +
 					'return ' + 
 						'distinct m, min(length(p)) ' + 
 					'order by min(length(p)) ' + 
@@ -244,13 +245,15 @@ class NetworkService {
 			int newOffset = offset - firstQueryNbTotalResults + limit;
 			int newLimit = limit - resultNodes.size()
 			
+			// TODO : Fix the nullpointer exception of Neo4j
+			// See here : https://groups.google.com/forum/?fromgroups#!topic/neo4j/v7yzYl2fGwA
 			query = 'start ' + 
 						'n = node:names(email={SP_user}), '
 			if(!filter.isEmpty()) {
 				query += ", m = node:super_index('" + luceneQuery + "') "
 			}
 					'match ' + 
-					 	'n-[r2:connect*1..5]->m ' + 
+					 	'n-[r2?:connect*1..5]->m ' + 
 					'where ' + 
 						'r2 is null AND m != n' + 
 					'return ' + 
@@ -406,6 +409,31 @@ class NetworkService {
 			// Apply tags to the newly created relationship 
 			if(props.tags) {
 				setProperty(['relationshipURI': createdRelationship, 'tags': props.tags])
+				
+				// We can deal with tags as String, Map, or List
+				def tagList = []
+				if(props.tags instanceof String)
+				{
+					def tokens = " ,;"
+					def result = ''
+					tagList = props.tags.tokenize(tokens)
+				}
+				else if(props.tags instanceof Map)
+				{
+					props.tags.each { key, value ->  tagList.add(key) }
+				}
+				else if (props.tags instanceof List)
+				{
+					tagList = props.tags
+				}
+				else
+				{
+					throw new Exception("tags type incompatible ! ")
+				}
+				
+				tagList.each {
+					superIndexService.removeTagFromIndex(it, to);
+				}
 			}
         }
 		
@@ -471,12 +499,17 @@ class NetworkService {
 			throw new Exception("tags type incompatible ! ")
 		}
 		
-		tagList.each { allExistingTags[it] = 1 }
+		def userNodeURI = getNodeURIFromEmail(props.endNode)
+		tagList.each { 
+			allExistingTags[it] = 1
+			superIndexService.addTagToIndex(it, userNodeURI); // Index each tag
+		}
 		
 		// Update in DB
         graphCommunicatorService.neoPut(relationship + '/properties', allExistingTags)
 		
         // add to index
+		// TODO: At the end this index is not usefull, because of the new super index 
 		def result = setRelationshipIndex(relationship, allExistingTags)
         return result.data
     }
@@ -524,7 +557,11 @@ class NetworkService {
 		graphCommunicatorService.neoPut(relationship + '/properties', actualTags)
 		
 		// Remove removed tags from the index
+		def userNodeURI = getNodeURIFromEmail(props.endNode)
 		setRelationshipIndex(relationship, actualTags)
+		actualTags.each {
+			superIndexService.removeTagFromIndex(it.key, userNodeURI);
+		}
 		
 		// If a relationship is left without properties, we delete it
 		if(actualTags.isEmpty())

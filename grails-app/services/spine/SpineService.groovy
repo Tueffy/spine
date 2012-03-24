@@ -7,6 +7,7 @@ class SpineService {
     static transactional = false
     def  networkService
     def badgeService
+	def SuperIndexService superIndexService
 
 	
     /**
@@ -325,8 +326,10 @@ class SpineService {
         if (!networkService.readRelationship(parameters)) {
             networkService.createRelationship(parameters)
         }
+		
         networkService.setProperty(parameters)
-
+		// Indexing : the NetworkService.setProperty method already updates the index
+		
         return success = true
     }
 	
@@ -358,6 +361,8 @@ class SpineService {
         parameters.put('tags', tags)
 
         success = (networkService.deleteProperty(parameters))
+		// Indexing : the NetworkService.removeProperty method already updates the index
+		
         return success
     }
 

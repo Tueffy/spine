@@ -1,11 +1,10 @@
 package spine
 
-import grails.test.*
-
+import grails.test.GrailsUnitTestCase
 
 class BadgeServiceTests extends GrailsUnitTestCase {
 
-	def badgeService
+	def BadgeService badgeService
 	def taglist1 = [Java:5, Spring:3, Operations:9, ITIL:11]
 	def taglist2 = [Frankfurt:6]
 	def taglist3 = [Cloud:3, Soccer:5]
@@ -15,7 +14,7 @@ class BadgeServiceTests extends GrailsUnitTestCase {
 	
     protected void setUp() {
         super.setUp()
-		checkDbResults = importDataService.checkDB()
+//		checkDbResults = importDataService.checkDB()
     }
 	
 	/**
@@ -23,7 +22,7 @@ class BadgeServiceTests extends GrailsUnitTestCase {
 	*/
     protected void tearDown() {
         super.tearDown()
-		assert checkDbResults == importDataService.checkDB()
+//		assert checkDbResults == importDataService.checkDB()
     }
 
     void testEvaluateTags1() {
