@@ -222,7 +222,7 @@ class NetworkService {
 		}
 		query += 'match ' +
 					'p = n-[r:connect*1..5]->m ' +
-				'where m != n '
+				'where m <> n '
 				'return ' +
 					'count(distinct m) as nb '
 		json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
