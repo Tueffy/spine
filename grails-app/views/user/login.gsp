@@ -20,7 +20,7 @@
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
     </div>  
     <div class="grid_14 alpha landing" style="padding-top:40px">
-    	<h2 style="font-size:36pt;color:#000000">Login and do not loose time connecting...</h2>
+    	<h2 style="font-size:36pt;color:#000000">Login and do not lose time connecting...</h2>
         <g:if test="flash['message']">
 			${flash['message']}
 		</g:if>
