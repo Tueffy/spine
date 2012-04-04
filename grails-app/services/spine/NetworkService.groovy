@@ -167,12 +167,12 @@ class NetworkService {
 		if(!filter.isEmpty()) {
 			for (i in 0..(filter.size() - 1))
 			{
-				luceneQuery += 	'tag : ' + filter[i] + ' OR ' +
-								'badge : ' + filter[i] + ' OR ' +
-								'email : ' + filter[i] + ' OR ' +
-								'firstname : ' + filter[i] + ' OR ' +
-								'lastname : ' + filter[i] + ' OR ' +
-								'city : ' + filter[i]
+				luceneQuery += 	'tag : ' + filter[i].toLowerCase() + ' OR ' +
+								'badge : ' + filter[i].toLowerCase() + ' OR ' +
+								'email : ' + filter[i].toLowerCase() + ' OR ' +
+								'firstname : ' + filter[i].toLowerCase() + ' OR ' +
+								'lastname : ' + filter[i].toLowerCase() + ' OR ' +
+								'city : ' + filter[i].toLowerCase()
 				if(i < filter.size() - 1) luceneQuery += ' OR '
 			}
 		}

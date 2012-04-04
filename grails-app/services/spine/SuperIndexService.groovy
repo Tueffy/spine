@@ -24,7 +24,7 @@ class SuperIndexService {
 	def addNodeToSuperIndex(String key, String value, String nodeURI) {
 		def requestQuery = [ 
 					'key' : key,
-					'value' : value,
+					'value' : value.toLowerCase(),
 					'uri' : nodeURI ]
 		graphCommunicatorService.neoPost(indexPath, requestQuery)
 	}
