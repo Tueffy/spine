@@ -50,9 +50,9 @@ a:hover { color:#67624e; }
 
 #left { }
 
-#left img.avatar { border: 4px solid white; border-radius:10px; display:block; }
+#left img.avatar { border: 4px solid white; border-radius:10px; display:block; margin-left:20px; }
 
-#left ul.description { list-style:none; padding-top: 7px; font-size: 11px; font-weight:bold;}
+#left ul.description { list-style:none; padding-top: 7px; font-size: 11px; font-weight:bold; margin-left:20px;}
 #left ul.description li.name { color:#67624e; }
 #left ul.description li.company { color:#958e73; }
 #left ul.description li.city { color:#958e73; }
@@ -97,7 +97,7 @@ a:hover { color:#67624e; }
 
 #right .feed .contact { margin-top: 15px; width:510px; }
 #right .feed .contact .picture { }
-#right .feed .contact .picture img.avatar { margin: auto; }
+#right .feed .contact .picture img.avatar { margin: 2px auto auto 15px; }
 #right .feed .contact .description {  }
 #right .feed .contact .description ul.badges { text-align:right; float:right; padding-right: 15px;}
 #right .feed .contact .description ul.badges li { display: inline; }
@@ -140,7 +140,7 @@ a:hover { color:#67624e; }
 #right .copyright a:hover {}
 
 #right .details_panel { margin-left: -25px; background:white; border-radius:0 15px 0 0; padding-top:10px; }
-#right .details_panel img.avatar, #right .feed .contact img.avatar { border: 5px solid #c9c5b8; border-radius:10px; display:block; }
+#right .details_panel img.avatar, #right .feed .contact img.avatar { border: 5px solid #c9c5b8; border-radius:10px; display:block; margin:auto auto 10px 30px; }
 #right .details_panel ul.description { list-style:none; font-size: 11px; font-weight:bold; padding: 10px 0; border-bottom:1px dotted #958e73; }
 #right .details_panel ul.description li.name { color:#67624e; }
 #right .details_panel ul.description li.company { color:#958e73; }

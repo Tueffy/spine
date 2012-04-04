@@ -3,24 +3,28 @@
 	          	  
          <!-- BEGIN : 1 person -->
          <div class="grid_14 alpha omega contact" id="${n.email}" >
-         <script>
-
-         	var mydrag = new Draggable('${n.email}', { revert: true });
-
-	        Droppables.add('${n.email}', { 
-			    accept: 'hot_tags',
-			    hoverclass: 'hover',
-			    onDrop: function(dragged, dropped, event) { 
-			    	//alert('Dragged: ' + dragged.id);
-			    	//alert('Dropped onto: ' + dropped.id);
-			    	//alert('Held ctrl key: ' + event.ctrlKey);			    
-			    	alert(dropped.id);
-			    	new Ajax.Request('/spine/network/addTag/'+dropped.id, {asynchronous:true,evalScripts:true,parameters:'e='+dragged.id});
-				    	
-			   	}
-			});
-         </script>
-         	<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="50" height="75" class="avatar" /></div>
+         
+	        <script>
+	
+	         	var mydrag = new Draggable('${n.email}', { revert: true });
+	
+		        Droppables.add('${n.email}', { 
+				    accept: 'hot_tags',
+				    hoverclass: 'hover',
+				    onDrop: function(dragged, dropped, event) { 
+				    	//alert('Dragged: ' + dragged.id);
+				    	//alert('Dropped onto: ' + dropped.id);
+				    	//alert('Held ctrl key: ' + event.ctrlKey);			    
+				    	alert(dropped.id);
+				    	new Ajax.Request('/spine/network/addTag/'+dropped.id, {asynchronous:true,evalScripts:true,parameters:'e='+dragged.id});
+					    	
+				   	}
+				});
+	        </script>
+	         
+			<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="75" height="75" class="avatar" /></div>
+			
+			
            <div class="grid_10 description omega">
              <ul class="badges">
                <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>

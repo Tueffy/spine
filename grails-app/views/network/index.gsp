@@ -7,8 +7,8 @@
 <body>
     <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
-      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="100" height="150" class="avatar" style="margin-left:45px"/>     
-	  <ul class="description"  style="margin-left:45px">
+      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="130" height="130" class="avatar" />     
+	  <ul class="description">
           <li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
           <li class="company">${user.company}</li>
           <li class="city">${user.country}</li>
@@ -79,7 +79,7 @@
         <!-- BEGIN : Details block -->
         <div class="grid_5 omega details_panel" >          
           <!-- <img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" />  -->
-          <img src="/spine/images/profiles/anonymous.gif"" alt="anonymous" width="100" height="150" class="avatar" id="selectedImage" style="margin-left:45px"/>
+          <img src="/spine/images/profiles/anonymous.gif"" alt="anonymous" width="125" height="125" class="avatar" id="selectedImage" />
      	  <span id="selectUser" style="font-size:9pt">Please choose one of your contacts to see more details!</span>
           <ul class="description">
             <li class="name" id="selectedUserName"></li>
