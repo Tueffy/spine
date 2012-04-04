@@ -1,5 +1,6 @@
 <div class="network_page">
-	<g:each in="${neighbours}" var="n">          	  
+	<g:each in="${neighbours}" var="n">
+	          	  
          <!-- BEGIN : 1 person -->
          <div class="grid_14 alpha omega contact" id="${n.email}" >
          <script>
@@ -27,7 +28,11 @@
              </ul>
             
              <h3><g:remoteLink action="getUser" id="${n.email}" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>
-             <p class="company">Accenture GmbH, ${n.city}, ${n.country}<br> </p>
+             <p class="company">
+             	<g:if test="${n?.company}">${n.company}</g:if>,  
+             	${n.city}, 
+             	${n.country}
+             <br> </p>
              
              <div class="grid_7 alpha">
                	<p class="quote">„Looking forward to new challenges„</p>
