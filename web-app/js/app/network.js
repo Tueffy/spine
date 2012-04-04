@@ -1,7 +1,19 @@
 window.onload = function() {
 
-	new Ajax.Autocompleter("autocomplete", "autocomplete_choices",
-			"/spine/network/ajaxAutoComplete", {});
+	
+	/****************************************
+	 *                                      *
+	 *      Auto completion for tags        *
+	 *                                      *
+	 ****************************************/
+	//new Ajax.Autocompleter("autocomplete", "autocomplete_choices",
+	//		"/spine/network/ajaxAutoComplete", {});
+	jQuery('.autocomplete_tags').autocomplete({
+		minLength: 2, 
+		source: '/spine/network/ajaxAutoComplete'
+	});
+	
+	
 
 	Droppables.add('left', {
 		accept : 'contact',

@@ -54,7 +54,8 @@
                     	<span class="plus">
                     		<g:form action="addTag" controller="network"  >
                     			<input name="email" type="hidden" value="${n.email}"/>
-						        <input name="tag" type="text" /> <a href="#"><g:submitToRemote  action="addTag" controller="network" value="+" onComplete="addTagUpdate(e,'${n.email}_tags')"/></a>
+						        <input name="tag" type="text" class="autocomplete_tags" /> 
+						        <a href="#"><g:submitToRemote  action="addTag" controller="network" value="+" onComplete="addTagUpdate(e,'${n.email}_tags')"/></a>
 							</g:form>
                     	</span>
                  	</li>

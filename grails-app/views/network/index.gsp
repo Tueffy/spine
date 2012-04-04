@@ -50,7 +50,7 @@
               	<input type="text" name="filter" id="autocomplete" value="${param}" default="${param}" onClick="javascript:this.value='';" />
               </g:if>
               <g:else>
-              	<input type="text" name="filter" id="autocomplete" value="Filter ${user.firstName}'s spine" default="Filter ${user.firstName}'s spine" onClick="javascript:this.value='';" />
+              	<input type="text" name="filter" id="autocomplete" class="autocomplete_tags" value="Filter ${user.firstName}'s spine" default="Filter ${user.firstName}'s spine" onClick="javascript:this.value='';" />
               </g:else>
               
               

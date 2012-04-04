@@ -55,11 +55,16 @@ class NetworkController {
 	}
 	
 	/**
-	 * 
+	 * jQuery autocomplete compliant, returns a simple list of tags
 	 */
 	def ajaxAutoComplete = {
-		def results = spineService.autocompleteTags(params.filter)
-		[ tags: results ]
+		def results = []
+		def filter = params.filter ? params.filter : params.term
+		spineService.autocompleteTags(filter).each {
+			key, value ->
+			results.push(key)
+		}
+		render results as JSON
 	}
 	
 	/**

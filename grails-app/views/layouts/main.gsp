@@ -4,13 +4,17 @@
   	<title><g:layoutTitle default="spine" /></title>
   	<link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
   	
+  	<link href="${resource(dir:'js/jquery/themes/redmond',file:'jquery-ui-1.8.18.custom.css')}" rel="stylesheet" type="text/css" />
+  	<link href="${resource(dir:'js/jquery/themes',file:'jquery-ui.css')}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
   	<link href="${resource(dir:'css',file:'reset.css')}" rel="stylesheet" type="text/css" />
   	<link href="${resource(dir:'css',file:'960.css')}" rel="stylesheet" type="text/css" />
   	<link href="${resource(dir:'css',file:'design.css')}" rel="stylesheet" type="text/css" />
   	<link href="${resource(dir:'css',file:'ajax.css')}" rel="stylesheet" type="text/css" />
+  	
   
   	<g:javascript src="jquery/jquery-1.7.min.js" />
+  	<g:javascript src="jquery/jquery-ui-1.8.18.custom.min.js" />
   	<g:javascript>
   		jQuery.noConflict();
   	</g:javascript>
