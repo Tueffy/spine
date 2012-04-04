@@ -420,8 +420,8 @@ class SpineService {
 	   // The idea is to go throw each tags and by applying a regexp determine the corresponding tags.
 	   allTheTags.each {
 		   tag, number -> 
-		   pattern = Pattern.compile("(.*)" + query + "(.*)")
-		   matcher = pattern.matcher(tag)
+		   pattern = Pattern.compile("(.*)" + query.toLowerCase() + "(.*)")
+		   matcher = pattern.matcher(tag.toLowerCase())
 		   if(matcher.find()) correspondingTags[tag] = number
 	  }
 	  return correspondingTags
