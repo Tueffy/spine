@@ -43,7 +43,7 @@
       	<div class="grid_14 alpha columnSeparator">
           <!-- BEGIN : filter & my updates -->
           <div class="grid_10 alpha filter">
-            <g:form name="filterByTag" method="post" action="index">
+            <g:form name="filterByTag" method="post" action="index" params="[user: user.email]">
             
               <!-- Input text : search Box -->
               <g:if test="${param}">
