@@ -1,27 +1,40 @@
+
+/* 
+ * Defining some UI object : 
+ */
+var viewAllTags;
+var viewAllTagsLink;
+
 window.onload = function() {
 
+	viewAllTags = jQuery('#right .details_panel p.all_tags');
+	viewAllTagsLink = viewAllTags.find('a');
 	
 	/****************************************
-	 *                                      *
-	 *      Auto completion for tags        *
-	 *                                      *
+	 * Auto completion for tags             *
 	 ****************************************/
-	//new Ajax.Autocompleter("autocomplete", "autocomplete_choices",
-	//		"/spine/network/ajaxAutoComplete", {});
 	jQuery('.autocomplete_tags').autocomplete({
 		minLength: 2, 
 		source: '/spine/network/ajaxAutoComplete'
 	});
 	
 	
+	/****************************************
+	 * View more or less tags in the        *
+	 * details panel                        *
+	 ****************************************/
+	viewAllTagsLink.on('click', toggleViewAllTags);
+	
 
+	/****************************************
+	 *  Drag & Drop user in the left panel  *
+	 *  to access the selected user network *
+	 ****************************************/
 	Droppables.add('left', {
 		accept : 'contact',
 		hoverclass : 'hover',
 		onDrop : function(e) {
-			// alert(e.id);
 			window.location = "index?user=" + e.id;
-
 		}
 	});
 
@@ -45,44 +58,65 @@ setFirstUser = function(user) {
 	firstUser = user;
 }
 
+/**
+ * Refresh the panel on the right with data about the selected user 
+ * Uses jQuery
+ */
 updateSelectedUser = function(e) {
-	// alert(e);
-	// evaluate the JSON
-	var user = eval("(" + e.responseText + ")");
-	$("selectUser").fade();
-	$("selectedUserName").innerHTML = user.firstName + ' ' + user.lastName;
-	$("selectedCity").innerHTML = user.city;
-	// $("selectedCountry").innerHTML = user.country;
-	$("selectedImage").appear();
-	$("selectedImage").src = "/spine/images/profiles/" + user.email + ".jpg";
-
-	var container = $("selectedTags");
-
-	var liList = container.childNodes;
-
-	for ( var i = 0; i < liList.length; i++) {
-		// alert (liList[i+1].nodeName);
-		var li = liList[i];
-		if (li.nodeName == "LI") {
-			$(li).fade();
-		}
+	var user = jQuery.parseJSON(e.responseText);
+	
+	// The user is no more asked to select a user : 
+	jQuery('#selectUser').hide();
+	
+	// Fill basic info about the user
+	jQuery('#selectedUserName').text(user.firstName + ' ' + user.lastName);
+	jQuery('#selectedCity').innerHTML = user.city;
+	jQuery('#selectedImage').attr('src', '/spine/images/profiles/' + user.email + '.jpg');
+	
+	// Updating the tag list
+	var selectedTags = jQuery('#selectedTags');
+	var selectedTagsMore = jQuery('#selectedTagsMore').hide();
+	selectedTags.find('li').remove();
+	selectedTagsMore.find('li').remove();
+	
+	// Get the tags & update the list with them
+	var nb_tags = 0;
+	jQuery.getJSON('/spine/network/getTags/' + user.email, function (tags) {
+		jQuery.each(tags, function (tag) {
+			nb_tags++;
+			var li = jQuery(document.createElement('li'));
+			li.text(tag);
+			if(nb_tags <= 10) 
+				li.appendTo(selectedTags);
+			else
+				li.appendTo(selectedTagsMore);
+			i++;
+		});
+	});	
+	
+	// Managing the "All tags" link
+	if(nb_tags > 10) {
+		viewAllTags.show();
+		viewAllTagsLink.text("All tags");
 	}
+	else
+		viewAllTags.hide();
+}
 
-	new Ajax.Request('/spine/network/getTags/' + user.email, {
-		asynchronous : true,
-		evalScripts : true,
-		onSuccess : function(transport) {
-			var tagsJSON = transport.responseText;
-			var tags = eval("(" + tagsJSON + ")");
-			for ( var key in tags) {
-				var new_element = document.createElement('li');
-				new_element.innerHTML = "#" + key;
-				container.insertBefore(new_element, container.firstchild);
-				$(new_element).grow();
-			}
-		}
-	});
-
+/**
+ * Display more or less tags in the right panel
+ */
+toggleViewAllTags = function () {
+	var selectedTagsMore = jQuery('#selectedTagsMore');
+	if(selectedTagsMore.css('display') == 'none') {
+		selectedTagsMore.show('slow');
+		jQuery(this).text("Less tags");
+	}
+	else {
+		selectedTagsMore.hide('slow');
+		jQuery(this).text("More tags");
+	}
+	return false;
 }
 
 tagsMinusOnMouseOver = function(e) {

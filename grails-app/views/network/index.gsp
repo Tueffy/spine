@@ -88,8 +88,11 @@
           </ul>          
           <ul class="tags" id="selectedTags">
            
-          </ul>          
-          <p class="all_tags"><a href="#">All tags</a></p>
+          </ul>   
+          <ul class="tags" id="selectedTagsMore">
+           
+          </ul>        
+          <p class="all_tags" style="display: none;"><a href="">All tags</a></p>
         </div> 
         <!-- END : Details block -->
       </div>
