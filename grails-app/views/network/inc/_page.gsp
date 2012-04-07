@@ -26,9 +26,12 @@
 			
 			
            <div class="grid_10 description omega">
+           
+             <!-- BADGES -->
              <ul class="badges">
-               <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
-               <li><img src="/spine/images/badges/html.png" width="36" height="35" alt="HTML"></li>
+             	<g:each in="${n.badges}" var="badge">
+             		<li><img src="/spine/images/badges/${badge.image}" width="36" height="35" alt="${badge}" title="${badge}" /></li>
+             	</g:each>
              </ul>
             
              <h3><g:remoteLink action="getUser" id="${n.email}" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>

@@ -42,6 +42,7 @@ class NetworkController {
 				userFromList.email = i.email
 				def tags = spineService.getUserTags(userFromList)
 				i.tags = tags
+				i.badges = spineService.getBadges(tags);
 		}
 		
 		//Get stastistics for tags and badges
