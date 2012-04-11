@@ -14,6 +14,11 @@ class TestController {
 		json.each { indexNode(it.self, it) }
 		render "ok"
 	}
+	
+	def tags = {
+		def tags = networkService.getAllProperties();
+		render tags;
+	}
 
 
 

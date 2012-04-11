@@ -13,9 +13,20 @@ window.onload = function() {
 	/****************************************
 	 * Auto completion for tags             *
 	 ****************************************/
+//	jQuery('.autocomplete_tags').autocomplete({
+//		minLength: 2, 
+//		source: '/spine/network/ajaxAutoComplete'
+//	});
+	
+	var tags = {
+        "Agile" 	: 16, 
+        "IT" 		: 30, 
+        "Java" 		: 27 
+	};
+	
 	jQuery('.autocomplete_tags').autocomplete({
 		minLength: 2, 
-		source: '/spine/network/ajaxAutoComplete'
+		source: autocompleteAllTagsSource
 	});
 	
 	
@@ -56,6 +67,23 @@ getFirstUser = function() {
 
 setFirstUser = function(user) {
 	firstUser = user;
+}
+
+/**
+ * Function uses by jQuery UI autocomplete widget to retrieve tags. 
+ */
+autocompleteAllTagsSource = function (request, response) {
+	var responseData = new Array();
+	jQuery.getJSON('/spine/network/ajaxAutoComplete', {'term': request.term}, function (data) {
+		jQuery.each(data, function (i, elem) {
+			console.log(elem);
+			responseData.push({
+				'label': elem.tag + ' : ' + elem.number, 
+				'value': elem.tag
+			});
+		});
+		response(responseData);
+	});	
 }
 
 /**

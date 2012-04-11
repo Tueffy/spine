@@ -408,21 +408,27 @@ class SpineService {
    /**
     * 
     * @param String query One tag to search for (No multitag autocompletion)
-    * @return Map Map of the matching tags : [tagName: number]
+    * @return List List of the matching tags : [[tagName: number]]
     */
    def autocompleteTags(String query)
    {
 	   def allTheTags = networkService.getAllProperties()
-	   def correspondingTags = [:]
+	   def correspondingTags = []
 	   Pattern pattern
 	   Matcher matcher
 	   
 	   // The idea is to go throw each tags and by applying a regexp determine the corresponding tags.
+	   // Search is : *query* where query is lowercased 
 	   allTheTags.each {
 		   tag, number -> 
 		   pattern = Pattern.compile("(.*)" + query.toLowerCase() + "(.*)")
 		   matcher = pattern.matcher(tag.toLowerCase())
-		   if(matcher.find()) correspondingTags[tag] = number
+		   if(matcher.find()) {
+			   correspondingTags.add([
+			   		tag: tag, 
+					number: number
+			   ]);
+		   }
 	  }
 	  return correspondingTags
    }
