@@ -16,7 +16,7 @@
       <div class="badges"  style="margin-left:35px">
         <ul>
           <g:each in="${badges}" var="b"> 
-          	 <li><img src="/spine/images/badges/${b.image}" width="37" height="38" alt="${b.name}"></li>          
+          	 <li><img src="/spine/images/badges/36x36/${b.image}" width="37" height="38" alt="${b.name}"></li>          
           </g:each>
         </ul>
       </div>

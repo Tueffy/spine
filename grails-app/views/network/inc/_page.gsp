@@ -30,7 +30,7 @@
              <!-- BADGES -->
              <ul class="badges">
              	<g:each in="${n.badges}" var="badge">
-             		<li><img src="/spine/images/badges/${badge.image}" width="36" height="35" alt="${badge}" title="${badge}" /></li>
+             		<li><img src="/spine/images/badges/36x36/${badge.image}" width="36" height="35" alt="${badge}" title="${badge}" /></li>
              	</g:each>
              </ul>
             
