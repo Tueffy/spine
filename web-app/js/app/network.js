@@ -1,10 +1,29 @@
 
-/* 
+/** 
  * Defining some UI object : 
  */
 var viewAllTags;
 var viewAllTagsLink;
 
+
+/**
+ * Dealing with the first user
+ * TODO: Can someone write down what it is used for ? 
+ */
+var firstUser = null;
+
+getFirstUser = function() {
+	return firstUser;
+}
+
+setFirstUser = function(user) {
+	firstUser = user;
+}
+
+
+/**
+ * Window & DOM ready we can interact with it ! 
+ */
 window.onload = function() {
 
 	viewAllTags = jQuery('#right .details_panel p.all_tags');
@@ -13,17 +32,6 @@ window.onload = function() {
 	/****************************************
 	 * Auto completion for tags             *
 	 ****************************************/
-//	jQuery('.autocomplete_tags').autocomplete({
-//		minLength: 2, 
-//		source: '/spine/network/ajaxAutoComplete'
-//	});
-	
-	var tags = {
-        "Agile" 	: 16, 
-        "IT" 		: 30, 
-        "Java" 		: 27 
-	};
-	
 	jQuery('.autocomplete_tags').autocomplete({
 		minLength: 2, 
 		source: autocompleteAllTagsSource
@@ -59,30 +67,28 @@ window.onload = function() {
 	 */
 }
 
-var firstUser = null;
-
-getFirstUser = function() {
-	return firstUser;
-}
-
-setFirstUser = function(user) {
-	firstUser = user;
-}
 
 /**
  * Function uses by jQuery UI autocomplete widget to retrieve tags. 
  */
 autocompleteAllTagsSource = function (request, response) {
+	// Empty Array we will populate for the response
 	var responseData = new Array();
+	
+	// Call the server, expecting a JSON answer
 	jQuery.getJSON('/spine/network/ajaxAutoComplete', {'term': request.term}, function (data) {
+		
+		// Server responded, now you can populate the responseData array
 		jQuery.each(data, function (i, elem) {
-			console.log(elem);
 			responseData.push({
 				'label': elem.tag + ' : ' + elem.number, 
 				'value': elem.tag
 			});
 		});
+		
+		// Sending back the responseData array for the autocompleter
 		response(responseData);
+		
 	});	
 }
 
