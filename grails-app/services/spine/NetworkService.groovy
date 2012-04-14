@@ -193,7 +193,7 @@ class NetworkService {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
 		query += 	'match ' +
-						'p = n-[r:connect*1..5]->m ' +
+						' p = n-[r:connect]->()-[r2?:connect*0..4]->m ' +
 					'where m <> n ' +
 					'return ' +
 						'distinct m, min(length(p)) ' +
@@ -227,7 +227,7 @@ class NetworkService {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
 		query += 'match ' +
-					'p = n-[r:connect*1..5]->m ' +
+					'p = n-[r:connect]->()-[r2?:connect*0..4]->m ' +
 				'where m <> n ' + 
 				'return ' +
 					'count(distinct m) as nb '
