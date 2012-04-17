@@ -147,7 +147,7 @@ class NetworkService {
      * @param email id of the person to start the query
      * @param offset pagination value
      * @param limit max of how many neighbours are searched
-     * @return The found nodes data. If no neighbours are found, returns null.
+     * @return Network
      */
 	def queryForNeighbourNodes(String email, int offset, int limit, List filter = [], boolean extended_search = true)
 	{
@@ -155,8 +155,10 @@ class NetworkService {
 		// TODO : Refectoring - refactor the way search work to make it less complicated and more maintainable and to get more performances
 		
 		// Vars initialization
-		def resultNodes = []
-		def neighbour = [:]
+		def network = new Network()
+		network.offset = offset
+		network.limit = limit
+		network.filter = filter
 		
 		/*-------------------------------------------------------------
 		 * 
@@ -192,12 +194,15 @@ class NetworkService {
 		if(!filter.isEmpty()) {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
-		query += 	'match ' +
-						' p = n-[r:connect]->()-[r2?:connect*0..4]->m ' +
+		query += 	'match ' 
+		if(filter.isEmpty())
+			query += 'n-[:connect*1..5]->m, '
+		query += 	'p = shortestPath(n-[:connect*..5]->m) ' + 
+						' ' +
 					'where m <> n ' +
 					'return ' +
-						'distinct m, min(length(p)) ' +
-					'order by min(length(p)) ' +
+						'distinct m, length(p), relationships(p) ' +
+					'order by length(p) ' +
 					'skip ' + offset + ' ' +
 					'limit ' + limit + ' '
 		
@@ -208,10 +213,21 @@ class NetworkService {
 		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
 		
 		// Get results
+//		return json.data
+		def i = 0
 		json.data.each {
-			neighbour = it[0].data
-			neighbour['distance'] = it[1]
-			resultNodes.add(neighbour)
+			
+			// it[0] => m
+			// it[1] => length(p)
+			// it[2] => relationships(p)
+			
+			println(i++)
+			def networkedUser = new NetworkedUser(new User());
+			networkedUser.user.bind(it[0])
+			networkedUser.distance = it[1]
+			if(networkedUser.distance == 2)
+				networkedUser.bindDirectTags(it[2][0])
+			network.networkedUsers.add(networkedUser)
 		}
 		
 		/*-------------------------------------------------------------
@@ -227,7 +243,7 @@ class NetworkService {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
 		query += 'match ' +
-					'p = n-[r:connect]->()-[r2?:connect*0..4]->m ' +
+					'p = shortestPath(n-[:connect*..5]->m) ' +
 				'where m <> n ' + 
 				'return ' +
 					'count(distinct m) as nb '
@@ -236,6 +252,7 @@ class NetworkService {
 			firstQueryNbTotalResults = 0;
 		else
 			firstQueryNbTotalResults = (int) json.data[0][0]
+		network.networkSize = firstQueryNbTotalResults
 			
 		
 		/*-------------------------------------------------------------
@@ -246,12 +263,12 @@ class NetworkService {
 		// We only execute the second query if there no more (or not enough) 
 		// result to get from the first one.  
 		// AND the extended_search parameter must be set to true
-		if(extended_search && resultNodes.size() < limit && !filter.isEmpty())
+		if(extended_search && network.networkedUsers.size() < limit && !filter.isEmpty())
 		{
 			int newOffset = offset - firstQueryNbTotalResults;
 			if(newOffset < 0)
 			newOffset = 0
-			int newLimit = limit - resultNodes.size()
+			int newLimit = limit - network.networkedUsers.size()
 			
 			// Build the second query
 			query = 'start ' +
@@ -260,10 +277,8 @@ class NetworkService {
 				query += " m = node:super_index('" + luceneQuery + "') "
 			}
 			query += 
-					'match ' +
-						 'n-[r2?:connect*1..5]->m ' +
 					'where ' +
-						'r2 is null AND m <> n ' +
+						'not(n-[:connect*1..5]->m) AND m <> n ' +
 					'return ' +
 						'distinct m, count(*) AS nbResults ' +
 					'skip ' + newOffset + ' ' +
@@ -278,15 +293,18 @@ class NetworkService {
 			
 			// Get results
 			json.data.each {
-				neighbour = it[0].data
-				neighbour['distance'] = 0 // We considere the distance beeing 0 because it's not in the user network
-//				println "Elem: " + neighbour
-				resultNodes.add(neighbour)
+				
+				// it[0] => m
+				// it[1] = nbResults
+				
+				def networkedUser = new NetworkedUser(new User())
+				networkedUser.user.bind(it[0])
+				network.networkedUsers.add(networkedUser)
 			}
 		}
 		
 		
-		return resultNodes
+		return network
 	}
 
     /** Returns all properties for the relationship pointing to the node referred to and their number.

@@ -35,15 +35,7 @@ class NetworkController {
 		def filter = params.filter
 				
 		// Get user network (get the first page)
-		def n = null
-		n  = spineService.getUserNetwork(user, filter , 0, config.network.itemsPerPage)
-		for ( i in n ) {
-				def userFromList = new User()
-				userFromList.email = i.email
-				def tags = spineService.getUserTags(userFromList)
-				i.tags = tags
-				i.badges = spineService.getBadges(tags);
-		}
+		def Network network  = spineService.getUserNetwork(user, filter , 0, config.network.itemsPerPage)
 		
 		//Get stastistics for tags and badges
 		def badges = spineService.getBadges(user);
@@ -52,7 +44,7 @@ class NetworkController {
 		//Top 5 hot tags
 		hotTags= [hotTags[1], hotTags[2], hotTags[3], hotTags[4], hotTags[5]]		
 				
-		[param : params.filter, user : user, neighbours : n, badges: badges, hotTags: hotTags]
+		[param : params.filter, user : user, network : network, badges: badges, hotTags: hotTags]
 	}
 	
 	/**
@@ -80,9 +72,10 @@ class NetworkController {
 		if(params.page == null) params.page = 1
 		int offset = params.page.toInteger() - 1
 		offset *= config.network.itemsPerPage
-		def n  = spineService.getUserNetwork(user, params.filter, offset, config.network.itemsPerPage)
 		
-		render( template: "inc/page", model: [neighbours: n]);
+		def Network network  = spineService.getUserNetwork(user, params.filter , offset, config.network.itemsPerPage)
+		
+		render( template: "inc/page", model: [network: network]);
 		
 	}
 	

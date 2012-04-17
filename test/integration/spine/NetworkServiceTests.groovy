@@ -23,80 +23,87 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
 	void testQueryForNeighbourNodes1() {
 		// Do not look for extended network
-		def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5, [], false)
-				def targetResultList = ['jack.rumpsy@techbank.com',
-                    'gudrun.mosters@techbank.com',
-                    'john.holland@techbank.com',
-                    'michaela.pfeffer@techbank.com',
-                    'karina.wocek@techbank.com']
+		def Network network = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5, [], false)
+		def List networkEmailList = network.toEmailList()
+				
+		def targetResultList = [
+			'karina.wocek@techbank.com',
+			'gudrun.mosters@techbank.com', 
+			'petra.gerste@techbank.com', 
+			'mario.gamez@techbank.com',
+			'markus.long@techbank.com'
+		]
 
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		assert networkEmailList.size() == 5
+		assert networkEmailList.containsAll(targetResultList)
 	}
 
 	void testQueryForNeighbourNodes2() {
 		// Do not look for extended network
-		def result = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5, [], false)
-		def targetResultList = ['michaela.pfeffer@techbank.com',
-            'karina.wocek@techbank.com',
-            'hope.soli@techbank.com',
-            'petra.gerste@techbank.com',
-            'anne.brown@techbank.com']
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		def Network network = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5, [], false)
+		def List networkEmailList = network.toEmailList()
+		
+		def targetResultList = [
+			'mario.gamez@techbank.com',
+			'markus.long@techbank.com', 
+			'jack.rumpsy@techbank.com', 
+			'alice.weisse@techbank.com', 
+			'john.holland@techbank.com'
+		]
+		
+		assert networkEmailList.size() == 5
+		assert networkEmailList.containsAll(targetResultList)
 	}
 
 	void testQueryForNeighbourNodes3() {
 		// Do not look for extended network
-		def result = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5, [], false)
+		def Network network = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5, [], false)
+		def List networkEmailList = network.toEmailList()
+		
 		def targetResultList = []
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		
+		assert networkEmailList.size() == 0
+		assert networkEmailList.containsAll(targetResultList)
 	}
 	
 	void testQueryForNeighbourNodes4()
 	{
 		// Do not look for extended network
 		def tagsToSearchFor = ['Agile']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
-		def targetResultList = ['jure.zakotnik@techbank.com']
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def List networkEmailList = network.toEmailList()
+		
+		def targetResultList = [
+			'jure.zakotnik@techbank.com', 
+			'bas.hoffe@techbank.com'
+		]
+		
+		assert networkEmailList.size() == 2
+		assert networkEmailList.containsAll(targetResultList)
 	}
 	
 	void testQueryForNeighbourNodes5()
 	{
 		// Do not look for extended network
 		def tagsToSearchFor = ['IT']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def List networkEmailList = network.toEmailList()
+		
 		def targetResultList = [
 			'jure.zakotnik@techbank.com',
 			 'markus.long@techbank.com'
 		]
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		
+		assert networkEmailList.containsAll(targetResultList)
 	}
 	
 	void testQueryForNeighbourNodes6()
 	{
 		// Do not look for extended network
 		def tagsToSearchFor = ['Agile', 'IT', 'Operations']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def List networkEmailList = network.toEmailList()
+		
 		def targetResultList = [
 			'jure.zakotnik@techbank.com', 
 			'markus.long@techbank.com', 
@@ -109,24 +116,20 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 			'fero.bacak@techbank.com', 
 			'steve.hill@techbank.com', 
 			'jeanluc.greedy@techbank.com']
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		
+		assert networkEmailList.containsAll(targetResultList)
 	}
 	
 	void testQueryForNeighbourNodes7()
 	{
 		// Do not look for extended network
 		def tagsToSearchFor = ['Agile']
-		def result = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def List networkEmailList = network.toEmailList()
+		
 		def targetResultList = ['jure.zakotnik@techbank.com']
-		def resultList = []
-		result.each {
-			resultList.add(it.email)
-		}
-		assert resultList.containsAll(targetResultList)
+		
+		assert networkEmailList.containsAll(targetResultList)
 	}
 
 	void testGetNodeURIFromEmail() {

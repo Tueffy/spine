@@ -67,64 +67,26 @@ class SpineService {
      * @param offset
      * @return userList of type User
      */
-    def getUserNetwork(User contextUser, String filter, int offset, int limit) {
+    def Network getUserNetwork(User contextUser, String filter, int offset, int limit) {
+        def Network network
+		def filterList = []
+		
+		// Tokenize the filter string if it not empty
+		if(filter != null && filter != '') {
+			def tokens = " ,;"
+			filterList = filter.tokenize(tokens)
+		}
+		
+		network = networkService.queryForNeighbourNodes(contextUser.email, offset, limit, filterList)
 
-        def queryReturn
-        def userList = []
+		// Grab tabs and badges for each user of the network
+		network.networkedUsers.each {
+			networkedUser -> 
+			networkedUser.user.tags = networkService.getIncomingTagsForNode(networkedUser.user.email)
+			networkedUser.user.badges = badgeService.evaluateTags(networkedUser.user.tags)
+		}
 
-        // verify if a filter has been passed
-
-        if ((filter == null) || (filter == '')) {
-
-            // get the neighbours in batches of 20
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit)
-
-        } else {
-
-            // first step is to tokenize the filter string
-            def tokens = " ,;"
-            def wordList = [] 
-			
-            wordList = filter.tokenize(tokens)
-
-            println "search filter: " + wordList
-
-            // now we need to wait until the network service queryNode is ready, as this is not the case yet, use the same service as in the if
-            queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, limit, wordList)
-        }
-
-        // loop through the list and instantiate the user objects incl. tags
-        def user
-
-        queryReturn.each {
-            user = new User()
-            user.firstName = it.firstName
-            user.lastName = it.lastName
-            user.email = it.email
-            user.country = it.country
-            user.city = it.city
-            user.imagePath = it.image
-            user.freeText = it.freeText
-            user.tags = networkService.getIncomingTagsForNode(it.email)
-            user.freeText = it.freeText
-			user.company = it.company
-			user.department = it.department
-			user.jobTitle = it.jobTitle
-			user.phone = it.phone
-			user.mobile = it.mobile
-			user.gender = it.gender
-			user.birthday = it.birthday
-			user.status = it.status
-			
-			user.tags = networkService.getIncomingTagsForNode(it.email)
-            user.distance = it.distance
-            if (user.tags != null)
-                user.badges = badgeService.evaluateTags(user.tags)
-
-            userList.add(user)
-        }
-
-        return userList
+        return network
     }
 
     /**
@@ -408,9 +370,9 @@ class SpineService {
    /**
     * 
     * @param String query One tag to search for (No multitag autocompletion)
-    * @return List List of the matching tags : [[tagName: number]]
+    * @return List List of the matching tags : [[tag: x, number: y]]
     */
-   def autocompleteTags(String query)
+   def List autocompleteTags(String query)
    {
 	   def allTheTags = networkService.getAllProperties()
 	   def correspondingTags = []

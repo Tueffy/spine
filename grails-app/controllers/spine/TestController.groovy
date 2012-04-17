@@ -1,5 +1,7 @@
 package spine
 
+import grails.converters.JSON;
+
 import java.util.List;
 
 class TestController {
@@ -19,8 +21,22 @@ class TestController {
 		def tags = networkService.getAllProperties();
 		render tags;
 	}
-
-
+	
+	def network2 = {
+		Network network = networkService.queryForNeighbourNodes("christian.tueffers@techbank.com", 0, 10);
+		render network.networkedUsers as JSON;
+//		def network = networkService.queryForNeighbourNodes("christian.tueffers@techbank.com", 0, 10);
+//		render network as JSON;
+//		def tagsToSearchFor = ['Agile']
+//		def network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+//		def List networkEmailList = network.toEmailList()
+//		render network
+//		def query = "start n = node:names(email='christian.tueffers@techbank.com') , m = node:super_index('tag : agile OR badge : agile OR email : agile OR firstname : agile OR lastname : agile OR city : agile') match  p = shortestPath(n-[:connect*..5]->m) where m <> n return distinct m.email, length(p), relationships(p)order by length(p) skip 0 limit 20"
+//		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
+//		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {}}')
+//		render json
+	}
+	
 
 	/**
 	 * Insert / update the data about the node in the super index

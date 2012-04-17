@@ -75,15 +75,14 @@ class SpineServiceTests extends GrailsUnitTestCase {
     // tests for getUserNetwork
 
     void testGetUserNetwork1() {
-
-        def result = spineService.getUserNetwork(u1, '', 0, 10)
-        assert result.size() == 10
+		def Network network = spineService.getUserNetwork(u1, '', 0, 10)
+		assert network.networkedUsers.size() == 10
     }
 
     void testGetUserNetwork2() {
 
-        def result = spineService.getUserNetwork(u2, '', 0, 10)
-        assert result.size() == 10
+        def Network network = spineService.getUserNetwork(u2, '', 0, 10)
+        assert network.networkedUsers.size() == 10
     }
 
     // tests for getUser
@@ -153,8 +152,13 @@ class SpineServiceTests extends GrailsUnitTestCase {
 	void testAutocompleteTags()
 	{
 		def results = spineService.autocompleteTags('Clou')
-		def expectedRestults = ['Cloud' : 6, 'zCloud' : 1]
-		assert results.sort() == expectedRestults.sort()
+		def expectedResults = [
+			[tag: 'zCloud', number: 1], 
+			[tag: 'Cloud', number: 6]
+		]
+		
+		assert results.size() == 2
+		assert results.containsAll(expectedResults)
 	}
 	
 	void testActivateUser()

@@ -1,14 +1,14 @@
 <div class="network_page">
-	<g:each in="${neighbours}" var="n">
+	<g:each in="${network.networkedUsers}" var="networkedUser">
 	          	  
          <!-- BEGIN : 1 person -->
-         <div class="grid_14 alpha omega contact" id="${n.email}" >
+         <div class="grid_14 alpha omega contact" id="${networkedUser.user.email}" >
          
 	        <script>
 	
-	         	var mydrag = new Draggable('${n.email}', { revert: true });
+	         	var mydrag = new Draggable('${networkedUser.user.email}', { revert: true });
 	
-		        Droppables.add('${n.email}', { 
+		        Droppables.add('${networkedUser.user.email}', { 
 				    accept: 'hot_tags',
 				    hoverclass: 'hover',
 				    onDrop: function(dragged, dropped, event) { 
@@ -22,33 +22,33 @@
 				});
 	        </script>
 	         
-			<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${n.email}.jpg" alt="${n.firstName}" width="75" height="75" class="avatar" /></div>
+			<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${networkedUser.user.email}.jpg" alt="${networkedUser.user.firstName}" width="75" height="75" class="avatar" /></div>
 			
 			
            <div class="grid_10 description omega">
            
              <!-- BADGES -->
              <ul class="badges">
-             	<g:each in="${n.badges}" var="badge">
+             	<g:each in="${networkedUser.user.badges}" var="badge">
              		<li><img src="/spine/images/badges/36x36/${badge.image}" width="36" height="35" alt="${badge}" title="${badge}" /></li>
              	</g:each>
              </ul>
             
-             <h3><g:remoteLink action="getUser" id="${n.email}" update="foo" onSuccess="updateSelectedUser(e)">${n.firstName} ${n.lastName}</g:remoteLink></h3>
+             <h3><g:remoteLink action="getUser" id="${networkedUser.user.email}" update="foo" onSuccess="updateSelectedUser(e)">${networkedUser.user.firstName} ${networkedUser.user.lastName}</g:remoteLink></h3>
              <p class="company">
-             	<g:if test="${n?.company}">${n.company}</g:if>,  
-             	${n.city}, 
-             	${n.country}
+             	<g:if test="${networkedUser.user?.company}">${networkedUser.user.company}</g:if>,  
+             	${networkedUser.user.city}, 
+             	${networkedUser.user.country}
              <br> </p>
              
              <div class="grid_7 alpha">
                	<p class="quote">„Looking forward to new challenges„</p>
-               	<ul class="tags" id="${n.email}_tags">               		
-               		<g:each in="${n.tags}" var="t">    	        	  
-	                    <li id="${n.email}_${t.key}">	                    
-		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${n.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${n.email}_${t.key}_minus');">${t.key}</a>
-		                    <span id="${n.email}_${t.key}_minus">
-		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:n.email]" onComplete="removeTagUpdate('${n.email}_${t.key}')">-</g:remoteLink>
+               	<ul class="tags" id="${networkedUser.user.email}_tags">               		
+               		<g:each in="${networkedUser.user.tags}" var="t">    	        	  
+	                    <li id="${networkedUser.user.email}_${t.key}">	                    
+		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${networkedUser.user.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${networkedUser.user.email}_${t.key}_minus');">${t.key}</a>
+		                    <span id="${networkedUser.user.email}_${t.key}_minus">
+		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:networkedUser.user.email]" onComplete="removeTagUpdate('${networkedUser.user.email}_${t.key}')">-</g:remoteLink>
 		                    </span>
 	                    </li>
                    	</g:each>                 
@@ -56,16 +56,16 @@
                    	<li> 	                    	
                     	<span class="plus">
                     		<g:form action="addTag" controller="network"  >
-                    			<input name="email" type="hidden" value="${n.email}"/>
+                    			<input name="email" type="hidden" value="${networkedUser.user.email}"/>
 						        <input name="tag" type="text" class="autocomplete_tags" /> 
-						        <a href="#"><g:submitToRemote  action="addTag" controller="network" value="+" onComplete="addTagUpdate(e,'${n.email}_tags')"/></a>
+						        <a href="#"><g:submitToRemote  action="addTag" controller="network" value="+" onComplete="addTagUpdate(e,'${networkedUser.user.email}_tags')"/></a>
 							</g:form>
                     	</span>
                  	</li>
                	</ul>
              </div>
              <div class="grid_3 omega">
-             	<p class="distance">${n.distance}</p>
+             	<p class="distance">${networkedUser.distance}</p>
                <div class="distance_arrows"></div>
              </div>
            </div>
