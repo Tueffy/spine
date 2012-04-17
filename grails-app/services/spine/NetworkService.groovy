@@ -41,9 +41,16 @@ class NetworkService {
      * @param props
      * @return
      */
-    def createNode(Map props) {
+	def createNode(Map props) {
         //TODO: check if node exists already via readNode
-        def newNodeRef = graphCommunicatorService.neoPost('/db/data/node', props)
+ 
+		//create a timestamp for the new node and add into the props for createdAt and lastUpdated
+		def now = System.currentTimeMillis()
+		props['createdAt'] = now
+		props['lastUpdated'] = now
+
+		//initiate the node creation
+		def newNodeRef = graphCommunicatorService.neoPost('/db/data/node', props)
         addNodeIndex(newNodeRef.self, props)
         return newNodeRef
     }
@@ -54,6 +61,11 @@ class NetworkService {
      * @return
      */
     def updateNode(String email, Map props) {
+
+		//change the timestamp of lastUpdated
+		def now = System.currentTimeMillis()
+		props['lastUpdated'] = now
+		
         def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': '"' + email + '"'])
         //node URL is self
         def newProperties = json.data[0]
@@ -64,12 +76,13 @@ class NetworkService {
         }
         //remove all old index entries
         removeNodeIndex(json.self[0])
-//		graphCommunicatorService.neoDelete(json.self[0]) // actually we don't need to delete the node
+		//graphCommunicatorService.neoDelete(json.self[0]) // actually we don't need to delete the node
         //add new properties to node
         graphCommunicatorService.neoPut(json.self[0] + '/properties', newProperties)
         //add new index entries
         addNodeIndex(json.self[0], newProperties)
     }
+
 
     /** Delete node and remove from index
      * @param email identifier of the node

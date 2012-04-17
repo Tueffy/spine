@@ -1,7 +1,6 @@
 package spine
 
 import grails.converters.JSON;
-
 import java.util.List;
 
 class TestController {
