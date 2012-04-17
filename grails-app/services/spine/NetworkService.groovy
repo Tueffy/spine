@@ -255,8 +255,10 @@ class NetworkService {
 		if(!filter.isEmpty()) {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
-		query += 'match ' +
-					'p = shortestPath(n-[:connect*..5]->m) ' +
+		query += 'match '
+		if(filter.isEmpty())
+			query += 'n-[:connect*1..5]->m, '
+		query += 'p = shortestPath(n-[:connect*..5]->m) ' +
 				'where m <> n ' + 
 				'return ' +
 					'count(distinct m) as nb '
