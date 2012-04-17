@@ -22,6 +22,10 @@ class NetworkedUser {
 		}
 	}
 	
+	def boolean isDirectTag(String tag) {
+		return directTags.contains(tag)
+	}
+	
     static constraints = {
     }
 }

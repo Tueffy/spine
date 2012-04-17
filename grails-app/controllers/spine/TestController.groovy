@@ -22,10 +22,10 @@ class TestController {
 	}
 	
 	def network2 = {
-		Network network = networkService.queryForNeighbourNodes("christian.tueffers@techbank.com", 0, 10);
-		render network.networkedUsers as JSON;
+		def Network network = networkService.queryForNeighbourNodes("christian.tueffers@techbank.com", 0, 10);
+		render network.networkedUsers[0].directTags
 //		def network = networkService.queryForNeighbourNodes("christian.tueffers@techbank.com", 0, 10);
-//		render network as JSON;
+//		render network;
 //		def tagsToSearchFor = ['Agile']
 //		def network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
 //		def List networkEmailList = network.toEmailList()

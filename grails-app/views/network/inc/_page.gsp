@@ -22,7 +22,9 @@
 				});
 	        </script>
 	         
-			<div class="grid_3 alpha picture"><img src="/spine/images/profiles/${networkedUser.user.email}.jpg" alt="${networkedUser.user.firstName}" width="75" height="75" class="avatar" /></div>
+			<div class="grid_3 alpha picture">
+				<img src="/spine/images/profiles/${networkedUser.user.email}.jpg" alt="${networkedUser.user.firstName}" width="75" height="75" class="avatar" />
+			</div>
 			
 			
            <div class="grid_10 description omega">
@@ -34,19 +36,33 @@
              	</g:each>
              </ul>
             
-             <h3><g:remoteLink action="getUser" id="${networkedUser.user.email}" update="foo" onSuccess="updateSelectedUser(e)">${networkedUser.user.firstName} ${networkedUser.user.lastName}</g:remoteLink></h3>
+            <!--  User complete name -->
+             <h3>
+             	<g:remoteLink action="getUser" id="${networkedUser.user.email}" update="foo" onSuccess="updateSelectedUser(e)">
+             		${networkedUser.user.firstName} ${networkedUser.user.lastName}
+             	</g:remoteLink>
+             </h3>
+             
+             <!--  Company, City, Country -->	
              <p class="company">
              	<g:if test="${networkedUser.user?.company}">${networkedUser.user.company}</g:if>,  
              	${networkedUser.user.city}, 
              	${networkedUser.user.country}
-             <br> </p>
+             	<br> 
+             </p>
              
              <div class="grid_7 alpha">
+             
                	<p class="quote">„Looking forward to new challenges„</p>
+               	
+               	<!-- Tag list -->
                	<ul class="tags" id="${networkedUser.user.email}_tags">               		
                		<g:each in="${networkedUser.user.tags}" var="t">    	        	  
 	                    <li id="${networkedUser.user.email}_${t.key}">	                    
-		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${networkedUser.user.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${networkedUser.user.email}_${t.key}_minus');">${t.key}</a>
+		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${networkedUser.user.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${networkedUser.user.email}_${t.key}_minus');">
+		                    	${t.key} <!-- Tag -->
+		                    	<g:if test="${networkedUser.isDirectTag(t.key)}">(!)</g:if>
+		                   </a>
 		                    <span id="${networkedUser.user.email}_${t.key}_minus">
 		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:networkedUser.user.email]" onComplete="removeTagUpdate('${networkedUser.user.email}_${t.key}')">-</g:remoteLink>
 		                    </span>
@@ -63,6 +79,9 @@
                     	</span>
                  	</li>
                	</ul>
+               	<!--  End : tag list -->
+               	
+               	
              </div>
              <div class="grid_3 omega">
              	<p class="distance">${networkedUser.distance}</p>

@@ -226,22 +226,21 @@ class NetworkService {
 		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + email + '"}}')
 		
 		// Get results
-//		return json.data
-		def i = 0
+//		return json.data[0]
 		json.data.each {
 			
 			// it[0] => m
 			// it[1] => length(p)
 			// it[2] => relationships(p)
 			
-			println(i++)
 			def networkedUser = new NetworkedUser(new User());
 			networkedUser.user.bind(it[0])
 			networkedUser.distance = it[1]
-			if(networkedUser.distance == 2)
-				networkedUser.bindDirectTags(it[2][0])
+			if(networkedUser.distance == 1)
+				networkedUser.bindDirectTags(it[2][0]) // it[2][0] => the first relationship of the path
 			network.networkedUsers.add(networkedUser)
 		}
+		
 		
 		/*-------------------------------------------------------------
 		*
