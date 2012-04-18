@@ -57,6 +57,10 @@ class User {
 		incomingRelationshipsURL = json.incoming_relationships
 		outgoingRelationshipsURL = json.outgoing_relationships
 	}
+	
+	def secureForRendering() {
+		password = null
+	}
 
 	def constraints =
 	{

@@ -6,7 +6,7 @@ class NetworkedUser {
 	int distance = 0
 	List directTags = []
 	
-	def NetworkedUser(User user) {
+	def NetworkedUser(User user = null) {
 		this.user = user
 	}
 	

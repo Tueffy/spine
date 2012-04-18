@@ -195,26 +195,35 @@ class NetworkController {
 	 */
 	def getUser  = {
 		
-		def user = new User()
-		//user.email = params.id
-		user = spineService.getUser(params.id);
+		def targetEmail = params.id
+		def contextUser = new User()
+		contextUser.email = session.user
+		
+		def NetworkedUser networkedUser = spineService.getUserInNetworkContext(contextUser, targetEmail)
+		
+//		def email = params.id
+//		def User user = spineService.getUser(email)
+//	
+//		//@TODO: Optimize with direct call to getUser
+//		def Network network  = spineService.getUserNetwork(user, null, 0, 30)		
+//		
+//		log.debug "User: ${user}"
+//		
+//		
+//		for(networkedUser in network.networkedUsers) {
+//			
+//		}
+//		
+//		for ( i in n ) {
+//				def email1 = params.id;
+//				def email2 = i.email;
+//				if(email1.equalsIgnoreCase(email2)){					
+//					user = i
+//					break
+//				}
+//		}		
 	
-		//@TODO: Optimize with direct call to getUser
-		def n = null
-		n  = spineService.getUserNetwork(user, null, 0, 30)		
-		
-		log.debug "User: ${user}"
-		
-		for ( i in n ) {
-				def email1 = params.id;
-				def email2 = i.email;
-				if(email1.equalsIgnoreCase(email2)){					
-					user = i
-					break
-				}
-		}		
-		
-		render user as JSON
+		render networkedUser as JSON
 		
 	}
 	

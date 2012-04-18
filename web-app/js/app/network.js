@@ -12,11 +12,11 @@ var viewAllTagsLink;
  */
 var firstUser = null;
 
-getFirstUser = function() {
+var getFirstUser = function() {
 	return firstUser;
 }
 
-setFirstUser = function(user) {
+var setFirstUser = function(user) {
 	firstUser = user;
 }
 
@@ -71,7 +71,7 @@ window.onload = function() {
 /**
  * Function uses by jQuery UI autocomplete widget to retrieve tags. 
  */
-autocompleteAllTagsSource = function (request, response) {
+var autocompleteAllTagsSource = function (request, response) {
 	// Empty Array we will populate for the response
 	var responseData = new Array();
 	
@@ -96,8 +96,9 @@ autocompleteAllTagsSource = function (request, response) {
  * Refresh the panel on the right with data about the selected user 
  * Uses jQuery
  */
-updateSelectedUser = function(e) {
-	var user = jQuery.parseJSON(e.responseText);
+var updateSelectedUser = function(e) {
+	var networkedUser = jQuery.parseJSON(e.responseText);
+	var user = networkedUser.user;
 	
 	// The user is no more asked to select a user : 
 	jQuery('#selectUser').hide();
@@ -114,8 +115,9 @@ updateSelectedUser = function(e) {
 	selectedTagsMore.find('li').remove();
 	
 	// Get the tags & update the list with them
-	var nb_tags = 0;
 	jQuery.getJSON('/spine/network/getTags/' + user.email, function (tags) {
+		var nb_tags = 0;
+
 		jQuery.each(tags, function (tag) {
 			nb_tags++;
 			var li = jQuery(document.createElement('li'));
@@ -124,23 +126,22 @@ updateSelectedUser = function(e) {
 				li.appendTo(selectedTags);
 			else
 				li.appendTo(selectedTagsMore);
-			i++;
 		});
+		
+		// Managing the "All tags" link
+		if(nb_tags > 10) {
+			viewAllTags.show();
+			viewAllTagsLink.text("All tags");
+		}
+		else
+			viewAllTags.hide();
 	});	
-	
-	// Managing the "All tags" link
-	if(nb_tags > 10) {
-		viewAllTags.show();
-		viewAllTagsLink.text("All tags");
-	}
-	else
-		viewAllTags.hide();
 }
 
 /**
  * Display more or less tags in the right panel
  */
-toggleViewAllTags = function () {
+var toggleViewAllTags = function () {
 	var selectedTagsMore = jQuery('#selectedTagsMore');
 	if(selectedTagsMore.css('display') == 'none') {
 		selectedTagsMore.show('slow');
@@ -153,7 +154,7 @@ toggleViewAllTags = function () {
 	return false;
 }
 
-tagsMinusOnMouseOver = function(e) {
+var tagsMinusOnMouseOver = function(e) {
 	// alert(e);
 	$(e).appear();
 	$(e).onmouseout = function() {
@@ -162,7 +163,7 @@ tagsMinusOnMouseOver = function(e) {
 	return false;
 }
 
-tagsMinusOnMouseOut = function(e) {
+var tagsMinusOnMouseOut = function(e) {
 	// alert("test");
 	$(e).fade({
 		duration : 7.0
@@ -170,14 +171,14 @@ tagsMinusOnMouseOut = function(e) {
 	return false;
 }
 
-tagsPlusOnMouseOver = function() {
+var tagsPlusOnMouseOver = function() {
 	// alert("test");
 	$('minus').appear(5);
 
 	return false;
 }
 
-tagsPlusOnMouseOut = function() {
+var tagsPlusOnMouseOut = function() {
 	// alert("test");
 	$('minus').fade();
 	return false;
@@ -187,7 +188,7 @@ tagsPlusOnMouseOut = function() {
  * 
  * @param e
  */
-inviteNewUser = function(e) {
+var inviteNewUser = function(e) {
 	alert("dd");
 }
 
@@ -197,7 +198,7 @@ inviteNewUser = function(e) {
  * 
  * @param e
  */
-addTagUpdate = function(e, id){
+var addTagUpdate = function(e, id){
 	
 	var response = eval("(" + e.responseText + ")");
 	
@@ -215,7 +216,7 @@ addTagUpdate = function(e, id){
  * 
  * @param e
  */
-removeTagUpdate = function(e){
+var removeTagUpdate = function(e){
 	
 	$(e).fade({
 		duration : 2.0

@@ -153,6 +153,35 @@ class NetworkService {
 		def json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': (queryString)])
 		return json
 	}
+	
+	def NetworkedUser queryUserInNetworkContext(contextUserEmail, String targetEmail)
+	{
+		def NetworkedUser networkedUser = new NetworkedUser()
+		
+		// Cypher query
+		def query = 
+			'start ' +
+				'n = node:names(email={SP_user}), ' +
+				'm = node:names(email={SP_target_user}) ' + 
+			'match ' + 
+				'p = shortestPath(n-[:connect*..5]->m) ' + 
+			'return m, relationships(p) ' 
+		
+		// Execute the query
+		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
+		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + contextUserEmail + '", "SP_target_user":"' + targetEmail + '"}}')
+		if(json.size() == 0)
+			return null
+		json = json.data[0] // The query gives only one result back
+		
+		// json[0] => m
+		// json[1] => p
+		networkedUser.user = new User()
+		networkedUser.user.bind(json[0])
+		networkedUser.bindDirectTags(json[1][0]) // json[1][0] => the 1st relationship of the path p
+		
+		return networkedUser
+	}
 
     /**
      * Uses the cypher plugin to retrieve the neighbours using offset and limit. The result includes the start node of the query itself.

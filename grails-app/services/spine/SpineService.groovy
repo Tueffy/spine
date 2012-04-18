@@ -88,11 +88,21 @@ class SpineService {
 
         return network
     }
+	
+	def NetworkedUser getUserInNetworkContext(User contextUser, String targetEmail) {
+		def NetworkedUser networkedUser = networkService.queryUserInNetworkContext(contextUser.email, targetEmail)
+		if(networkedUser != null) {
+			networkedUser.user.tags = networkService.getIncomingTagsForNode(networkedUser.user.email)
+			networkedUser.user.badges = badgeService.evaluateTags(networkedUser.user.tags)
+		}
+		
+		return networkedUser
+	}
 
     /**
      * returns a User object based on email address
      *
-     * @return
+     * @return User
      */
     def getUser(String email) {
 
