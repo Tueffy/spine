@@ -174,5 +174,29 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		def tagsToTest = ['IT', 'Java', 'Agile', 'Operations', 'Front', 'Office', 'ProjectX', 'Trading', 'Spring', 'Soccer']
 		assert hotTags == tagsToTest
 	}
+	
+	void testgetUserInNetworkContext() 
+	{
+		User contextUser = u3
+		User targetUser = u2
+		def NetworkedUser networkedUser = spineService.getUserInNetworkContext(contextUser, targetUser.email)
+		
+		def directTagsExpected = [
+			'Bielefeld', 'Warhammer', 'Agile', 
+			'SSL', 'Munich', 'Jax', 
+			'2011', 'Spring', 'IT', 
+			'RPG', 'Java'
+		]
+		
+		def expectedBadges = ['Java Guru', 'Scrum Master']
+		def actualBadges = []
+		networkedUser.user.badges.each {
+			actualBadges.add(it.name)
+		}
+		
+		assert actualBadges.sort() == expectedBadges.sort()
+		assert networkedUser.directTags.sort() == directTagsExpected.sort()
+		assert networkedUser.distance == 1
+	}
 
 }

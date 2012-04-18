@@ -394,5 +394,23 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		assert(networkService.getIdFromURI('/db/data/node/101') == '101')
 		assert(networkService.getIdFromURI('/db/data/relationship/42') == '42')
 	}
+	
+	void testQueryUserInNetworkContext() {
+		def contextUserEmail = 'christian.tueffers@techbank.com'
+		def targetEmail = 'jure.zakotnik@techbank.com'
+		
+		def NetworkedUser networkedUser = networkService.queryUserInNetworkContext(contextUserEmail, targetEmail)
+		
+		def directTagsExpected = [
+			'Bielefeld', 'Warhammer', 'Agile',
+			'SSL', 'Munich', 'Jax',
+			'2011', 'Spring', 'IT',
+			'RPG', 'Java'
+		]
+		
+		assert networkedUser.directTags.sort() == directTagsExpected.sort()
+		assert networkedUser.distance == 1
+		assert networkedUser.user.email == targetEmail
+	}
 }
 

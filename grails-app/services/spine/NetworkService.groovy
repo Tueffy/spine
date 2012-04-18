@@ -154,7 +154,7 @@ class NetworkService {
 		return json
 	}
 	
-	def NetworkedUser queryUserInNetworkContext(contextUserEmail, String targetEmail)
+	def NetworkedUser queryUserInNetworkContext(String contextUserEmail, String targetEmail)
 	{
 		def NetworkedUser networkedUser = new NetworkedUser()
 		
@@ -179,6 +179,7 @@ class NetworkService {
 		networkedUser.user = new User()
 		networkedUser.user.bind(json[0])
 		networkedUser.bindDirectTags(json[1][0]) // json[1][0] => the 1st relationship of the path p
+		networkedUser.distance = json[1].size()
 		
 		return networkedUser
 	}
