@@ -61,6 +61,22 @@ class User {
 	def secureForRendering() {
 		password = null
 	}
+	
+	def sortTags(List<String> directTags = null) {
+		def directSortedTags = [:]
+		
+		if(directTags != null) {
+			directTags.each {  
+				directSortedTags[it] = tags[it]
+			}
+		}
+		
+		
+		
+		// Policy is the following : 
+		// - direct tags (if specified firsts)
+		// - order by tag weight desc
+	}
 
 	def constraints =
 	{

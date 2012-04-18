@@ -47,14 +47,12 @@
             
               <!-- Input text : search Box -->
               <g:if test="${param}">
-              	<input type="text" name="filter" id="autocomplete" value="${param}" default="${param}" onClick="javascript:this.value='';" />
+              	<input type="text" name="filter" id="autocomplete" class="autocomplete_tags" value="${param}" default="${param}" onClick="javascript:this.value='';" />
               </g:if>
               <g:else>
               	<input type="text" name="filter" id="autocomplete" class="autocomplete_tags" value="Filter ${user.firstName}'s spine" default="Filter ${user.firstName}'s spine" onClick="javascript:this.value='';" />
               </g:else>
-              
-              
-              <div id="autocomplete_choices" class="autocomplete"></div>              
+                            
               <ul class="filter_list">
                 <li>Filter by</li>
                 <li><a href="#">Expertise</a></li>

@@ -44,7 +44,7 @@
 			</div>
 			<div class="buttons" style="text-align:right;margin-right:50px">
 				<span class="formButton"> 
-					<input type="submit" value="Login" ></input>
+					<input type="submit" value="Login">
 				</span>
 			</div>
 		</g:form>
