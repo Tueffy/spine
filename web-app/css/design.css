@@ -108,9 +108,13 @@ a:hover { color:#67624e; }
 #right .feed .contact .quote span:first-child { vertical-align:super; }
 #right .feed .contact ul.tags { list-style:none; font-size: 9pt; font-weight:bold ;font-family:Tahoma, Geneva, sans-serif;}
 #right .feed .contact ul.tags li { display:inline-block; margin-right: 11px;}
-#right .feed .contact ul.tags a.tag { padding: 3px; border-radius:5px; text-decoration:none; }
-#right .feed .contact ul.tags a.tag:hover { background:#c9c5b8; }
-#right .feed .contact ul.tags a.direct_tag { color: red; }
+#right .feed .contact ul.tags .tag { padding: 3px; border-radius:5px; text-decoration:none; }
+#right .feed .contact ul.tags .tag:hover { background:#c9c5b8; }
+#right .feed .contact ul.tags .direct_tag { color: red; }
+#right .feed .contact ul.tags .tag .remove_tag, #right .feed .contact ul.tags .tag .add_tag {
+	vertical-align:25%; font-size: 85%;
+}
+#right .feed .contact ul.tags .tag .remove_tag:hover { color: white; }
 #right .feed .contact .distance { font-family:"HelveticaRounded Bold";font-size:28pt; width:40px; height:40px; margin:5px; margin-left:35px; border-radius:10px; background:#c9c5b8; padding:4px; text-align:center; width:50px; color:#FFFFFF;}
 #right .feed .contact .distance_arrows { width:33px; height:24px; background:url(../images/home/distance_arrows.png) no-repeat; margin-top:-15px; margin-left:20px;}
 #right .feed .separator { border-bottom:1px dotted #958e73; margin-left: 2%; margin-top: 15px; margin-bottom:5px; width:89% }

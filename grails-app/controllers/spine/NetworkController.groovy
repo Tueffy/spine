@@ -228,15 +228,12 @@ class NetworkController {
 		def sessionUser = new User()
 		sessionUser = session.user
 		
-		def selectedUser = new User()
-		selectedUser = spineService.getUser(params.user) 
+		def targetUser = new User()
+		targetUser = spineService.getUser(params.email) 
 		
-		def tag = params.id
-		
-		def tags = spineService.removeTag(sessionUser, selectedUser, tag)
+		def tags = spineService.removeTag(sessionUser, targetUser, params.tag)
 		
 		render sessionUser as JSON
-		
 	}
 	
 	/**
@@ -259,16 +256,13 @@ class NetworkController {
 	 * @author Thomas M. Michelbach, Christian Tueffers, Ingmar Mueller, Jure Zakotnik
 	 */
 	def addTag = {
-		
 		def user = new User()
-		
 		user = session.user
 		
 		spineService.addTag(user.email, params.email, params.tag)
 		
 		//render user as JSON
 		def response = [tag: params.tag]
-		
 		render response as JSON
 	}
 

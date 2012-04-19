@@ -29,26 +29,23 @@ window.onload = function() {
 	viewAllTags = jQuery('#right .details_panel p.all_tags');
 	viewAllTagsLink = viewAllTags.find('a');
 	
-	/****************************************
-	 * Auto completion for tags             *
-	 ****************************************/
+	/**
+	 * Auto completion for tags
+	 */
 	jQuery('.autocomplete_tags').autocomplete({
 		minLength: 2, 
 		source: autocompleteAllTagsSource
 	});
 	
 	
-	/****************************************
-	 * View more or less tags in the        *
-	 * details panel                        *
-	 ****************************************/
+	/**
+	 * View more or less tags in the details panel
+	 */
 	viewAllTagsLink.on('click', toggleViewAllTags);
 	
-
-	/****************************************
-	 *  Drag & Drop user in the left panel  *
-	 *  to access the selected user network *
-	 ****************************************/
+	/**
+	 * Drag & Drop user in the left panel to access the selected user network
+	 */
 	Droppables.add('left', {
 		accept : 'contact',
 		hoverclass : 'hover',
@@ -56,15 +53,13 @@ window.onload = function() {
 			window.location = "index?user=" + e.id;
 		}
 	});
-
-	/*
-	 * new Ajax.Request('/spine/network/getUserStatistics/${user.email}', {
-	 * asynchronous:true, evalScripts:true, onSuccess: function(transport) { var
-	 * tagsJSON = transport.responseText; var tags = eval("("+tagsJSON+")");
-	 * 
-	 * for (var key in tags) { $(key).innerHTML = tags[key]; }
-	 *  } });
+	
+	/**
+	 * Remove or add one tag from the network view
 	 */
+	jQuery('#right').on('click', 'a.remove_tag', removeTagClick );
+	jQuery('#right').on('click', 'a.add_tag', addTagClick );
+
 }
 
 
@@ -192,33 +187,94 @@ var inviteNewUser = function(e) {
 	alert("dd");
 }
 
-
-/**
- * 
- * 
- * @param e
- */
-var addTagUpdate = function(e, id){
-	
-	var response = eval("(" + e.responseText + ")");
-	
-	//alert(response.tag);
-	
-	var ul = $(id);
-	var li = document.createElement("li");
-	li.innerHTML = response.tag;
-	ul.insertBefore(li, ul.getElementsByTagName("li")[1]);
-	
+var addTagClick = function () {
+	var jObject_tag = jQuery(this).closest('.tag');
+	var tag = jObject_tag.attr('tag');
+	var targetEmail = jObject_tag.closest('.contact').attr('id');
+	jQuery.getJSON('/spine/network/addTag', {tag: tag, email: targetEmail}, function () {
+		jObject_tag.addClass('direct_tag'); // the clicked tag is now a direct tag
+		jObject_tag.attr('nb', parseInt(jObject_tag.attr('nb')) + 1); // nb property is increased by 1
+		jObject_tag.find('.add_tag').removeClass('add_tag').addClass('remove_tag').text('-'); // toggle add/remove tag action
+		reorderTags(jObject_tag.closest('.tags')); 
+	});
+	return false;
 }
 
+var removeTagClick = function () {
+	var jObject_tag = jQuery(this).closest('.tag');
+	var tag = jObject_tag.attr('tag');
+	var targetEmail = jObject_tag.closest('.contact').attr('id');
+	jQuery.getJSON('/spine/network/removeTag', {tag: tag, email: targetEmail}, function (data) {
+		if(jObject_tag.attr('nb') == 1)
+			jObject_tag.remove();
+		else {
+			jObject_tag.removeClass('direct_tag');
+			jObject_tag.attr('nb', parseInt(jObject_tag.attr('nb')) - 1);
+			jObject_tag.find('.remove_tag').removeClass('remove_tag').addClass('add_tag').text('+');  // toggle add/remove tag action
+			reorderTags(jObject_tag.closest('.tags'));
+		}
+	});
+	return false;
+}
 
-/**
- * 
- * @param e
- */
-var removeTagUpdate = function(e){
+var reorderTags = function (jObject_tagList) {
 	
-	$(e).fade({
-		duration : 2.0
+	// Get tags and dispatch them into two arrays, according if they are direct or not
+	var directTags = []
+	var notDirectTags = []
+	jObject_tagList.find('.tag').each(function () {
+		self = jQuery(this);
+		if(self.hasClass('direct_tag'))
+			directTags.push(self)
+		else
+			notDirectTags.push(self)
+	});
+	
+	// Sort the tags by "nb" ASC
+	directTags.sort(function (a, b) {
+		return parseInt(a.attr('nb')) - parseInt(b.attr('nb'))
+	});
+	notDirectTags.sort(function (a, b) {
+		return parseInt(a.attr('nb')) - parseInt(b.attr('nb'))
+	});
+	
+	// Merge the tags into one array
+	var tags = jQuery.merge(notDirectTags, directTags);
+	
+	// Remove the tags in the DOM to put the new ordered ones
+	jObject_tagList.find('.tag').remove();
+	jQuery.each(tags, function () {
+		this.prependTo(jObject_tagList);
 	});
 }
+
+
+///**
+// * 
+// * 
+// * @param e
+// */
+//var addTagUpdate = function(e, id){
+//	
+//	var response = eval("(" + e.responseText + ")");
+//	
+//	//alert(response.tag);
+//	
+//	var ul = $(id);
+//	var li = document.createElement("li");
+//	li.innerHTML = response.tag;
+//	ul.insertBefore(li, ul.getElementsByTagName("li")[1]);
+//	
+//}
+//
+//
+///**
+// * 
+// * @param e
+// */
+//var removeTagUpdate = function(e){
+//	
+//	$(e).fade({
+//		duration : 2.0
+//	});
+//}
