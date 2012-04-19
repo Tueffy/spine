@@ -28,9 +28,9 @@ class NetworkController {
 		else
 			user.email = session.user
 		
-		user = spineService.getUser(user.email);
-		user.tags = [];
-		user.tags = spineService.getUserTags(user);
+		user = spineService.getUser(user.email)
+		user.tags = [:]
+		user.tags = spineService.getUserTags(user)
 				
 		def filter = params.filter
 				

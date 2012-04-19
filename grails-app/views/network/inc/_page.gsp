@@ -58,10 +58,10 @@
                	<!-- Tag list -->
                	<ul class="tags" id="${networkedUser.user.email}_tags">               		
                		<g:each in="${networkedUser.user.tags}" var="t">    	        	  
-	                    <li id="${networkedUser.user.email}_${t.key}">	                    
-		                    <a href="#" onmouseover="javascript:tagsMinusOnMouseOver('${networkedUser.user.email}_${t.key}_minus');" onmouseout="javascript:tagsMinusOnMouseOut('${networkedUser.user.email}_${t.key}_minus');">
+	                    <li id="${networkedUser.user.email}_${t.key}">
+	                    	<a href="" class="tag<g:if test="${networkedUser.isDirectTag(t.key)}"> direct_tag</g:if>">                   
 		                    	${t.key} <!-- Tag -->
-		                    	<g:if test="${networkedUser.isDirectTag(t.key)}">(!)</g:if>
+		                    </a>	 
 		                   </a>
 		                    <span id="${networkedUser.user.email}_${t.key}_minus">
 		                    	<g:remoteLink action="removeTag" id="${t.key}" params="[user:networkedUser.user.email]" onComplete="removeTagUpdate('${networkedUser.user.email}_${t.key}')">-</g:remoteLink>

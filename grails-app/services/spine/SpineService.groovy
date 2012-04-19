@@ -84,6 +84,7 @@ class SpineService {
 			networkedUser -> 
 			networkedUser.user.tags = networkService.getIncomingTagsForNode(networkedUser.user.email)
 			networkedUser.user.badges = badgeService.evaluateTags(networkedUser.user.tags)
+			networkedUser.sortTags()
 		}
 
         return network
@@ -94,6 +95,7 @@ class SpineService {
 		if(networkedUser != null) {
 			networkedUser.user.tags = networkService.getIncomingTagsForNode(networkedUser.user.email)
 			networkedUser.user.badges = badgeService.evaluateTags(networkedUser.user.tags)
+			networkedUser.sortTags()
 		}
 		
 		return networkedUser

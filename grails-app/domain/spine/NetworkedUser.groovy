@@ -4,7 +4,7 @@ class NetworkedUser {
 
 	User user
 	int distance = 0
-	List directTags = []
+	List<String> directTags = []
 	
 	def NetworkedUser(User user = null) {
 		this.user = user
@@ -24,6 +24,12 @@ class NetworkedUser {
 	
 	def boolean isDirectTag(String tag) {
 		return directTags.contains(tag)
+	}
+	
+	def sortTags() {
+		if(user != null) {
+			user.sortTags(directTags)
+		}
 	}
 	
     static constraints = {

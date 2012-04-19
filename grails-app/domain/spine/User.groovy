@@ -23,7 +23,7 @@ class User {
 	String status
 
 	//@TODO: Temporary solution to iterate tags 
-	HashMap tags
+	Map tags = [:]
 	Long distance
 	List badges
 	
@@ -64,18 +64,33 @@ class User {
 	
 	def sortTags(List<String> directTags = null) {
 		def directSortedTags = [:]
-		
 		if(directTags != null) {
 			directTags.each {  
 				directSortedTags[it] = tags[it]
 			}
 		}
+		directSortedTags = directSortedTags.sort { a, b -> b.value <=> a.value } // Sort a map by value reversed
 		
-		
-		
-		// Policy is the following : 
+		def notDirectSortedTags = [:]
+		tags.each {
+			// it.key : the tag
+			// it.value : the number associated with the tag
+			if(!directTags.contains(it.key)) {
+				notDirectSortedTags[it.key] = it.value
+			}
+		}
+		notDirectSortedTags = notDirectSortedTags.sort { a, b -> b.value <=> a.value } // Sort a map by value reversed
+				
+		// Policy is the following :
 		// - direct tags (if specified firsts)
 		// - order by tag weight desc
+		tags = [:]
+		directSortedTags.each {
+			tags[it.key] = it.value
+		}
+		notDirectSortedTags.each {
+			tags[it.key] = it.value 
+		}
 	}
 
 	def constraints =
