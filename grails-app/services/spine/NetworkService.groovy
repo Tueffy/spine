@@ -158,7 +158,6 @@ class NetworkService {
 	{
 		def NetworkedUser networkedUser = new NetworkedUser()
 		
-		// Cypher query
 		def query = 
 			'start ' +
 				'n = node:names(email={SP_user}), ' +
@@ -166,20 +165,35 @@ class NetworkService {
 			'match ' + 
 				'p = shortestPath(n-[:connect*..5]->m) ' + 
 			'return m, relationships(p) ' 
-		
+
 		// Execute the query
 		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
 		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + contextUserEmail + '", "SP_target_user":"' + targetEmail + '"}}')
-		if(json.size() == 0)
+		if(!json.data || json.data.size() == 0) // not in the user network: extended network 
+		{
+			query =
+			'start ' +
+				'm = node:names(email={SP_target_user}) ' +
+			'return m '
+			json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_user":"' + contextUserEmail + '", "SP_target_user":"' + targetEmail + '"}}')
+		}
+		
+		println json;
+		if(!json.data || json.data.size() == 0)
 			return null
+		
 		json = json.data[0] // The query gives only one result back
 		
 		// json[0] => m
-		// json[1] => p
+		// json[1] => p ; only if poeple are directly connected
 		networkedUser.user = new User()
 		networkedUser.user.bind(json[0])
-		networkedUser.bindDirectTags(json[1][0]) // json[1][0] => the 1st relationship of the path p
-		networkedUser.distance = json[1].size()
+		if(json[1] == null) 
+			networkedUser.distance = 0;
+		else {
+			networkedUser.bindDirectTags(json[1][0]) // json[1][0] => the 1st relationship of the path p
+			networkedUser.distance = json[1].size()
+		}
 		
 		return networkedUser
 	}
