@@ -321,8 +321,10 @@ class NetworkService {
 				query += " m = node:super_index('" + luceneQuery + "') "
 			}
 			query += 
+					'match ' + 
+						'n-[r?:connect*1..5]->m ' + 
 					'where ' +
-						'not(n-[:connect*1..5]->m) AND m <> n ' +
+						'r is null AND m <> n ' +
 					'return ' +
 						'distinct m, count(*) AS nbResults ' +
 					'skip ' + newOffset + ' ' +
