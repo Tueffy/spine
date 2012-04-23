@@ -88,6 +88,7 @@ var autocompleteAllTagsSource = function (request, response) {
 	});	
 }
 
+
 /**
  * Refresh the panel on the right with data about the selected user 
  * Uses jQuery
@@ -110,28 +111,24 @@ var updateSelectedUser = function(e) {
 	selectedTags.find('li').remove();
 	selectedTagsMore.find('li').remove();
 	
-	// Get the tags & update the list with them
-	jQuery.getJSON('/spine/network/getTags/' + user.email, function (tags) {
-		var nb_tags = 0;
-
-		jQuery.each(tags, function (tag) {
-			nb_tags++;
-			var li = jQuery(document.createElement('li'));
-			li.text(tag);
-			if(nb_tags <= 10) 
-				li.appendTo(selectedTags);
-			else
-				li.appendTo(selectedTagsMore);
-		});
-		
-		// Managing the "All tags" link
-		if(nb_tags > 10) {
-			viewAllTags.show();
-			viewAllTagsLink.text("All tags");
-		}
+	var nb_tags = 0;
+	jQuery.each(user.tags, function (tag, nb) {
+		var li = jQuery(document.createElement('li'));
+		li.text(tag + '(' + nb + ')');
+		nb_tags++;
+		if(nb_tags <= 10) 
+			li.appendTo(selectedTags);
 		else
-			viewAllTags.hide();
-	});	
+			li.appendTo(selectedTagsMore);
+	})
+		
+	// Managing the "All tags" link
+	if(nb_tags > 10) {
+		viewAllTags.show();
+		viewAllTagsLink.text("All tags");
+	}
+	else
+		viewAllTags.hide();
 }
 
 /**
