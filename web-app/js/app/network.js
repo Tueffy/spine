@@ -242,6 +242,7 @@ var addTagText = function () {
 								.text(tag_added)
 								.append('<a class="remove_tag" href="#">-</a>')
 								.appendTo(jObject_contact.find('.tags'));
+			reorderTags(jObject_contact.find('.tags'));
 		}
 	});
 	
@@ -281,12 +282,12 @@ var reorderTagsByNb = function (jObject_tagList) {
 			notDirectTags.push(self)
 	});
 	
-	// Sort the tags by "nb" ASC
+	// Sort the tags by "nb" DESC
 	directTags.sort(function (a, b) {
-		return parseInt(a.attr('nb')) - parseInt(b.attr('nb'))
+		return parseInt(a.attr('tag')) - parseInt(b.attr('tag'))
 	});
 	notDirectTags.sort(function (a, b) {
-		return parseInt(a.attr('nb')) - parseInt(b.attr('nb'))
+		return parseInt(a.attr('tag')) - parseInt(b.attr('tag'))
 	});
 	
 	// Merge the tags into one array
@@ -301,6 +302,9 @@ var reorderTagsByNb = function (jObject_tagList) {
 
 var reorderTags = function (jObject_tagList) {
 	
+	console.log('Re-ordering ! ');
+//	console.log(jObject_tagList);
+//	console.log(jObject_tagList.html());
 	// Get tags and dispatch them into two arrays, according if they are direct or not
 	var directTags = []
 	var notDirectTags = []
@@ -310,14 +314,15 @@ var reorderTags = function (jObject_tagList) {
 			directTags.push(self)
 		else
 			notDirectTags.push(self)
+//		console.log(self.attr('tag'));
 	});
 	
-	// Sort the tags by "nb" ASC
+	// Sort the tags by "tag" ASC
 	directTags.sort(function (a, b) {
-		return parseInt(a.attr('nb')) - parseInt(b.attr('nb'))
+		return b.attr('tag') - a.attr('tag')
 	});
 	notDirectTags.sort(function (a, b) {
-		return parseInt(a.attr('nb')) - parseInt(b.attr('nb'))
+		return b.attr('tag') - a.attr('tag')
 	});
 	
 	// Merge the tags into one array
