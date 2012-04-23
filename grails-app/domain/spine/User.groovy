@@ -69,7 +69,8 @@ class User {
 				directSortedTags[it] = tags[it]
 			}
 		}
-		directSortedTags = directSortedTags.sort { a, b -> b.value <=> a.value } // Sort a map by value reversed
+		// directSortedTags = directSortedTags.sort { a, b -> b.value <=> a.value } // Sort a map by value reversed
+		directSortedTags = directSortedTags.sort { it.key } // Sort a map by key
 		
 		def notDirectSortedTags = [:]
 		tags.each {
@@ -79,7 +80,8 @@ class User {
 				notDirectSortedTags[it.key] = it.value
 			}
 		}
-		notDirectSortedTags = notDirectSortedTags.sort { a, b -> b.value <=> a.value } // Sort a map by value reversed
+		// notDirectSortedTags = notDirectSortedTags.sort { a, b -> b.value <=> a.value } // Sort a map by value reversed
+		notDirectSortedTags = notDirectSortedTags.sort { it.key } // Sort a map by key
 				
 		// Policy is the following :
 		// - direct tags (if specified firsts)
