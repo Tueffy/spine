@@ -9,16 +9,10 @@
 			</g:else>
 		</li>
 	</g:each>
-	
-	<li>&nbsp;</li>
-	<li> 	                    	
-	<span class="plus">
-		<g:form action="addTag" controller="network" >
-			<input name="email" type="hidden" value="${networkedUser.user.email}"/>
-			<input name="tag" type="text" class="autocomplete_tags" /> 
-			<a href="#"><g:submitToRemote  action="addTag" controller="network" value="+" onComplete="addTagUpdate(e,'${networkedUser.user.email}_tags')"/></a>
-		</g:form>
-		</span>
-	</li>
 </ul>
 
+<g:form action="addTag" controller="network" class="add_tag">
+	<input name="email" type="hidden" value="${networkedUser.user.email}">
+	<input name="tag" type="text" class="autocomplete_tags"> 
+	<input type="submit" value="+">
+</g:form>
