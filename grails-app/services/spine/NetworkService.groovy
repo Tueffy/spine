@@ -197,6 +197,36 @@ class NetworkService {
 		
 		return networkedUser
 	}
+	
+	def String parseSearchQueryIntoLuceneQuery(String query) {
+		def List<String> tokenizedQuery = query.tokenize(" ")
+		def operators = ['AND', 'OR']
+		def luceneQuery = ''
+		def lastWordWasOperator = false
+		tokenizedQuery.each {
+			if(lastWordWasOperator || (!lastWordWasOperator && !operators.contains(it)))
+			{
+				// Default implicit operator :
+				if(!lastWordWasOperator && !operators.contains(it) && luceneQuery != '')
+					luceneQuery += ' OR '
+				
+				luceneQuery += '(' +
+					'tag : ' + it.toLowerCase() + ' OR ' +
+					'badge : ' + it.toLowerCase() + ' OR ' +
+					'email : ' + it.toLowerCase() + ' OR ' +
+					'firstname : ' + it.toLowerCase() + ' OR ' +
+					'lastname : ' + it.toLowerCase() + ' OR ' +
+					'city : ' + it.toLowerCase() + '' +
+					')'
+			}
+			else
+			{
+				luceneQuery += ' ' + it + ' '
+				lastWordWasOperator = true
+			}
+		}
+		return luceneQuery
+	}
 
     /**
      * Uses the cypher plugin to retrieve the neighbours using offset and limit. The result includes the start node of the query itself.
@@ -206,7 +236,7 @@ class NetworkService {
      * @param limit max of how many neighbours are searched
      * @return Network
      */
-	def queryForNeighbourNodes(String email, int offset, int limit, List filter = [], boolean extended_search = true)
+	def queryForNeighbourNodes(String email, int offset, int limit, String filter = null, boolean extended_search = true)
 	{
 		// TODO : The function is becomming too complex, must be splitted into more atomic functions
 		// TODO : Refectoring - refactor the way search work to make it less complicated and more maintainable and to get more performances
@@ -222,22 +252,12 @@ class NetworkService {
 		 * 	LUCENE QUERY : Which we will use to query the super index
 		 * 
 		 * ----------------------------------------------------------- */
-		String luceneQuery = ''
-		if(!filter.isEmpty()) {
-			for (i in 0..(filter.size() - 1))
-			{
-				luceneQuery += 	'tag : ' + filter[i].toLowerCase() + ' OR ' +
-								'badge : ' + filter[i].toLowerCase() + ' OR ' +
-								'email : ' + filter[i].toLowerCase() + ' OR ' +
-								'firstname : ' + filter[i].toLowerCase() + ' OR ' +
-								'lastname : ' + filter[i].toLowerCase() + ' OR ' +
-								'city : ' + filter[i].toLowerCase()
-				if(i < filter.size() - 1) luceneQuery += ' OR '
-			}
-		}
-		else {
+		def luceneQuery = ''
+		def isFiltered = (filter != null && filter.trim() != '')
+		if(isFiltered) 
+			luceneQuery = parseSearchQueryIntoLuceneQuery(filter)
+		else 
 			luceneQuery = '*:* '
-		}
 		
 		
 		/*-------------------------------------------------------------
@@ -248,11 +268,11 @@ class NetworkService {
 		// Build the query
 		def query = 'start ' +
 						'n = node:names(email={SP_user}) '
-		if(!filter.isEmpty()) {
+		if(isFiltered) {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
 		query += 	'match ' 
-		if(filter.isEmpty())
+		if(!isFiltered)
 			query += 'n-[:connect*1..5]->m, '
 		query += 	'p = shortestPath(n-[:connect*..5]->m) ' + 
 						' ' +
@@ -295,11 +315,11 @@ class NetworkService {
 		int firstQueryNbTotalResults = 0;
 		query = 'start ' +
 					'n = node:names(email={SP_user}) '
-		if(!filter.isEmpty()) {
+		if(isFiltered) {
 			query += ", m = node:super_index('" + luceneQuery + "') "
 		}
 		query += 'match '
-		if(filter.isEmpty())
+		if(!isFiltered)
 			query += 'n-[:connect*1..5]->m, '
 		query += 'p = shortestPath(n-[:connect*..5]->m) ' +
 				'where m <> n ' + 
@@ -331,7 +351,7 @@ class NetworkService {
 			// Build the second query
 			query = 'start ' +
 						'n = node:names(email={SP_user}), '
-			if(!filter.isEmpty()) {
+			if(isFiltered) {
 				query += " m = node:super_index('" + luceneQuery + "') "
 			}
 			query += 

@@ -68,16 +68,9 @@ class SpineService {
      * @return userList of type User
      */
     def Network getUserNetwork(User contextUser, String filter, int offset, int limit) {
+		
         def Network network
-		def filterList = []
-		
-		// Tokenize the filter string if it not empty
-		if(filter != null && filter != '') {
-			def tokens = " ,;"
-			filterList = filter.tokenize(tokens)
-		}
-		
-		network = networkService.queryForNeighbourNodes(contextUser.email, offset, limit, filterList)
+		network = networkService.queryForNeighbourNodes(contextUser.email, offset, limit, filter)
 
 		// Grab tabs and badges for each user of the network
 		network.networkedUsers.each {

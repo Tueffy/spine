@@ -1,5 +1,7 @@
 package spine
 
+import org.junit.rules.ExpectedException;
+
 import grails.test.GrailsUnitTestCase
 
 
@@ -23,7 +25,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
 	void testQueryForNeighbourNodes1() {
 		// Do not look for extended network
-		def Network network = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5, [], false)
+		def Network network = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 0, 5, '', false)
 		def List networkEmailList = network.toEmailList()
 				
 		def targetResultList = [
@@ -40,7 +42,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
 	void testQueryForNeighbourNodes2() {
 		// Do not look for extended network
-		def Network network = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5, [], false)
+		def Network network = networkService.queryForNeighbourNodes('jure.zakotnik@techbank.com', 3, 5, '', false)
 		def List networkEmailList = network.toEmailList()
 		
 		def targetResultList = [
@@ -57,7 +59,7 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 
 	void testQueryForNeighbourNodes3() {
 		// Do not look for extended network
-		def Network network = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5, [], false)
+		def Network network = networkService.queryForNeighbourNodes('does_not_exist@techbank.com', 3, 5, '', false)
 		def List networkEmailList = network.toEmailList()
 		
 		def targetResultList = []
@@ -69,8 +71,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes4()
 	{
 		// Do not look for extended network
-		def tagsToSearchFor = ['Agile']
-		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def filter = 'Agile'
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, filter, false)
 		def List networkEmailList = network.toEmailList()
 		
 		def targetResultList = [
@@ -85,8 +87,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes5()
 	{
 		// Do not look for extended network
-		def tagsToSearchFor = ['IT']
-		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def filter = 'IT'
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, filter, false)
 		def List networkEmailList = network.toEmailList()
 		
 		def targetResultList = [
@@ -100,8 +102,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes6()
 	{
 		// Do not look for extended network
-		def tagsToSearchFor = ['Agile', 'IT', 'Operations']
-		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def filter = 'Agile IT Operations'
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, filter, false)
 		def List networkEmailList = network.toEmailList()
 		
 		def targetResultList = [
@@ -123,8 +125,8 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 	void testQueryForNeighbourNodes7()
 	{
 		// Do not look for extended network
-		def tagsToSearchFor = ['Agile']
-		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, tagsToSearchFor, false)
+		def filter = 'Agile'
+		def Network network = networkService.queryForNeighbourNodes('christian.tueffers@techbank.com', 0, 20, filter, false)
 		def List networkEmailList = network.toEmailList()
 		
 		def targetResultList = ['jure.zakotnik@techbank.com']
@@ -411,6 +413,26 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 		assert networkedUser.directTags.sort() == directTagsExpected.sort()
 		assert networkedUser.distance == 1
 		assert networkedUser.user.email == targetEmail
+	}
+	
+	void testParseSearchQueryIntoLuceneQuery() {
+		def query = 'Java'
+		def expected = '(tag : java OR badge : java OR email : java OR firstname : java OR lastname : java OR city : java)'
+		assert query == expected
+	}
+	
+	void testParseSearchQueryIntoLuceneQuery2() {
+		def query = 'Java Frankfurt'
+		def expected = '(tag : java OR badge : java OR email : java OR firstname : java OR lastname : java OR city : java)' + 
+			' OR (tag : frankfurt OR badge : frankfurt OR email : frankfurt OR firstname : frankfurt OR lastname : frankfurt OR city : frankfurt)'
+		assert query == expected
+	}
+	
+	void testParseSearchQueryIntoLuceneQuery3() {
+		def query = 'Java AND Frankfurt'
+		def expected = '(tag : java OR badge : java OR email : java OR firstname : java OR lastname : java OR city : java)' +
+			' AND (tag : frankfurt OR badge : frankfurt OR email : frankfurt OR firstname : frankfurt OR lastname : frankfurt OR city : frankfurt)'
+		assert query == expected
 	}
 }
 

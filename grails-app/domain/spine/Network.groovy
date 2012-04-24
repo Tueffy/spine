@@ -8,7 +8,7 @@ class Network {
 	int networkSize // The size of the user network according the maxLevel prop
 	int offset = 0
 	int limit
-	List filter = []
+	String filter
 	
 	def bind (User user, json = null) {
 		this.user = user;

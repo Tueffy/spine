@@ -33,6 +33,10 @@ class TestController {
 		
 	}
 	
+	def lucene = {
+		render networkService.parseSearchQueryIntoLuceneQuery('Java AND Frankfurt');
+	}
+	
 
 	/**
 	 * Insert / update the data about the node in the super index
