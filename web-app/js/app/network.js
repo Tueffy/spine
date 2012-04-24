@@ -114,7 +114,7 @@ var updateSelectedUser = function(e) {
 	var nb_tags = 0;
 	jQuery.each(user.tags, function (tag, nb) {
 		var li = jQuery(document.createElement('li'));
-		li.text(tag + '(' + nb + ')');
+		li.html('#' + tag + '<span class="nb">' + nb + '</span>');
 		nb_tags++;
 		if(nb_tags <= 10) 
 			li.appendTo(selectedTags);
