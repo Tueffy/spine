@@ -112,9 +112,14 @@ var updateSelectedUser = function(e) {
 	selectedTagsMore.find('li').remove();
 	
 	var nb_tags = 0;
-	jQuery.each(user.tags, function (tag, nb) {
+	jQuery.each(user.tags, function (tag, nb) // for each tag
+	{
 		var li = jQuery(document.createElement('li'));
-		li.html('#' + tag + '<span class="nb">' + nb + '</span>');
+		li.html('<span class="tag">#' + tag + '</span><span class="nb">' + nb + '</span>');
+		if(jQuery.inArray(tag, networkedUser.directTags) != -1) // check if the tag is a direct tag
+			li.addClass('direct_tag');
+		
+		// Put the li element into the right ul element
 		nb_tags++;
 		if(nb_tags <= 10) 
 			li.appendTo(selectedTags);
