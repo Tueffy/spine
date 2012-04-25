@@ -76,3 +76,56 @@ document.observe("dom:loaded", function() {
 	}
 	
 });
+
+/**
+ * Landing namespace 
+ */
+var landing = {};
+
+
+landing.form = {
+		
+		var jForm;
+		var jFormPagination;
+		var jFormPages;
+		
+		var init = function () {
+			jQuery(document).ready(function () {
+				this.jForm = jQuery('form.registration');
+				this.jFormPagination = this.jForm.find('.pagination');
+				this.jFormPages = this.jForm.find('.page');
+				
+				// Handle manually form submission
+				this.jForm.on('submit', landing.form.submit);
+			});
+		}
+		
+		var submit = function () {
+			return false;
+		}
+		
+		/**
+		 * @return int 
+		 */
+		var getCurrentStep = function () {
+			var i = 1;
+			var current;
+			this.jFormPagination.find('li').each(function () {
+				if(jQuery(this).hasClass('current')) {
+					current = i;
+					return;
+				}
+				i++;
+			});
+			
+			return current;
+		}
+		
+		var nextStep = function () {
+			
+		}
+		
+		var previousStep = function () {
+			
+		}
+}

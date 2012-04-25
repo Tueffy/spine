@@ -159,3 +159,8 @@ a:hover { color:#67624e; }
 #right .details_panel p.all_tags { text-align:right; padding-top:20px; margin-right:-15px; }
 #right .details_panel p.all_tags a { color:#958e73; font-size:9pt; font-weight:bold; text-decoration:none; }
 #right .details_panel p.all_tags a:hover { color:#67624e; }
+
+
+form.registration {}
+form.registration ul.pagnination { border-top: 1px solid black; border-bottom: 1px solid black; padding: 5px 0; margin-bottom:20px; }
+form.registration ul.pagnination li { display:inline-block; width:175px; margin:0; text-align: center; }

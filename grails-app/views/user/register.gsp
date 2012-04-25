@@ -12,6 +12,102 @@
 </head>
 
 <body>
+
+
+
+
+
+
+
+<div class="registration">
+	<div class="grid_10 omega knowledge" style="padding-top:80px">
+    	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
+    </div>  
+    
+    <div class="grid_14 alpha landing" style="padding-top:40px">
+    
+    	<g:form action="doRegister" method="post" name="registration" class="registration">
+    	
+    		<ul class="pagnination">
+	    		<li class="current">First Step</li>
+	    		<li>Second Step</li>
+	    		<li>Third Step</li>
+	    	</ul>
+    	
+    		<!-- First Step -->
+    		<div class="page">
+    			<table>
+    				<tr>
+						<th class="label">
+							<label for='lastName'>Last Name:</label>
+						</th>
+						<td class="label">
+							<input id="lastName" type="text" name="lastName" value="${user?.lastname}" />
+						</td>
+					</tr>
+					<tr>
+						<th class="label">
+							<label for="firstName">First Name:</label>
+						</th>
+						<td>
+							<input id="firstName" type="text" name="firstName" value="${user?.firstname}" />
+						</td>
+					</tr>
+					<tr>
+						<th class="label">
+							<label for="email">Email:</label>
+						</th>
+						<td>
+							<input id="email" type="text" name="email" value="${tmp_email}" />
+						</td>
+					</tr>
+					<tr>
+						<th class="label">
+							<label for="country">Country:</label>
+						</th>
+						<td>
+							<input id="country" type="text" name="country" value="${user?.country}" />
+						</td>
+					</tr>
+					<tr>
+						<th class="label">
+							<label for='city'>City:</label>
+						</th>
+						<td>
+							<input id="city" type="text" name="city" value="${user?.city}" />
+						</td>
+					</tr>
+					<tr>
+						<th class="label">
+							<label for='password'>Password:</label>
+						</th>
+						<td>
+							<input id="password" type="password" name="password" value="${user?.password}" />
+						</td>
+					</tr>
+				</table>
+    		</div>
+    		
+    		<!-- Second Step -->
+    		<div class="page"></div>
+    		
+    		<!-- Third Step -->
+    		<div class="page">
+    		
+    		</div>
+    	
+    	</g:form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<%--
   	<div class="grid_10 omega knowledge" style="padding-top:80px">
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
     </div>  
@@ -149,7 +245,9 @@
 		
 		</g:form>
     </div>
-    <div class="grid_10 omega knowledge"><img src="${resource(dir:'images/home',file:'knowledge.png')}" width="399" height="299" alt="Knowledge"></div>
+    
+    
+  --%>
   
 </body>
 </html>
