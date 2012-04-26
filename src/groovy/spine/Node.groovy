@@ -31,7 +31,8 @@ abstract class Node {
 		}
 		else // Create node
 		{ 
-			graphCommunicatorService.neoPost('/db/data/node', jsonData)
+			def json = graphCommunicatorService.neoPost('/db/data/node', jsonData)
+			self = json.self
 		}
 	}
 	
