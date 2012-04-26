@@ -76,7 +76,7 @@ class TestController {
 		
 		// Index user basic data
 		if(json.data?.email)  // adding email
-			superIndexService.addFirstNameToIndex(json.data.email, nodeURI)
+			superIndexService.addEmailToIndex(json.data.email, nodeURI)
 		
 		if(json.data?.firstName)  // adding first name
 			superIndexService.addFirstNameToIndex(json.data.firstName, nodeURI)

@@ -6,6 +6,9 @@ import groovyx.net.http.Method
 import org.apache.commons.logging.LogFactory
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.Method.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class GraphCommunicatorService {
 
@@ -14,6 +17,26 @@ class GraphCommunicatorService {
 
     HTTPBuilder httpBuilder = new HTTPBuilder('http://localhost:7474')
 
+	def String encodeMapToJSONString(Map map) {
+		def jsonString = '{ '
+		
+		def i = 1;
+		def mapSize = map.size()
+		map.each {
+			jsonString += '"'+ it.key.toString() + '" : '
+			if(it.value instanceof Map)
+				jsonString += encodeMapToJSONString(it.value)
+			else 
+				jsonString += '"' + it.value.toString() + '"'
+			if(i != mapSize)
+				jsonString += ', '
+			i++
+		}
+		
+		jsonString += ' }'
+		return jsonString
+	}
+	
     def neoPost(requestPath, requestQuery) {
         internalRequest(POST, requestPath, requestQuery)
     }
@@ -35,9 +58,16 @@ class GraphCommunicatorService {
     }
 
     private def internalRequest(Method method, String requestPath, requestQuery = null) {
-//        log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
 
-        return httpBuilder.request(method, groovyx.net.http.ContentType.JSON) {req ->
+		// If the URL starts with http://localhost:7474 remove it
+		def Pattern pattern = Pattern.compile("^http://localhost:7474(.*)")
+		def Matcher matcher = pattern.matcher(requestPath)
+		if(matcher.matches())
+			requestPath = matcher.group(1)
+			
+		log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
+		
+        return httpBuilder.request(method, JSON) {req ->
             uri.path = requestPath
 
             if (method == GET) {

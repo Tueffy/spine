@@ -1,7 +1,7 @@
 
 package spine
 
-class User {
+class User extends Node {
 
 	Long id
 	Long version
@@ -27,35 +27,48 @@ class User {
 	Long distance
 	List badges
 	
-	String nodeURL
-	String incomingRelationshipsURL
-	String outgoingRelationshipsURL
-
 	String toString()
 	{ "$email" }
 	
 	def bind(json) {
-		// Bind data
-		lastName = json.data?.firstName
-		firstName = json.data?.lastName
-		email = json.data?.email
-		company = json.data?.company
-		password = json.data?.password
-		country = json.data?.country
-		city = json.data?.city
-		imagePath = json.data?.imagePath
-		freeText = json.data?.freeText
-		department = json.data?.department
-		jobTitle = json.data?.jobTitle
-		gender = json.data?.gender
-		phone = json.data?.phone
-		mobile = json.data?.mobile
-		status = json.data?.status
 		
-		// Bind meta data
-		nodeURL = json.self
-		incomingRelationshipsURL = json.incoming_relationships
-		outgoingRelationshipsURL = json.outgoing_relationships
+		super.bind(json)
+		
+		// Bind data
+		lastName = properties?.firstName
+		firstName = properties?.lastName
+		email = properties?.email
+		company = properties?.company
+		password = properties?.password
+		country = properties?.country
+		city = properties?.city
+		imagePath = properties?.imagePath
+		freeText = properties?.freeText
+		department = properties?.department
+		jobTitle = properties?.jobTitle
+		gender = properties?.gender
+		phone = properties?.phone
+		mobile = properties?.mobile
+		status = properties?.status
+	}
+	
+	def persist(GraphCommunicatorService graphCommunicatorService) {
+		if(firstName) properties.put('firstName', firstName)
+		if(lastName) properties.put('lastName', lastName)
+		if(email) properties.put('email', email)
+		if(company) properties.put('company', company)
+		if(password) properties.put('password', password)
+		if(country) properties.put('country', country)
+		if(city) properties.put('city', city)
+		if(imagePath) properties.put('imagePath', imagePath)
+		if(freeText) properties.put('freeText', freeText)
+		if(department) properties.put('department', department)
+		if(jobTitle) properties.put('jobTitle', jobTitle)
+		if(gender) properties.put('gender', gender)
+		if(phone) properties.put('phone', phone)
+		if(mobile) properties.put('mobile', mobile)
+		if(status) properties.put('status', status)
+		super.persist(graphCommunicatorService)
 	}
 	
 	def secureForRendering() {

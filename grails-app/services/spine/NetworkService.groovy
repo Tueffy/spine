@@ -8,6 +8,7 @@ class NetworkService {
     static transactional = false
 
     def graphCommunicatorService
+	def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
 	def SuperIndexService superIndexService
     //def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 
@@ -566,6 +567,54 @@ class NetworkService {
         log.info('Found relationship: ' + resultRelationship)
         return resultRelationship
     }
+	
+	/**
+	 * Get the relationship between two users
+	 * @param startEmail
+	 * @param endEmail
+	 * @return
+	 */
+	def ConnectRelationship findConnectRelationship(String startEmail, String endEmail, createIfNotFound = false) {
+		def query = 
+			'start ' + 
+				'start_user = node:super_index(email = {SP_START_EMAIL}), ' + 
+				'end_user = node:super_index(email = {SP_END_EMAIL}) ' + 
+			'match start_user-[r?:connect]->end_user ' + 
+			'return r, start_user, end_user'
+		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_START_EMAIL":"' + startEmail + '", "SP_END_EMAIL":"' + endEmail + '"}}')
+		if(json.data.size() == 0)
+			return null
+		
+		// Populate the relationship
+		json = json.data[0] // first result
+		
+		// json[0] => r
+		// json[1] => start_user
+		// json[2] => end_user
+		
+		if(!json[1] ||! json[2])
+		 throw new Exception("One of the user does not exists!")
+		
+		def ConnectRelationship connectRelationship = new ConnectRelationship()
+		connectRelationship.start = new User()
+		connectRelationship.start.bind(json[1])
+		connectRelationship.end = new User()
+		connectRelationship.end.bind(json[2])
+		 
+		if(json[0] && json[0] != 'null') // if json[0] is null it won't be equal to null because it's a JSONNull Object
+		{
+			connectRelationship.bind(json[0])
+		}
+		else // relationship not found ! 
+		{
+			if(!createIfNotFound)
+				return null
+			else
+				connectRelationship.persist(graphCommunicatorService)
+		}
+		
+		return connectRelationship
+	}
 
     /**
      * Add or reset properties to a relationship. 

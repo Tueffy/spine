@@ -277,37 +277,26 @@ class SpineService {
      *
      * @param loggedInUser = User
      * @param targetUser = Email
-     * @param taglist = space , ; separated list
+     * @param tag
      * @return success
      */
-    def addTag(String loggedInUser, String targetUser, String tags) {
-
-        Boolean success = false
-        HashMap parameters = [:]
-
-        parameters.put('startNode', loggedInUser)
-        parameters.put('endNode', targetUser)
-        parameters.put('tags', tags)
-
-        // If the relationship doesn't exists we create it
-        if (!networkService.readRelationship(parameters)) {
-            networkService.createRelationship(parameters)
-        }
-		
-        networkService.setProperty(parameters)
-		// Indexing : the NetworkService.setProperty method already updates the index
-		
-        return success = true
+    def addTag(String loggedInUser, String targetUser, String tag) {
+		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser, targetUser, true)
+		relationship.addTag(tag)
+		relationship.persist(networkService.graphCommunicatorService);
+		superIndexService.addTagToIndex(tag, relationship.end.self)
+		def success = relationship.self && relationship.hasTag(tag)
+        return success
     }
 	
 	/**
 	 * 
 	 * @param loggedInUser
 	 * @param targetUser
-	 * @param tags
+	 * @param tag
 	 * @return
 	 */
-	def addTag(User loggedInUser, User targetUser, String tags) {
+	def addTag(User loggedInUser, User targetUser, String tag) {
 		addTag(loggedInUser.email, targetUser.email, tags)
 	}
 
@@ -316,21 +305,24 @@ class SpineService {
      *
      * @param loggedInUser
      * @param targetUser
-     * @param taglist
+     * @param String tag
      * @return Boolean success
      */
-    def removeTag(User loggedInUser, User targetUser, String tags) {
-        Boolean success = false
-        Map parameters = [:]
-
-        parameters.put('startNode', loggedInUser.email)
-        parameters.put('endNode', targetUser.email)
-        parameters.put('tags', tags)
-
-        success = (networkService.deleteProperty(parameters))
-		// Indexing : the NetworkService.removeProperty method already updates the index
+    def removeTag(User loggedInUser, User targetUser, String tag) {
+		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email)
+		if(!relationship || !relationship.self)
+			return false
+		relationship.removeTag(tag)
+		superIndexService.removeTagFromIndex(tag, relationship.end.self)
 		
-        return success
+		// Should we delete or update the relationship ? 
+		if(relationship.data.size() == 0)
+			relationship.delete(networkService.graphCommunicatorService)
+		else
+			relationship.persist(networkService.graphCommunicatorService);
+			
+		def success = !relationship.hasTag(tag)
+		return success
     }
 
     /**
