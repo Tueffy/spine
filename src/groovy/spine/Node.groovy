@@ -1,5 +1,7 @@
 package spine
 
+import org.codehaus.groovy.grails.exceptions.InvalidPropertyException;
+
 abstract class Node {
 
 	def String self
@@ -31,5 +33,15 @@ abstract class Node {
 		{ 
 			graphCommunicatorService.neoPost('/db/data/node', jsonData)
 		}
+	}
+	
+	def delete(GraphCommunicatorService graphCommunicatorService) {
+		if(self) // Node is actually in DB
+		{
+			graphCommunicatorService.neoDelete(self)
+			self = null
+		}
+		else
+			throw new InvalidPropertyException("self property of the node is empty ! ")
 	}
 }

@@ -54,7 +54,7 @@ abstract class Relationship {
 	}
 	
 	def delete(GraphCommunicatorService graphCommunicatorService) {
-		if(self) // Property is actually in DB
+		if(self) // Relationship is actually in DB
 		{
 			graphCommunicatorService.neoDelete(self)
 			self = null
