@@ -6,27 +6,30 @@ abstract class Node {
 	def String incomingRelationships
 	def String outgoingRelationships
 	def String createRelationship
+	def String properties
 	
-	def Map properties = [:]
+	def Map data = [:]
 	
 	def bind(json) {
 		json.data.each {
-			properties.put(it.key, it.value)
+			data.put(it.key, it.value)
 		}
 		self = json.self
 		incomingRelationships = json.incoming_relationships
 		outgoingRelationships = json.outgoing_relationships
 		createRelationship = json.create_relationship
+		properties = json.properties
 	}
 	
 	def persist(GraphCommunicatorService graphCommunicatorService) {
+		def String jsonData = graphCommunicatorService.encodeMapToJSONString(data)
 		if(self) // Update node 
 		{
-			
+			graphCommunicatorService.neoPut(properties, jsonData)
 		}
 		else // Create node
 		{ 
-			
+			graphCommunicatorService.neoPost('/db/data/node', jsonData)
 		}
 	}
 }

@@ -38,8 +38,6 @@ abstract class Relationship {
 	}
 	
 	def persist(GraphCommunicatorService graphCommunicatorService) {
-		println "START = " + start
-		println "END = " + end
 		if(start?.self && end?.self) {
 			if(self) // update relationship 
 			{
