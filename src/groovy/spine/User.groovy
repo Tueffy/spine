@@ -35,39 +35,39 @@ class User extends Node {
 		super.bind(json)
 		
 		// Bind data
-		lastName = properties?.firstName
-		firstName = properties?.lastName
-		email = properties?.email
-		company = properties?.company
-		password = properties?.password
-		country = properties?.country
-		city = properties?.city
-		imagePath = properties?.imagePath
-		freeText = properties?.freeText
-		department = properties?.department
-		jobTitle = properties?.jobTitle
-		gender = properties?.gender
-		phone = properties?.phone
-		mobile = properties?.mobile
-		status = properties?.status
+		lastName = data?.firstName
+		firstName = data?.lastName
+		email = data?.email
+		company = data?.company
+		password = data?.password
+		country = data?.country
+		city = data?.city
+		imagePath = data?.imagePath
+		freeText = data?.freeText
+		department = data?.department
+		jobTitle = data?.jobTitle
+		gender = data?.gender
+		phone = data?.phone
+		mobile = data?.mobile
+		status = data?.status
 	}
 	
 	def persist(GraphCommunicatorService graphCommunicatorService) {
-		if(firstName) properties.put('firstName', firstName)
-		if(lastName) properties.put('lastName', lastName)
-		if(email) properties.put('email', email)
-		if(company) properties.put('company', company)
-		if(password) properties.put('password', password)
-		if(country) properties.put('country', country)
-		if(city) properties.put('city', city)
-		if(imagePath) properties.put('imagePath', imagePath)
-		if(freeText) properties.put('freeText', freeText)
-		if(department) properties.put('department', department)
-		if(jobTitle) properties.put('jobTitle', jobTitle)
-		if(gender) properties.put('gender', gender)
-		if(phone) properties.put('phone', phone)
-		if(mobile) properties.put('mobile', mobile)
-		if(status) properties.put('status', status)
+		if(firstName) data.put('firstName', firstName)
+		if(lastName) data.put('lastName', lastName)
+		if(email) data.put('email', email)
+		if(company) data.put('company', company)
+		if(password) data.put('password', password)
+		if(country) data.put('country', country)
+		if(city) data.put('city', city)
+		if(imagePath) data.put('imagePath', imagePath)
+		if(freeText) data.put('freeText', freeText)
+		if(department) data.put('department', department)
+		if(jobTitle) data.put('jobTitle', jobTitle)
+		if(gender) data.put('gender', gender)
+		if(phone) data.put('phone', phone)
+		if(mobile) data.put('mobile', mobile)
+		if(status) data.put('status', status)
 		super.persist(graphCommunicatorService)
 	}
 	
