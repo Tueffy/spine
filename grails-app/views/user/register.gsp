@@ -7,6 +7,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script type="text/javascript" src="/spine/js/prototype/event.simulate.js"></script>
   <script type="text/javascript" src="/spine/js/app/landing.js"></script>
+  <script type="text/javascript">landing.form.init();</script>
   <uploader:head />
   <cropper:head />
 </head>
@@ -20,80 +21,135 @@
 
 
 <div class="registration">
-	<div class="grid_10 omega knowledge" style="padding-top:80px">
+	<div class="grid_10 omega knowledge" style="padding-top: 110px;">
     	<img src="${resource(dir:'images/home',file:'spine-connected.png')}" alt="Connected">
     </div>  
     
-    <div class="grid_14 alpha landing" style="padding-top:40px">
+    <div class="grid_14 alpha landing">
     
+    	<h2 style="font-size:36pt;color:#000000;display:inline;">Register</h2>
+        <p class="subtitle" style="display:inline;">Join Spine now!</p>
+        
+        <g:if test="flash['message']">
+			<p>${flash['message']}</p>
+		</g:if>
+    	
     	<g:form action="doRegister" method="post" name="registration" class="registration">
     	
-    		<ul class="pagnination">
+    		<ul class="pagination">
 	    		<li class="current">First Step</li>
 	    		<li>Second Step</li>
 	    		<li>Third Step</li>
 	    	</ul>
     	
-    		<!-- First Step -->
-    		<div class="page">
-    			<table>
-    				<tr>
-						<th class="label">
-							<label for='lastName'>Last Name:</label>
-						</th>
-						<td class="label">
-							<input id="lastName" type="text" name="lastName" value="${user?.lastname}" />
-						</td>
-					</tr>
-					<tr>
-						<th class="label">
-							<label for="firstName">First Name:</label>
-						</th>
-						<td>
-							<input id="firstName" type="text" name="firstName" value="${user?.firstname}" />
-						</td>
-					</tr>
-					<tr>
-						<th class="label">
-							<label for="email">Email:</label>
-						</th>
-						<td>
-							<input id="email" type="text" name="email" value="${tmp_email}" />
-						</td>
-					</tr>
-					<tr>
-						<th class="label">
-							<label for="country">Country:</label>
-						</th>
-						<td>
-							<input id="country" type="text" name="country" value="${user?.country}" />
-						</td>
-					</tr>
-					<tr>
-						<th class="label">
-							<label for='city'>City:</label>
-						</th>
-						<td>
-							<input id="city" type="text" name="city" value="${user?.city}" />
-						</td>
-					</tr>
-					<tr>
-						<th class="label">
-							<label for='password'>Password:</label>
-						</th>
-						<td>
-							<input id="password" type="password" name="password" value="${user?.password}" />
-						</td>
-					</tr>
-				</table>
-    		</div>
-    		
-    		<!-- Second Step -->
-    		<div class="page"></div>
-    		
-    		<!-- Third Step -->
-    		<div class="page">
-    		
+    		<div class="pages">
+	    		<!-- First Step -->
+	    		<div class="page">
+	    		
+	    			<h3>Account information</h3>
+	    		
+	    			<table>
+	    				<tr>
+							<th class="label">
+								<label for='lastName'>Last Name:</label>
+							</th>
+							<td class="label">
+								<input id="lastName" type="text" name="lastName" value="${user?.lastname}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for="firstName">First Name:</label>
+							</th>
+							<td>
+								<input id="firstName" type="text" name="firstName" value="${user?.firstname}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for="email">Email:</label>
+							</th>
+							<td>
+								<input id="email" type="text" name="email" value="${tmp_email}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for="country">Country:</label>
+							</th>
+							<td>
+								<input id="country" type="text" name="country" value="${user?.country}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for='city'>City:</label>
+							</th>
+							<td>
+								<input id="city" type="text" name="city" value="${user?.city}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for='password'>Password:</label>
+							</th>
+							<td>
+								<input id="password" type="password" name="password" value="${user?.password}" />
+							</td>
+						</tr>
+					</table>
+	    		</div>
+	    		
+	    		<!-- Second Step -->
+	    		<div class="page">
+	    			<h3>Upload a picture (optional)</h3>
+	    			
+	    			<div class="upload_box">
+						<uploader:uploader id="picture" multiple="false">
+							<uploader:onComplete>
+								$('picture_field').writeAttribute('value', responseJSON.filename);
+								$('au-picture').hide();
+								$('cropper').show();
+								$('cropper-img').writeAttribute('src', '../' + responseJSON.dir + responseJSON.filename);
+								new Cropper.Img('cropper-img',{
+								 	autoIncludeCSS: false, 
+								 	ratioDim:{x:40,y:40}, 
+								 	onEndCrop: function(coords, dimensions) { 
+										$( 'crop_x1' ).value = coords.x1;
+										$( 'crop_y1' ).value = coords.y1;
+										$( 'crop_x2' ).value = coords.x2;
+										$( 'crop_y2' ).value = coords.y2;
+										$( 'crop_w' ).value = dimensions.width;
+										$( 'crop_h' ).value = dimensions.height;
+								 	} }
+								);
+							</uploader:onComplete>
+						</uploader:uploader>
+					</div>
+					
+					<div id="cropper" style="display: none;">
+						<img id="cropper-img" />
+						<input type="hidden" name="crop_x1" id="crop_x1" value="0" />
+						<input type="hidden" name="crop_y1" id="crop_y1" value="0" />
+						<input type="hidden" name="crop_x2" id="crop_x2" value="0" />
+						<input type="hidden" name="crop_y2" id="crop_y2" value="0" />
+						<input type="hidden" name="crop_h" id="crop_h" value="0" />
+						<input type="hidden" name="crop_w" id="crop_w" value="0" />
+						<input type="hidden" name="picture" id="picture_field" />
+					</div>
+	    		</div>
+	    		
+	    		<!-- Third Step -->
+	    		<div class="page">
+	    			<h3>Tell us more about yourself (Optional) </h3>
+					<textarea name="freeText">...</textarea>
+	    		</div>
+	    		
+	    		<div class="controls">
+					<a href="#" class="previous">Previous</a>
+					<a href="#" class="next">Next</a>
+	    		</div>
+	    		
     		</div>
     	
     	</g:form>

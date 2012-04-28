@@ -18,30 +18,6 @@ document.observe("dom:loaded", function() {
 	}
 	
 	/**
-	 * For a given event, go to the next Page / slide
-	 * @param event
-	 */
-	function nextPage(event)
-	{
-		var current_slide = event.element().up('.form_slide');
-		var next_slide = current_slide.next('.form_slide');
-		current_slide.removeClassName('current');
-		next_slide.addClassName('current');
-	}
-	
-	/**
-	 * For a given event, go to the previous page / slide
-	 * @param event
-	 */
-	function previousPage(event)
-	{
-		var current_slide = event.element().up('.form_slide');
-		var previous_slide = current_slide.previous('.form_slide');
-		current_slide.removeClassName('current');
-		previous_slide.addClassName('current');
-	}
-	
-	/**
 	 * Open the upload box associated with a button
 	 * @param event
 	 */
@@ -53,9 +29,6 @@ document.observe("dom:loaded", function() {
 			alert("ERROR : Upload box not found ! ");
 			return false;
 		}
-//		alert(file_input.readAttribute('name'));
-//		file_input.simulate('click');
-//		file_input.fire('click');
 		fireEvent(file_input, 'click');
 	}
 
@@ -82,50 +55,125 @@ document.observe("dom:loaded", function() {
  */
 var landing = {};
 
-
 landing.form = {
 		
-		var jForm;
-		var jFormPagination;
-		var jFormPages;
-		
-		var init = function () {
-			jQuery(document).ready(function () {
-				this.jForm = jQuery('form.registration');
-				this.jFormPagination = this.jForm.find('.pagination');
-				this.jFormPages = this.jForm.find('.page');
-				
-				// Handle manually form submission
-				this.jForm.on('submit', landing.form.submit);
+	// Properties
+	
+	jForm: null, 
+	jFormPagination: null, 
+	jFormPages: null,
+	jFormNavigation: null, 
+	
+	// Functions
+	
+	/**
+	 * Initialize the registration form
+	 */
+	init: function () {
+		var self = this;
+		jQuery(document).ready(function () {
+			self.jForm = jQuery('form.registration');
+			self.jFormPagination = self.jForm.find('.pagination');
+			self.jFormPages = self.jForm.find('.page');
+			self.jFormNavigation = self.jForm.find('.controls');
+			
+			// Events
+			
+			// Trap submit event
+			self.jForm.on('submit', function () {
+				self.submit();
+			})
+			
+			// Form navigation
+			self.jFormNavigation.on('click', 'a.next', function () { 
+				self.nextPage();
 			});
-		}
-		
-		var submit = function () {
+			self.jFormNavigation.on('click', 'a.previous', function () {
+				self.previousPage();
+			});
+			
+			self.goToPage(1);
+		});
+	}, 
+	
+	submit: function () {
+		if(this.getCurrentPage() < this.getNbOfPages()) {
+			this.nextPage();
 			return false;
 		}
+	}, 
+	
+	/**
+	 * Get the current step or page
+	 * @return int
+	 */
+	getCurrentPage: function () {
+		var self = this;
+		var i = 1;
+		var current = 1;
+		self.jFormPagination.find('li').each(function () {
+			if(jQuery(this).hasClass('current')) {
+				current = i;
+				return;
+			}
+			i++;
+		});
 		
-		/**
-		 * @return int 
-		 */
-		var getCurrentStep = function () {
-			var i = 1;
-			var current;
-			this.jFormPagination.find('li').each(function () {
-				if(jQuery(this).hasClass('current')) {
-					current = i;
-					return;
-				}
-				i++;
-			});
-			
-			return current;
-		}
+		return current;
+	}, 
+	
+	/**
+	 * Jump to the n-th page
+	 * @param int n
+	 */
+	goToPage: function (n) {
+		var i = 1;
+		this.jFormPages.hide();
+		jQuery(this.jFormPages[n - 1]).show();
 		
-		var nextStep = function () {
-			
-		}
+		var jFormPaginationItems = this.jFormPagination.find('li');
+		jFormPaginationItems.removeClass('current');
+		jQuery(jFormPaginationItems[n - 1]).addClass('current');
 		
-		var previousStep = function () {
-			
+		if(n == 1) // The first page
+			this.jFormNavigation.find('a.previous').css('visibility', 'hidden');
+		else 
+			this.jFormNavigation.find('a.previous').css('visibility', 'visible');
+		
+		if(n == this.getNbOfPages())
+			this.jFormNavigation.find('a.next').text('Submit');
+		else
+			this.jFormNavigation.find('a.next').text('Next');
+	},
+	
+	/**
+	 * Get the number of pages in the form
+	 */
+	getNbOfPages: function () {
+		return this.jFormPages.length
+	}, 
+	
+	/**
+	 * Move to the next page
+	 */
+	nextPage: function () {
+		var current_page = this.getCurrentPage();
+		var nb_pages = this.getNbOfPages();
+		if(current_page == nb_pages) {
+			this.jForm.submit();
 		}
+		else 
+			this.goToPage(current_page + 1);
+	}, 
+	
+	/**
+	 * Move to the previous page
+	 */
+	previousPage: function () {
+		var current_page = this.getCurrentPage();
+		var nb_pages = this.getNbOfPages();
+		if(current_page > 1)
+			this.goToPage(current_page - 1);
+	}
+	
 }
