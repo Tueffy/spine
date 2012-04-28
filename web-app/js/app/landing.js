@@ -177,3 +177,68 @@ landing.form = {
 	}
 	
 }
+
+
+landing.loginForm = {
+	jForm: null, 
+	jFormLoginField: null, 
+	jFormPasswordField: null, 
+	
+	init: function () {
+		var self = this;
+		jQuery(document).ready(function () {
+			self.jForm = jQuery('form.login');
+			self.jFormLoginField = self.jForm.find('input[name=email]');
+			self.jFormPasswordField = self.jForm.find('input[name=password]');
+			
+			self.bindDefaultValue(self.jFormLoginField, true);
+			self.bindDefaultValue(self.jFormPasswordField, true);
+			
+			// When the form is submitted
+			self.jForm.on('submit', function () {
+				self.onSubmit();
+			});
+			
+			// When an input field gains focus
+			self.jForm.on('focus', 'input[type=text], input[type=password]', function () {
+				self.unbindDefaultValue(jQuery(this));
+			});
+			
+			// When an input field loses the focus
+			self.jForm.on('focusout', 'input[type=text], input[type=password]', function () {
+				self.bindDefaultValue(jQuery(this), true);
+			});
+		});
+	}, 
+	
+	/**
+	 * Action when form is submitted
+	 */
+	onSubmit: function () {
+		
+	}, 
+	
+	/**
+	 * @param jObject : a jQuery object
+	 * @param boolean onlyIfEmpty : bind only if jObject value is empty
+	 */
+	bindDefaultValue: function (jObject, onlyIfEmpty) {
+		var default_value = jObject.attr('default');
+		if(default_value == null || default_value == undefined)
+			return false;
+		
+		var current_value = jQuery.trim(jObject.val());
+		if(current_value == '' || onlyIfEmpty == false)
+			jObject.val(default_value);
+	}, 
+	
+	unbindDefaultValue: function (jObject) {
+		var default_value = jObject.attr('default');
+		if(default_value == null || default_value == undefined)
+			return false;
+		
+		var current_value = jObject.val();
+		if(current_value == default_value)
+			jObject.val('');
+	}
+}
