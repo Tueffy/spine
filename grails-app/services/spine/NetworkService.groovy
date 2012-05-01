@@ -61,11 +61,13 @@ class NetworkService {
      * @param props
      * @return
      */
-    def updateNode(String email, Map props) {
+    def updateNode(String email, Map props, boolean bypassLastUpdatedProperty = false) {
 
-		//change the timestamp of lastUpdated
-		def now = System.currentTimeMillis()
-		props['lastUpdated'] = now
+		if(!bypassLastUpdatedProperty) {
+			//change the timestamp of lastUpdated
+			def now = System.currentTimeMillis()
+			props['lastUpdated'] = now
+		}
 		
         def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': '"' + email + '"'])
         //node URL is self
