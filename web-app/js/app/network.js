@@ -134,6 +134,9 @@ var updateSelectedUser = function(e) {
 	}
 	else
 		viewAllTags.hide();
+	
+	// Go to the top : 
+	window.location.hash = "#details_panel";
 }
 
 /**
