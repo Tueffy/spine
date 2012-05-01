@@ -86,7 +86,7 @@ a:hover { color:#67624e; }
 #right .feed .content { margin-top: 10px; background: #fffff; }
 
 #right .feed .filter { background:#c9c5b8; border-radius:15px 0 0 0; height:90px; }
-#right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:350px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 18pt; color:#c9c5b8; padding: 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}
+#right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:350px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 18px; color:#c9c5b8; padding: 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}
 #right .feed .filter ul.filter_list { list-style:none; text-align: right; margin: 4px 14px 0 0; padding-bottom:13px; }
 #right .feed .filter ul.filter_list li { display: inline-block; color: white; font-size:11px; font-weight:bold;margin-left:8px; }
 #right .feed .filter ul.filter_list li a { color: white; text-decoration: none; }
