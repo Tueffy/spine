@@ -17,10 +17,10 @@ class SpineServiceTests extends GrailsUnitTestCase {
         super.setUp()
 
         //Define Users, which can be used during the testing
-        u1.email = 'markus.long@techbank.com'
-        u2.email = 'jure.zakotnik@techbank.com'
-        u3.email = 'christian.tueffers@techbank.com'
-        u4.email = 'fero.bacak@techbank.com'
+        u1.email = 'ahmed.fatir@innonet-bank.com'
+        u2.email = 'akin.burshaz@innonet-bank.com'
+        u3.email = 'oliver.schaefer@innonet-bank.com'
+        u4.email = 'kerstin.kruse@innonet-bank.com'
 
 		checkDbResults = importDataService.checkDB()
     }
@@ -37,39 +37,39 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testLoginUser1() {
 
-        def success = spineService.loginUser('christian.tueffers@techbank.com', 'manage')
-        assert success.lastName == 'Tueffers'
-        assert success.firstName == 'Christian'
-        assert success.country == 'Germany'
-        assert success.city == 'Frankfurt'
-        assert success.email == 'christian.tueffers@techbank.com'
-        assert success.imagePath == 'christian.tueffers@techbank.com.jpg'
+        def success = spineService.loginUser('ahmed.fatir@innonet-bank.com', 'password')
+        assert success.lastName == 'Fatir'
+        assert success.firstName == 'Ahmed'
+        assert success.country == 'UK'
+        assert success.city == 'London'
+        assert success.email == 'ahmed.fatir@innonet-bank.com'
+        assert success.imagePath == 'ahmed.fatir@innonet-bank.com.jpg'
         assert success.badges.size() == 0
     }
 
     void testLoginUser2() {
 
-        def failure = spineService.loginUser('christian.tueffers@techbank.com', 'password')
+        def failure = spineService.loginUser('ahmed.fatir@innonet-bank.com', 'azerty')
         assert failure == null
     }
 
     void testLoginUser3() {
 
-        def notexist = spineService.loginUser('christian.tueffers@techbank.com', 'password')
+        def notexist = spineService.loginUser('akin.burshaz@innonet-bank.com', 'qwerty')
         assert notexist == null
     }
 
     void testLoginUser4() {
 
-        def success = spineService.loginUser('markus.long@techbank.com', 'clojure')
-        assert success.lastName == 'Long'
-        assert success.firstName == 'Markus'
+        def success = spineService.loginUser('akin.burshaz@innonet-bank.com', 'password')
+        assert success.lastName == 'Burshaz'
+        assert success.firstName == 'Akin'
         assert success.country == 'Germany'
         assert success.city == 'Hamburg'
-        assert success.email == 'markus.long@techbank.com'
-        assert success.imagePath == 'markus.long@techbank.com.jpg'
-        assert success.tags.size() == 7
-        assert success.badges.size() == 2
+        assert success.email == 'akin.burshaz@innonet-bank.com'
+        assert success.imagePath == 'akin.burshaz@innonet-bank.com.jpg'
+        assert success.tags.size() == 10
+        assert success.badges.size() == 0
     }
 
     // tests for getUserNetwork
@@ -89,7 +89,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 
     void testGetUser1() {
 
-        def result = spineService.getUser('markus.long@techbank.com')
+        def result = spineService.getUser('ahmed.fatir@innonet-bank.com')
         assert result != null
 
     }
@@ -99,33 +99,33 @@ class SpineServiceTests extends GrailsUnitTestCase {
     void testGetUserTags1() {
 
         def output = spineService.getUserTags(u1)
-        assert output == ['Help':3, 'ITIL':5, 'Operations':6, 'Desk':3, 'IT':4, 'Java':2, 'SOA':1]
+        assert output == ['BI':8, 'Java':7, 'HTML':1, 'BJ':1] 
 
     }
 
     void testGetUserTags2() {
         def output = spineService.getUserTags(u2)
-        assert output ==  ['Agile':15, 'IT':11, 'Java':12, 'SOA':1, 'Spring':4, 'Cloud':1, 'BPM':1, 'RPG':2, 'Operations':2, 'Bielefeld':5, 'Development':1, 'Warhammer':1, 'SSL':1, 'Munich':2, 'Jax':2, '2011':2, 'Wine':1, 'Soccer':1]
+        assert output ==  ['BI':9, 'Java':5, 'ITIL':2, 'HelpDesk':1, 'BAM':2, 'DataWarehouse':1, 'CEP':1, 'SQL':2, 'RealTime':1, 'Architecture':1] 
     }
 
     void testGetUserTags3() {
         def output = spineService.getUserTags(u3)
-        assert output == ['Love':1, 'ProjectX':1]
+        assert output == ['Clubbing':1, 'Java':1, 'Serengeti':1, 'Innovation':1, 'zCloud':1, 'Mobile':1, 'zJava':1] 
     }
 
     void testGetUserTags4() {
 
         def output = spineService.getUserTags(u4)
-        assert output == [Spring: 7, Java: 9, Development: 2, IT: 1, HTML: 3, SQL: 2, SSL: 1, zCloud: 1, zJava: 1]
+        assert output == ['Diversity':1, 'LesBleus':1, 'TourEiffel':1, 'Shopping':1, 'Sales':1]
     }
 	
 	void testRemoveTag()
 	{
-		spineService.addTag(u1, u4, 'Office')
-		def userTags = spineService.getUserTags(u4)
-		assert userTags['Office'] == 1
-		spineService.removeTag(u1, u4, 'Office')
-		userTags = spineService.getUserTags(u4)
+		spineService.addTag(u1, u3, 'Office')
+		def userTags = spineService.getUserTags(u3)
+		assert userTags['Office']
+		spineService.removeTag(u1, u3, 'Office')
+		userTags = spineService.getUserTags(u3)
 		assert (userTags['Office'] == null)
 	}
 
@@ -138,15 +138,15 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		// Calling with a Map of tags
 		def userTags = spineService.getUserTags(u1)
 		def userBadges = spineService.getBadges(userTags)
-		assert userBadges.size() == 2
-		assert userBadges[0].name == "ITIL Champ"
-		assert userBadges[1].name == "The Operator"
+		assert userBadges.size() == 0
+//		assert userBadges[0].name == "ITIL Champ"
+//		assert userBadges[1].name == "The Operator"
 		
 		// Calling with a user object
 		userBadges = spineService.getBadges(u1)
-		assert userBadges.size() == 2
-		assert userBadges[0].name == "ITIL Champ"
-		assert userBadges[1].name == "The Operator"
+		assert userBadges.size() == 0
+//		assert userBadges[0].name == "ITIL Champ"
+//		assert userBadges[1].name == "The Operator"
 	}
 	
 	void testAutocompleteTags()
@@ -154,7 +154,7 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		def results = spineService.autocompleteTags('Clou')
 		def expectedResults = [
 			[tag: 'zCloud', number: 1], 
-			[tag: 'Cloud', number: 6]
+			[tag: 'Cloud', number: 2]
 		]
 		
 		assert results.size() == 2
@@ -166,29 +166,26 @@ class SpineServiceTests extends GrailsUnitTestCase {
 		def user = spineService.getUser(u1.email)
 		spineService.updateUserProfile(user, ['status' : 'inactive'])
 		spineService.activateUser(user)
+		user = spineService.getUser(u1.email)
+		assert user.status == 'active'
 	} 
 	
 	void testGetHotTags()
 	{
 		def hotTags = spineService.getHotTags()
-		def tagsToTest = ['IT', 'Java', 'Agile', 'Operations', 'Front', 'Office', 'ProjectX', 'Trading', 'Spring', 'Soccer']
+		def tagsToTest = ['Java', 'BI', 'Securities', 'Bonds', 'Wine', 'PM', 'Leadership', 'Innovation', 'Diversity', 'Scheduling']
 		assert hotTags == tagsToTest
 	}
 	
 	void testgetUserInNetworkContext() 
 	{
-		User contextUser = u3
-		User targetUser = u2
+		User contextUser = u1
+		User targetUser = u3
 		def NetworkedUser networkedUser = spineService.getUserInNetworkContext(contextUser, targetUser.email)
 		
-		def directTagsExpected = [
-			'Bielefeld', 'Warhammer', 'Agile', 
-			'SSL', 'Munich', 'Jax', 
-			'2011', 'Spring', 'IT', 
-			'RPG', 'Java'
-		]
+		def directTagsExpected = ['Innovation', 'zCloud', 'Mobile',  'zJava']
 		
-		def expectedBadges = ['Java Guru', 'Scrum Master']
+		def expectedBadges = []
 		def actualBadges = []
 		networkedUser.user.badges.each {
 			actualBadges.add(it.name)

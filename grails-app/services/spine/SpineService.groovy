@@ -297,7 +297,7 @@ class SpineService {
 	 * @return
 	 */
 	def addTag(User loggedInUser, User targetUser, String tag) {
-		addTag(loggedInUser.email, targetUser.email, tags)
+		addTag(loggedInUser.email, targetUser.email, tag)
 	}
 
     /**
