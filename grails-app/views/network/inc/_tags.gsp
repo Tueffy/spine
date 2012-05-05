@@ -1,7 +1,7 @@
 <ul class="tags" id="${networkedUser.user.email}_tags">
 	<g:each in="${networkedUser.user.tags}" var="tag">
 		<li tag="${tag.key}" nb="${tag.value}" class="tag<g:if test="${networkedUser.isDirectTag(tag.key)}"> direct_tag</g:if>"> 
-			${tag.key}
+			<g:link controller="network" action="index" params="[filter: tag.key]">${tag.key}</g:link>
 			<g:if test="${networkedUser.isDirectTag(tag.key)}">
 				<a href="#" class="remove_tag">-</a>
 			</g:if> <g:else>

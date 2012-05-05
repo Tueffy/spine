@@ -115,7 +115,7 @@ var updateSelectedUser = function(e) {
 	jQuery.each(user.tags, function (tag, nb) // for each tag
 	{
 		var li = jQuery(document.createElement('li'));
-		li.html('<span class="tag">' + tag + '</span><span class="nb">' + nb + '</span>');
+		li.html('<span class="tag"><a href="/spine/network/index?filter='+ tag +'">' + tag + '</a></span><span class="nb">' + nb + '</span>');
 		if(jQuery.inArray(tag, networkedUser.directTags) != -1) // check if the tag is a direct tag
 			li.addClass('direct_tag');
 		
