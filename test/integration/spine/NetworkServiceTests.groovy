@@ -405,5 +405,13 @@ class NetworkServiceTests extends GrailsUnitTestCase {
 			' AND (tag : frankfurt OR badge : frankfurt OR email : frankfurt OR firstname : frankfurt OR lastname : frankfurt OR city : frankfurt)'
 		assert networkService.parseSearchQueryIntoLuceneQuery(query) == expected
 	}
+	
+	void testParseSearchQueryIntoLuceneQuery4() {
+		def query = 'Java AND HTML AND SQL'
+		def expected = '(tag : java OR badge : java OR email : java OR firstname : java OR lastname : java OR city : java)' +
+			' AND (tag : html OR badge : html OR email : html OR firstname : html OR lastname : html OR city : html)' + 
+			' AND (tag : sql OR badge : sql OR email : sql OR firstname : sql OR lastname : sql OR city : sql)' 
+		assert networkService.parseSearchQueryIntoLuceneQuery(query) == expected
+	}
 }
 

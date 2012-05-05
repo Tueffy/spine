@@ -221,6 +221,7 @@ class NetworkService {
 					'lastname : ' + it.toLowerCase() + ' OR ' +
 					'city : ' + it.toLowerCase() + '' +
 					')'
+				lastWordWasOperator = false
 			}
 			else
 			{
