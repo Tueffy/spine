@@ -125,6 +125,9 @@ class UserController {
 			'city' : params.city,
 			'country' : params.country,
 			'email' : params.email,
+			'company': params.company, 
+			'department': params.department,
+			'jobTitle': params.jobTitle, 
 			'password' : params.password, 
 			'image' : "",
 			'freeText' : params.freeText ]
@@ -132,7 +135,6 @@ class UserController {
 		// If an image has been sent, apply cropping
 		if(params.picture != ""){
 			cropUserPicture()
-			
 			userparams.image = userparams.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}		
 		

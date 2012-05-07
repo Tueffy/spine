@@ -76,9 +76,9 @@ form.registration { margin-top: 10px; }
 form.registration ul.pagination { border-top: 1px solid black; border-bottom: 1px solid black; padding: 5px 0; margin-bottom:20px; }
 form.registration ul.pagination li { display:inline-block; width:175px; margin:0; text-align: center; }
 form.registration ul.pagination li.current { color: red; }
-form.registration div.page { height: 370px; }
+form.registration div.page { height: auto; }
 form.registration div.page h3 { padding-bottom: 15px; }
-form.registration div.controls { text-align: center; margin-top: 10px; }
+form.registration div.controls { text-align: center; padding: 30px; }
 form.registration div.controls a { padding:5px 10px; border-radius:2px; border: 1px solid black; }
 form.registration div.controls a.disabled { cursor: default;}
 form.registration textarea { width: 100% !important; height: 310px !important; }

@@ -91,6 +91,30 @@
 						</tr>
 						<tr>
 							<th class="label">
+								<label for='department'>Department:</label>
+							</th>
+							<td>
+								<input id="department" type="text" name="department" value="${user?.department}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for='jobTitle'>Job Title:</label>
+							</th>
+							<td>
+								<input id="jobTitle" type="text" name="jobTitle" value="${user?.jobTitle}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for='company'>Company:</label>
+							</th>
+							<td>
+								<input id="company" type="text" name="company" value="${user?.company}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
 								<label for='password'>Password:</label>
 							</th>
 							<td>
