@@ -193,9 +193,11 @@ class NetworkService {
 		networkedUser.user.bind(json[0])
 		if(json[1] == null) 
 			networkedUser.distance = 0;
-		else {
-			networkedUser.bindDirectTags(json[1][0]) // json[1][0] => the 1st relationship of the path p
+		else 
+		{
 			networkedUser.distance = json[1].size()
+			if(networkedUser.distance == 1) // direct tags if path length == 1
+			networkedUser.bindDirectTags(json[1][0]) // json[1][0] => the 1st relationship of the path p
 		}
 		
 		return networkedUser
