@@ -347,7 +347,7 @@ class NetworkService {
 		// We only execute the second query if there no more (or not enough) 
 		// result to get from the first one.  
 		// AND the extended_search parameter must be set to true
-		if(extended_search && network.networkedUsers.size() < limit && !filter.isEmpty())
+		if(extended_search && network.networkedUsers.size() < limit && isFiltered)
 		{
 			int newOffset = offset - firstQueryNbTotalResults;
 			if(newOffset < 0)
