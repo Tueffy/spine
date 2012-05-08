@@ -77,7 +77,18 @@ landing.form = {
 			self.jFormPages = self.jForm.find('.page');
 			self.jFormNavigation = self.jForm.find('.controls');
 			
+			
+			// 
+			// Widgets
+			// 
+			
+			self.jForm.find('#birthday').datepicker({
+				dateFormat: "dd-MM-y"
+			});
+			
+			//
 			// Events
+			//
 			
 			// Trap submit event
 			self.jForm.on('submit', function () {

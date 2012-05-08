@@ -50,6 +50,18 @@
 	    		
 	    			<table>
 	    				<tr>
+							<th class="gender">
+								<label for='gender'>Gender:</label>
+							</th>
+							<td class="label">
+								<select name="gender" id="gender">
+									<option value=""<g:if test="${user?.gender == null}"> selected="selected"</g:if>></option>
+									<option value="male"<g:if test="${user?.gender == 'male'}"> selected="selected"</g:if>>Male</option>
+									<option value="female"<g:if test="${user?.gender == 'female'}"> selected="selected"</g:if>>Female</option>
+								</select>
+							</td>
+						</tr>
+	    				<tr>
 							<th class="label">
 								<label for='lastName'>Last Name:</label>
 							</th>
@@ -63,6 +75,14 @@
 							</th>
 							<td>
 								<input id="firstName" type="text" name="firstName" value="${user?.firstname}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for="birthday">Birth Day:</label>
+							</th>
+							<td>
+								<input id="birthday" type="text" name="birthday" value="${user?.birthday}" />
 							</td>
 						</tr>
 						<tr>

@@ -120,10 +120,12 @@ class UserController {
 		
 		// create map with parameters
 		def userparams = [
+			'gender': params.gender, 
 			'firstName' : params.firstName,
 			'lastName' : params.lastName,
 			'city' : params.city,
 			'country' : params.country,
+			'birthday': params.birthday, 
 			'email' : params.email,
 			'company': params.company, 
 			'department': params.department,

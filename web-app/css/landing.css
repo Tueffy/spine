@@ -2,7 +2,12 @@
 #container .landing h2 { color:#67624e; font-size:24pt; font-weight:normal; margin-top: 15px;  font-family:"HelveticaRounded Bold";}
 #container .landing p.subtitle { margin-bottom:20px; margin-top:5px; }
 #container .landing form td {height:50px}
-#container .landing form input[type=text],  #container .landing form input[type=password], #container .landing form textarea{ 
+
+#container .landing form input[type=text],  
+#container .landing form input[type=password], 
+#container .landing form textarea, 
+#container .landing form select 
+{ 
 	width: 400px; 
 	font-size:11pt; 
 	border:1px solid #67624e; 
