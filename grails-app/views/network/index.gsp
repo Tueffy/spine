@@ -82,14 +82,12 @@
           <ul class="description">
             <li class="name" id="selectedUserName"></li>
             <li class="company" id="selectedCompany"></li>
-            <li class="city" id="selectedCity"></li>
-          </ul>          
-          <ul class="tags" id="selectedTags">
-           
-          </ul>   
-          <ul class="tags" id="selectedTagsMore">
-           
-          </ul>        
+            <li class="city"><span id="selectedCity"></span>, <span id="selectedCountry"></span></li>
+            <li class="freeText" id="selectedFreeText"></li>
+          </ul>
+          <ul class="badges" id="selectedBadges"></ul>
+          <ul class="tags" id="selectedTags"></ul>   
+          <ul class="tags" id="selectedTagsMore"></ul>        
           <p class="all_tags" style="display: none;"><a href="">All tags</a></p>
         </div> 
         <!-- END : Details block -->

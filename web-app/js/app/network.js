@@ -102,8 +102,21 @@ var updateSelectedUser = function(e) {
 	
 	// Fill basic info about the user
 	jQuery('#selectedUserName').text(user.firstName + ' ' + user.lastName);
-	jQuery('#selectedCity').innerHTML = user.city;
+	jQuery('#selectedCity').text(user.city);
+	jQuery('#selectedCountry').text(user.country);
+	jQuery('#selectedCompany').text(user.company);
+	jQuery('#selectedFreeText').text('„' + user.freeText + '„');
 	jQuery('#selectedImage').attr('src', '/spine/images/profiles/' + user.email + '.jpg');
+	
+	// Updating the badges list
+	var badgesList = jQuery('#selectedBadges');
+	badgesList.html('');
+	jQuery.each(user.badges, function (i, badge) {
+		var li = jQuery(document.createElement('li'));
+		li.addClass('badge');
+		li.html('<img src="/spine/images/badges/36x36/' + badge.image + '" title="' + badge.name + '" alt="' + badge.name + '" width="36" height="36" />');
+		li.appendTo(badgesList);
+	});
 	
 	// Updating the tag list
 	var selectedTags = jQuery('#selectedTags');
@@ -134,6 +147,8 @@ var updateSelectedUser = function(e) {
 	}
 	else
 		viewAllTags.hide();
+	
+	jQuery('#details_panel > ul.description').show();
 	
 	// Go to the top : 
 	window.location.hash = "#details_panel";
