@@ -1,10 +1,10 @@
 <div class="container_24">
       <span>
       		<g:if test="${session.user != $null}">
-      			<a href="/spine/network/index"><img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" /></a>
+      			<a href="/spine/network/index"><img src="/spine/images/home/logo.png" alt="Spine" class="logo" /></a>
       		</g:if>
       		<g:else>
-      			<a href="/spine"><img src="/spine/images/home/logo.png" alt="Spine" width="222" height="61" class="logo" /></a>
+      			<a href="/spine"><img src="/spine/images/home/logo.png" alt="Spine" class="logo" /></a>
       		</g:else>     		
       </span>
       <span>
