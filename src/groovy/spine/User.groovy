@@ -35,8 +35,8 @@ class User extends Node {
 		super.bind(json)
 		
 		// Bind data
-		lastName = data?.firstName
-		firstName = data?.lastName
+		lastName = data?.lastName
+		firstName = data?.firstName
 		email = data?.email
 		company = data?.company
 		password = data?.password
