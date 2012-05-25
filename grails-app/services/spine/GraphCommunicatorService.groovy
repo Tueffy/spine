@@ -66,7 +66,7 @@ class GraphCommunicatorService {
 
     private def internalRequest(Method method, String requestPath, requestQuery = null) {
 		requestPath = cleanRequestPath(requestPath)
-		log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
+//		log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
 		
 		Future result = asyncHTTPBuilder.request(method) {
 			uri.path = requestPath

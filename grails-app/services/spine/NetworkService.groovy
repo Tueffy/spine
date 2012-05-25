@@ -289,7 +289,7 @@ class NetworkService {
 					'skip ' + offset + ' ' +
 					'limit ' + limit + ' '
 		
-		print("\n\n\n" + query + "\n\n\n");
+//		print("\n\n\n" + query + "\n\n\n");
 		
 		// Execute the query
 		def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
@@ -371,7 +371,7 @@ class NetworkService {
 					'limit ' + newLimit + ' '
 					
 			
-			log.info(query)
+//			log.info(query)
 			
 			// Execute the query
 			cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'

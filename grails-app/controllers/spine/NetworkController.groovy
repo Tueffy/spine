@@ -20,7 +20,8 @@ class NetworkController {
 	 * 
 	 */
 	def index = {
-				
+
+		def startTime = System.currentTimeMillis()				
 		// Get the user
 		User user = new User()
 		if(params.user !=null)
@@ -43,7 +44,11 @@ class NetworkController {
 		
 		//Top 5 hot tags
 		hotTags= [hotTags[1], hotTags[2], hotTags[3], hotTags[4], hotTags[5]]		
-				
+			
+		def endTime = System.currentTimeMillis()
+		def executionTime = endTime - startTime
+		log.debug("Execution time for loading the network page = " + executionTime + "ms. ")
+			
 		[param : params.filter, user : user, network : network, badges: badges, hotTags: hotTags]
 	}
 	
