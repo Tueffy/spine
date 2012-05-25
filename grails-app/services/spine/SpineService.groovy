@@ -8,6 +8,8 @@ class SpineService {
     def  networkService
     def badgeService
 	def SuperIndexService superIndexService
+	
+	def static List hotTagsCache = []
 
 	
     /**
@@ -354,14 +356,19 @@ class SpineService {
 	* @param 
 	* @return List tagList
 	*/
-   def getHotTags() {
-	   Map allTags = networkService.getAllProperties().sort { a,b -> b.value <=> a.value } // sort by value desc
-	   List tagList = []
-	   allTags.each {
-		   key, value -> 
-		   if(tagList.size() < 10) tagList.add(key)
+   def List getHotTags() {
+	   if(hotTagsCache.isEmpty())
+	   {
+		   log.debug("Caching hot tags... ");
+		   Map allTags = networkService.getAllProperties().sort { a,b -> b.value <=> a.value } // sort by value desc
+		   allTags.each {
+			   key, value ->
+			   if(hotTagsCache.size() < 10) hotTagsCache.add(key)
+		   }
 	   }
-	   return tagList
+	   else
+	   		log.debug("Getting hot tags from cache... ");
+	   return hotTagsCache
    }
    
    /**
