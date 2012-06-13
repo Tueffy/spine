@@ -2,7 +2,7 @@ package spine
 
 import java.util.regex.*
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.CeilingCall;
+//import com.sun.org.apache.xalan.internal.xsltc.compiler.CeilingCall;
 
 class NetworkService {
     static transactional = false
@@ -37,6 +37,15 @@ class NetworkService {
         def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': '"' + email + '"'])
         return json.data[0]
     }
+	
+	def User readUserNode(String email) {
+		def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': '"' + email + '"'])
+		if(json == null)
+			return null
+		User user = new User()
+		user.bind(json[0])
+		return user
+	}
 
     /** Create node and add to index (all properties)
      * @param props
@@ -587,6 +596,7 @@ class NetworkService {
 			'match start_user-[r?:connect]->end_user ' + 
 			'return r, start_user, end_user'
 		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"SP_START_EMAIL":"' + startEmail + '", "SP_END_EMAIL":"' + endEmail + '"}}')
+		log.info(json)
 		if(json.data.size() == 0)
 			return null
 		

@@ -42,7 +42,7 @@ class User extends Node {
 		password = data?.password
 		country = data?.country
 		city = data?.city
-		imagePath = data?.imagePath
+		imagePath = data?.image
 		freeText = data?.freeText
 		department = data?.department
 		jobTitle = data?.jobTitle
@@ -60,7 +60,7 @@ class User extends Node {
 		if(password) data.put('password', password)
 		if(country) data.put('country', country)
 		if(city) data.put('city', city)
-		if(imagePath) data.put('imagePath', imagePath)
+		if(imagePath) data.put('image', imagePath)
 		if(freeText) data.put('freeText', freeText)
 		if(department) data.put('department', department)
 		if(jobTitle) data.put('jobTitle', jobTitle)

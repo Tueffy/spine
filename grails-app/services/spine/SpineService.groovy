@@ -8,6 +8,7 @@ class SpineService {
     def  networkService
     def badgeService
 	def SuperIndexService superIndexService
+	def LogService logService
 	
 	def static List hotTagsCache = []
 
@@ -101,42 +102,19 @@ class SpineService {
      *
      * @return User
      */
-    def getUser(String email) {
+    def User getUser(String email, boolean getTags = true) {
 
-        // instantiate return structure
-        def user = new User()
-
-        // retrieve the properties
-        def userNode = networkService.readNode(email)
-		if(userNode == null)
-			return null;
-		
-        // copy over the values from the hash map into the user object
-        user.firstName = userNode?.firstName
-        user.lastName = userNode?.lastName
-        user.email = userNode.email
-        user.country = userNode?.country
-        user.city = userNode?.city
-        user.imagePath = userNode?.image
-        user.freeText = userNode?.freeText
-        user.freeText = userNode?.freeText
-		user.company = userNode?.company
-		user.department = userNode?.department
-		user.jobTitle = userNode?.jobTitle
-		user.phone = userNode?.phone
-		user.mobile = userNode?.mobile
-		user.gender = userNode?.gender
-		user.birthday = userNode?.birthday
-		user.status = userNode?.status
-		
-        user.tags = networkService.getIncomingTagsForNode(userNode.email)
-		// TODO: does not look good, have to rethink the way we manage user in the code
-		user.password = userNode.password
-        if (user.tags != null)
-            user.badges = badgeService.evaluateTags(user.tags)
-
-        // add something related to distance to the current contextUser
-
+        def User user = networkService.readUserNode(email)
+		if(user == null)
+			return null
+			
+		// get tags
+		if(getTags) {
+			user.tags = networkService.getIncomingTagsForNode(user.email)
+			if (user.tags != null)
+				user.badges = badgeService.evaluateTags(user.tags)
+		}
+        
         return user
     }
 
@@ -283,12 +261,9 @@ class SpineService {
      * @return success
      */
     def addTag(String loggedInUser, String targetUser, String tag) {
-		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser, targetUser, true)
-		relationship.addTag(tag)
-		relationship.persist(networkService.graphCommunicatorService);
-		superIndexService.addTagToIndex(tag, relationship.end.self)
-		def success = relationship.self && relationship.hasTag(tag)
-        return success
+		def User fromUser = getUser(loggedInUser, false)
+		def User toUser = getUser(targetUser, false)
+		return addTag(fromUser, toUser, tag)
     }
 	
 	/**
@@ -299,7 +274,19 @@ class SpineService {
 	 * @return
 	 */
 	def addTag(User loggedInUser, User targetUser, String tag) {
-		addTag(loggedInUser.email, targetUser.email, tag)
+		
+		if(!loggedInUser.self)
+			loggedInUser = getUser(loggedInUser.email, false)
+		if(!targetUser.self)
+			targetUser = getUser(targetUser.email, false)
+					
+		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email, true)
+		relationship.addTag(tag)
+		relationship.persist(networkService.graphCommunicatorService);
+		superIndexService.addTagToIndex(tag, relationship.end.self)
+		logService.addTag(tag, loggedInUser, targetUser)
+		def success = relationship.self && relationship.hasTag(tag)
+		return success
 	}
 
     /**
@@ -322,6 +309,9 @@ class SpineService {
 			relationship.delete(networkService.graphCommunicatorService)
 		else
 			relationship.persist(networkService.graphCommunicatorService);
+			
+		// Log the action
+		logService.removeTag(tag, loggedInUser, targetUser)
 			
 		def success = !relationship.hasTag(tag)
 		return success
