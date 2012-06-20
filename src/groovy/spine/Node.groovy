@@ -32,7 +32,7 @@ abstract class Node {
 		else // Create node
 		{ 
 			def json = graphCommunicatorService.neoPost('/db/data/node', jsonData)
-			self = json.self
+			bind(json)
 		}
 	}
 	

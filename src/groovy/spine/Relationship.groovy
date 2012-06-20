@@ -47,7 +47,7 @@ abstract class Relationship {
 			{
 				def props = [ 'to': end.self, 'type': type, 'data': data ]
 				def json = graphCommunicatorService.neoPost(start.createRelationship, graphCommunicatorService.encodeMapToJSONString(props))
-				self = json.self
+				bind(json)
 			}
 		}
 		else

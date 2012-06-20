@@ -7,8 +7,6 @@ class LogService {
 	static logIndexPath = '/db/data/index/node/log/'
 
 	def addTag(String tag, User from, User to) {
-		log.info("Start = " + from.self)
-		log.info("End = " + to.self)
 		LogEntry logEntry = new LogEntry()
 		logEntry.type = 'tag'
 		logEntry.action = 'add'

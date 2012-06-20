@@ -32,6 +32,7 @@ class LogEntry extends Node {	def String type	def String action
 		if(time) data.put('time', time)
 		
 		super.persist(graphCommunicatorService)
+		
 		if(from != null)
 			from.persist(graphCommunicatorService)
 		if(to != null)

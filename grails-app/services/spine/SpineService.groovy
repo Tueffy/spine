@@ -279,12 +279,17 @@ class SpineService {
 			loggedInUser = getUser(loggedInUser.email, false)
 		if(!targetUser.self)
 			targetUser = getUser(targetUser.email, false)
-					
+		
+		// Get "connect" relationship between two users
+		// If does not exist: relationship will be created			
 		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email, true)
 		relationship.addTag(tag)
 		relationship.persist(networkService.graphCommunicatorService);
 		superIndexService.addTagToIndex(tag, relationship.end.self)
+		
+		// Log the action
 		logService.addTag(tag, loggedInUser, targetUser)
+		
 		def success = relationship.self && relationship.hasTag(tag)
 		return success
 	}
@@ -298,6 +303,12 @@ class SpineService {
      * @return Boolean success
      */
     def removeTag(User loggedInUser, User targetUser, String tag) {
+		
+		if(!loggedInUser.self)
+			loggedInUser = getUser(loggedInUser.email, false)
+		if(!targetUser.self)
+			targetUser = getUser(targetUser.email, false)
+		
 		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email)
 		if(!relationship || !relationship.self)
 			return false
