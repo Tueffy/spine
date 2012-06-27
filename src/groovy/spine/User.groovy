@@ -21,6 +21,7 @@ class User extends Node {
 	String mobile
 	String birthday
 	String status
+	Long lastNotifications
 
 	//@TODO: Temporary solution to iterate tags 
 	Map tags = [:]
@@ -50,6 +51,7 @@ class User extends Node {
 		phone = data?.phone
 		mobile = data?.mobile
 		status = data?.status
+		lastNotifications = data?.lastNotifications
 	}
 	
 	def persist(GraphCommunicatorService graphCommunicatorService) {
@@ -68,6 +70,7 @@ class User extends Node {
 		if(phone) data.put('phone', phone)
 		if(mobile) data.put('mobile', mobile)
 		if(status) data.put('status', status)
+		if(lastNotifications) data.put('lastNotifications', lastNotifications)
 		super.persist(graphCommunicatorService)
 	}
 	

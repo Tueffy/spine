@@ -37,6 +37,12 @@ class TestController {
 		render networkService.parseSearchQueryIntoLuceneQuery('Java AND Frankfurt');
 	}
 	
+	def log = {
+		def LogFilter logFilter = new LogFilter()
+		logFilter.type = 'tag'
+		render logFilter.buildCypherQuery()
+	}
+	
 
 	/**
 	 * Insert / update the data about the node in the super index

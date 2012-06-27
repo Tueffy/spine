@@ -1,5 +1,8 @@
 package spine
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.codehaus.groovy.grails.exceptions.InvalidPropertyException;
 
 abstract class Node {
@@ -44,5 +47,17 @@ abstract class Node {
 		}
 		else
 			throw new InvalidPropertyException("self property of the node is empty ! ")
+	}
+	
+	def getID() {
+		if(!self)
+			return null
+		Pattern pattern = Pattern.compile('(.*)/([0-9]+)/?')
+		Matcher matcher = pattern.matcher(self)
+		matcher.matches()
+		if(matcher.groupCount() > 0)
+			return matcher.group(2)
+		else
+			return '-1'
 	}
 }

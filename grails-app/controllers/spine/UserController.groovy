@@ -75,7 +75,7 @@ class UserController {
 	 */
 	def doLogin = {
 		
-		log.info "Start login: ${params.email}"
+//		log.info "Start login: ${params.email}"
 		
 		def user = new User();
 		user = spineService.getUser(params.email);

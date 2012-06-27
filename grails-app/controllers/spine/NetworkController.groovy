@@ -13,6 +13,7 @@ class NetworkController {
 	def beforeInterceptor = [action:this.&checkUser,except:[]]
 
 	def spineService
+	def LogService logService
 	def smtpService
 
 	/**
@@ -48,8 +49,11 @@ class NetworkController {
 		def endTime = System.currentTimeMillis()
 		def executionTime = endTime - startTime
 		log.debug("Execution time for loading the network page = " + executionTime + "ms. ")
+		
+		// Get notifications.
+		def notifications = logService.getUserNotifications(user)
 			
-		[param : params.filter, user : user, network : network, badges: badges, hotTags: hotTags]
+		[param : params.filter, user : user, network : network, badges: badges, hotTags: hotTags, notifications: notifications]
 	}
 	
 	/**

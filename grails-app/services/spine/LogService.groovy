@@ -46,6 +46,23 @@ class LogService {
 		networkService.graphCommunicatorService.neoPost(logIndexPath, requestQuery)
 	}
 
-	def getNotifications(User user) {
+	def getNotifications(LogFilter logFilter) {
+		def query = logFilter.buildCypherQuery()
+	}
+	
+	def getUserNotifications(User user) {
+		def LogFilter logFilter = new LogFilter()
+		
+		if(user?.lastNotifications)
+			logFilter.afterTime = user.lastNotifications
+		else 
+			logFilter.afterTime = 0
+		
+		logFilter.to = user
+		
+		def query = logFilter.buildCypherQuery()
+		def results = []
+		results = logFilter.executeAndParseQuery(query, networkService.graphCommunicatorService)
+		return results
 	}
 }

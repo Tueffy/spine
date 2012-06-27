@@ -26,7 +26,14 @@
       <g:if test="${session.user != $null}">
       <p class="news">
           <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
-          <span id="message">You've got 7 new tags and 1 new badge.</span>
+          <span id="message">
+	          <g:if test="${notifications}">
+	          	You've got ${notifications.size()} notifications. 
+	          </g:if>
+	          <g:else>
+	          	0 notification.
+	          </g:else>
+          </span>
       </p> 
       </g:if>
 </div>

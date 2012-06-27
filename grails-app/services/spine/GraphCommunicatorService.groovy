@@ -16,6 +16,7 @@ class GraphCommunicatorService {
 
     static transactional = false
     private static final log = LogFactory.getLog(this)
+	String cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
 
 	AsyncHTTPBuilder asyncHTTPBuilder = new AsyncHTTPBuilder(
 		poolsize: 10, 
