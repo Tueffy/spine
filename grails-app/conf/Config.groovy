@@ -103,12 +103,12 @@ grails {
 	mail {
 	  host = "email-smtp.us-east-1.amazonaws.com"
 	  port = 465
-	  username = "AKIAJAF7F45ZIHP3LVEQ"
-	  password = "ArToT20nyOJhYMXXIMmc+TPSseGqrxNGzJApYUHZ/u26"
+	  username = "AKIAITOYGH3TN2W5YGRA"
+	  password = "AvihRZVsw7h0WiZYX81L3/UXx8C2DRoRzCZHGW8NJfwf"
 	  props = ["mail.smtp.auth":"true",
 			   "mail.smtp.socketFactory.port":"465",
 			   "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
 			   "mail.smtp.socketFactory.fallback":"false"]
- 
+
 	} 
 }

@@ -18,7 +18,7 @@ class SmtpService {
 			body(
 				view: "/emails/account-activation",
 				//plugin:"email-confirmation",
-				model:[fromAddress:'t.michelbach@gmail.com', id: toMail]
+				model:[fromAddress:'jure@zakotnik.de', id: toMail]
 			)			
 		    //attachBytes 'spine-logo.gif','image/gif', new File(  "./web-app/images/emails/spine-logo.gif").readBytes()
 		  }
@@ -35,7 +35,7 @@ class SmtpService {
 			body(
 				view: "/emails/account-removal",
 				//plugin:"email-confirmation",
-				model:[fromAddress:'t.michelbach@gmail.com', id:'111']
+				model:[fromAddress:'jure@zakotnik.de', id:'111']
 			)
 			//attachBytes 'spine-logo.gif','image/gif', new File(  "./web-app/images/emails/spine-logo.gif").readBytes()
 		  }
@@ -51,7 +51,7 @@ class SmtpService {
 			body(
 				view: "/emails/news-weekly",
 				//plugin:"email-confirmation",
-				model:[fromAddress:'t.michelbach@gmail.com', id:'111']
+				model:[fromAddress:'jure@zakotnik.de', id:'111']
 			)
 			//attachBytes 'spine-logo.gif','image/gif', new File(  "./web-app/images/emails/spine-logo.gif").readBytes()
 		  }
@@ -67,7 +67,7 @@ class SmtpService {
 			body(
 				view: "/emails/password-recovery",
 				//plugin:"email-confirmation",
-				model:[fromAddress:'t.michelbach@gmail.com', id: toMail]
+				model:[fromAddress:'jure@zakotnik.de', id: toMail]
 			)
 			//attachBytes 'spine-logo.gif','image/gif', new File(  "./web-app/images/emails/spine-logo.gif").readBytes()
 		  }
@@ -83,7 +83,7 @@ class SmtpService {
 			body(
 				view: "/emails/user-invitation",
 				//plugin:"email-confirmation",
-				model:[fromAddress:'t.michelbach@gmail.com', id:'111']
+				model:[fromAddress:'jure@zakotnik.de', id:'111']
 			)
 			//attachBytes 'spine-logo.gif','image/gif', new File(  "./web-app/images/emails/spine-logo.gif").readBytes()
 		  }
