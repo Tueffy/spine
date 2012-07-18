@@ -50,7 +50,7 @@ class UserController {
 	* Activate user and forward him to the login page
 	*/
     def activate = {		
-		log.info "Activate user: ${params.id}"
+		//log.info "Activate user: ${params.id}"
 		
 		//@TODO: Use unique IDs
 		def user = spineService.getUser(params.id)
@@ -143,7 +143,7 @@ class UserController {
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {
 			flash['message'] = "New user has been created"			
-			smtpService.sendAccountActivationMail(userparams.email,"t.michelbach@gmail.com")			
+			smtpService.sendAccountActivationMail(userparams.email,"team@spine-it.com")			
 			redirect(controller:'user', action:'login')
 		}
 		else {
@@ -165,7 +165,7 @@ class UserController {
 		  'email' : params.email
 	  ]
 	  
-	  smtpService.sendPasswordRecoveryMail(userparams.email,"t.michelbach@gmail.com");
+	  smtpService.sendPasswordRecoveryMail(userparams.email,"team@spine-it.com");
 	 
 	  flash['message'] = "Password recovery procedure was sent to your email address!"
 	  redirect(controller:'user',action:'login')
@@ -208,16 +208,16 @@ class UserController {
 			if(oldFileToDelete.exists() && !oldFileToDelete.directory)
 			{
 				oldFileDeleted = oldFileToDelete.delete();
-				log.debug("\nFile deleted = ${oldFileDeleted}");
+				//log.debug("\nFile deleted = ${oldFileDeleted}");
 			}
 		}
 		
 		// Finalize upload by putting the cropped picture to its right place
-		log.debug "File renaming = "
+		//log.debug "File renaming = "
 		File file = new File(outputDir + inputFilename)
 		String outputFileName = params.email + "." + inputFileExtension
 		Boolean fileMoved = file.renameTo(new File(outputDir + outputFileName))
-		log.debug fileMoved.toString() + "\n" + outputDir + outputFileName
+		//log.debug fileMoved.toString() + "\n" + outputDir + outputFileName
 		
 		// If moving failed, delete the tmp file
 		if(!fileMoved)
@@ -247,7 +247,7 @@ class UserController {
 			'freeText' : params.freeText ]
 		
 		// If an image has been sent, apply cropping
-		log.debug "picture = ${params.picture}"
+		//log.debug "picture = ${params.picture}"
 		if(params.picture != ""){
 			cropUserPicture()
 			userparams.imagePath = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
