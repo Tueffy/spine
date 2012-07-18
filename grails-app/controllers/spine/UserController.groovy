@@ -143,7 +143,7 @@ class UserController {
 		// call the spine service and depending on success either forward to login page or keep on register page
 		if (spineService.createNewUser(userparams, null) != null) {
 			flash['message'] = "New user has been created"			
-			smtpService.sendAccountActivationMail(userparams.email,"t.michelbach@gmail.com")			
+			smtpService.sendAccountActivationMail(userparams.email,"team@spine-it.com")			
 			redirect(controller:'user', action:'login')
 		}
 		else {
@@ -165,7 +165,7 @@ class UserController {
 		  'email' : params.email
 	  ]
 	  
-	  smtpService.sendPasswordRecoveryMail(userparams.email,"t.michelbach@gmail.com");
+	  smtpService.sendPasswordRecoveryMail(userparams.email,"team@spine-it.com");
 	 
 	  flash['message'] = "Password recovery procedure was sent to your email address!"
 	  redirect(controller:'user',action:'login')
