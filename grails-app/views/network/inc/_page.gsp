@@ -23,7 +23,9 @@
 	        </script>
 	         
 			<div class="grid_3 alpha picture">
-				<img src="/spine/images/profiles/${networkedUser.user.email}.jpg" alt="${networkedUser.user.firstName}" width="75" height="75" class="avatar" />
+				<g:remoteLink action="getUser" id="${networkedUser.user.email}" update="foo" onSuccess="updateSelectedUser(e)">
+					<img src="/spine/images/profiles/${networkedUser.user.email}.jpg" alt="${networkedUser.user.firstName}" width="75" height="75" class="avatar" />
+				</g:remoteLink>
 			</div>
 			
 			
