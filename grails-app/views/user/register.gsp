@@ -37,16 +37,16 @@
     	<g:form action="doRegister" method="post" name="registration" class="registration">
     	
     		<ul class="pagination">
-	    		<li class="current">First Step</li>
-	    		<li>Second Step</li>
-	    		<li>Third Step</li>
+	    		<li class="current">Personnal Details</li>
+	    		<li>Photo</li>
+	    		<li>Aditional info</li>
 	    	</ul>
     	
     		<div class="pages">
 	    		<!-- First Step -->
 	    		<div class="page">
 	    		
-	    			<h3>Account information</h3>
+	    			<h3>1. Personnal Details</h3>
 	    		
 	    			<table>
 	    				<tr>
@@ -146,7 +146,7 @@
 	    		
 	    		<!-- Second Step -->
 	    		<div class="page">
-	    			<h3>Upload a picture (optional)</h3>
+	    			<h3>2. Photo</h3>
 	    			
 	    			<div class="upload_box">
 						<uploader:uploader id="picture" multiple="false">
@@ -185,7 +185,7 @@
 	    		
 	    		<!-- Third Step -->
 	    		<div class="page">
-	    			<h3>Tell us more about yourself (Optional) </h3>
+	    			<h3>3. Aditional info </h3>
 					<textarea name="freeText">...</textarea>
 	    		</div>
 	    		

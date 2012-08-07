@@ -105,6 +105,9 @@ var updateSelectedUser = function(e) {
 	jQuery('#selectedCity').text(user.city);
 	jQuery('#selectedCountry').text(user.country);
 	jQuery('#selectedCompany').text(user.company);
+	jQuery('#selectedDepartment').text(user.department);
+	jQuery('#selectedJobTitle').text(user.jobTitle);
+	jQuery('#selectedPhone').text('Phone: ' + user.phone);
 	jQuery('#selectedFreeText').text('„' + user.freeText + '„');
 	jQuery('#selectedImage').attr('src', '/spine/images/profiles/' + user.email + '.jpg');
 	

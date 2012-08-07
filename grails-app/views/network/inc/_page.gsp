@@ -53,7 +53,7 @@
              
              <div class="grid_7 alpha">
              
-               	<p class="quote">„Looking forward to new challenges„</p>
+               	<%--<p class="quote">„${networkedUser.user?.freeText}„</p>--%>
                	
                	<!-- Tag list -->
                	<g:render template="inc/tags" model="['networkedUser': networkedUser]"></g:render>

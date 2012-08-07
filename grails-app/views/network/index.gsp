@@ -42,7 +42,7 @@
       	<!-- BEGIN : Feed block -->
       	<div class="grid_14 alpha columnSeparator">
           <!-- BEGIN : filter & my updates -->
-          <div class="grid_10 alpha filter">
+          <div class="grid_13 alpha omega filter">
             <g:form name="filterByTag" method="post" action="index" params="[user: user.email]">
             
               <!-- Input text : search Box -->
@@ -53,18 +53,18 @@
               	<input type="text" name="filter" id="autocomplete" class="autocomplete_tags" value="Filter ${user.firstName}'s spine" default="Filter ${user.firstName}'s spine" onClick="javascript:this.value='';" />
               </g:else>
                             
-              <ul class="filter_list">
-                <li>Filter by</li>
-                <li><a href="#">Expertise</a></li>
-                <li><a href="#">Distances</a></li>
-            </ul>
+<%--              <ul class="filter_list">--%>
+<%--                <li>Filter by</li>--%>
+<%--                <li><a href="#">Expertise</a></li>--%>
+<%--                <li><a href="#">Distances</a></li>--%>
+<%--            </ul>--%>
             	<input type="hidden" value="${param}" id="filter_helper" />
             </g:form>            
           </div>
-          <div class="grid_4 omega my_updates" id="test1">
-            <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>
-            <p><a href="#">My Spine Updates</a></p>
-          </div>
+<%--          <div class="grid_4 omega my_updates" id="test1">--%>
+<%--            <a href="#"><img src="/spine/images/home/my_updates.png" width="60" height="54" alt="Update box"></a>--%>
+<%--            <p><a href="#">My Spine Updates</a></p>--%>
+<%--          </div>--%>
            <!-- END : filter & my updates -->          
          
           <!--  BEGIN Flux -->
@@ -82,6 +82,8 @@
           <ul class="description">
             <li class="name" id="selectedUserName"></li>
             <li class="company" id="selectedCompany"></li>
+            <li class="jobTitle"><span id="selectedDepartment"></span>, <span id="selectedJobTitle"></span></li>
+            <li class="phone" id="selectedPhone"></li>
             <li class="city"><span id="selectedCity"></span>, <span id="selectedCountry"></span></li>
             <li class="freeText" id="selectedFreeText"></li>
           </ul>

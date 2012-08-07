@@ -19,5 +19,12 @@ jQuery(document).ready(function(e) {
 	// Erease / refill default text in the filter box
 	jQuery('#container .feed  .filter').on('focus', 'input[type=text]', function () { emptyInputText(jQuery(this)) });
 	jQuery('#container .feed  .filter').on('blur', 'input[type=text]', function () { unEmptyInputText(jQuery(this)) });
+	
+	// Erease / refill default text in the filter box
+	jQuery('#container .feed  .filter').on('focus', 'input[type=text]', function () { emptyInputText(jQuery(this)) });
+	jQuery('#container .feed  .filter').on('blur', 'input[type=text]', function () { unEmptyInputText(jQuery(this)) });
+	
+	jQuery('.auto_refill').on('focus', function () { emptyInputText(jQuery(this)) });
+	jQuery('.auto_refill').on('blur', function () { unEmptyInputText(jQuery(this)) });
 
 });

@@ -55,7 +55,7 @@ a:hover { color:#67624e; }
 #left ul.description { list-style:none; padding-top: 7px; font-size: 11px; font-weight:bold; margin-left:20px;}
 #left ul.description li.name { color:#67624e; }
 #left ul.description li.company { color:#958e73; }
-#left ul.description li.city { color:#958e73; }
+#left ul.description li.company { color:#958e73; }
 
 #left ul.menu { list-style:none; padding-top: 25px; font-size: 11px; font-weight:bold; }
 #left ul.menu li { border-bottom:1px dotted #958e73; padding-top: 5px; padding-bottom: 8px; }
@@ -85,8 +85,8 @@ a:hover { color:#67624e; }
 
 #right .feed .content { margin-top: 10px; background: #fffff; }
 
-#right .feed .filter { background:#c9c5b8; border-radius:15px 0 0 0; height:90px; }
-#right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:350px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 18px; color:#c9c5b8; padding: 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}
+#right .feed .filter { background:#c9c5b8; border-radius:15px 0 0 0; height:85px; }
+#right .feed .filter form input[type=text] { margin: 20px 0 0 15px; width:465px; border:0; border-radius:10px; font-family:"HelveticaRounded Bold"; font-size: 18px; color:#c9c5b8; padding: 10px 5px; box-shadow: 0 -1px 0 #888, 0 1px 2px #777 inset;}
 #right .feed .filter ul.filter_list { list-style:none; text-align: right; margin: 4px 14px 0 0; padding-bottom:13px; }
 #right .feed .filter ul.filter_list li { display: inline-block; color: white; font-size:11px; font-weight:bold;margin-left:8px; }
 #right .feed .filter ul.filter_list li a { color: white; text-decoration: none; }
@@ -151,6 +151,8 @@ a:hover { color:#67624e; }
 #right .details_panel ul.description { list-style:none; font-size: 11px; font-weight:bold; padding: 8px 0; }
 #right .details_panel ul.description li.name { color:#67624e; }
 #right .details_panel ul.description li.company { color:#958e73; }
+#right .details_panel ul.description li.jobTitle { color:#958e73; }
+#right .details_panel ul.description li.phone { color:#958e73; }
 #right .details_panel ul.description li.city { color:#958e73; }
 #right .details_panel ul.description li.freeText { font-weight: normal; }
 #right .details_panel ul.badges {   }
