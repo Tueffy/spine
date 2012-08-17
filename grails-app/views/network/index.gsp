@@ -80,7 +80,7 @@
           <ul class="badges" id="selectedBadges"></ul>
           <ul class="tags" id="selectedTags"></ul>   
           <ul class="tags" id="selectedTagsMore"></ul>        
-          <p class="all_tags" style="display: none;"><a href="">All tags</a></p>
+          <p class="all_tags" style="display: none;"><a href="">More tags</a></p>
         </div> 
         <!-- END : Details block -->
       </div>
@@ -92,7 +92,7 @@
       <!-- BEGIN : Copyright -->
       <!-- > -->
       <div class="grid_19 alpha omega copyright">
-        <div class="grid_5 omega">&copy; Spine 2011 - All rights reserved</div>
+        <div class="grid_5 omega">&copy; Spine 2012 - All rights reserved</div>
       </div>
       <!-- END : Copyright -->
       
