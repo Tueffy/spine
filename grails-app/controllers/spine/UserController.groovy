@@ -50,7 +50,7 @@ class UserController {
 	* Activate user and forward him to the login page
 	*/
     def activate = {		
-		log.info "Activate user: ${params.id}"
+		//log.info "Activate user: ${params.id}"
 		
 		//@TODO: Use unique IDs
 		def user = spineService.getUser(params.id)
