@@ -7,31 +7,21 @@
 <body>
     <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
-      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="130" height="130" class="avatar" />     
+      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" />     
 	  <ul class="description">
-          <li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
-          <li class="company">${user.company}</li>
-          <li class="city">${user.country}</li>
-	  </ul>      
-      <div class="badges"  style="margin-left:35px">
-        <ul>
-          <g:each in="${badges}" var="b"> 
-          	 <li><img src="/spine/images/badges/36x36/${b.image}" width="37" height="38" alt="${b.name}"></li>          
-          </g:each>
-        </ul>
-      </div>
+         <li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
+         <li class="company">${user.company}</li>
+         <li class="jobTitle">${user.department}, ${user.jobTitle}</li>
+         <li class="phone">Phone: ${user.phone}</li>
+         <li class="city">${user.city}, ${user.country}</li>
+         <li class="freeText">${user.freeText}</li>
+ 	  </ul>      
+      
       <ul class="menu">
         <li><a href="#"><span id="badgesNumber">${badges.size()}</span> Badges</a></li> 
         <li><a href="#"><span id="tagsNumber">${user.tags.size()}</span> Tags</a></li>
       </ul>   
-      <br/>   
-      <p>
-         Invite new user
-         <form>
-         	Email: <input type="text" id="inviteUserMail"/>
-         	<g:remoteLink action="inviteNewUser" id="invite" update="foo" onSuccess="inviteNewUser(e)">Invite</g:remoteLink>
-         </form>
-      </p>
+ 
     </div>
     <!-- END : LEFT MENU -->    
     

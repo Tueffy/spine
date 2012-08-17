@@ -11,7 +11,6 @@
 	      <ul class="links">
 	      	<li><a href="/spine/about">About Spine</a></li>
 	      	<li><a href="/spine/how">How it works</a></li>
-	      	<li><a href="/spine/terms">Terms and conditions</a></li>
 	      	<li><a href="/spine/disclaimer">Disclaimer</a></li>
 	      	<!-- BEGIN : CHECK USER FOR SESSION LOGGED IN -->
 	      	<g:if test="${session.user != $null}">
@@ -23,17 +22,5 @@
 			<!-- END : CHECK USER FOR SESSION LOGGED IN -->
 	      </ul>
       </span> 
-      <g:if test="${session.user != $null}">
-      <p class="news">
-          <img src="/spine/images/home/bubble.png" alt="Bubble" width="42" height="39" class="bubble" />
-          <span id="message">
-	          <g:if test="${notifications}">
-	          	You've got ${notifications.size()} notifications. 
-	          </g:if>
-	          <g:else>
-	          	0 notification.
-	          </g:else>
-          </span>
-      </p> 
-      </g:if>
+
 </div>
