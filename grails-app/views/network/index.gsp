@@ -7,21 +7,37 @@
 <body>
     <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
-      <img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" />     
-	  <ul class="description">
-         <li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
-         <li class="company">${user.company}</li>
-         <li class="jobTitle">${user.department}, ${user.jobTitle}</li>
-         <li class="phone">Phone: ${user.phone}</li>
-         <li class="city">${user.city}, ${user.country}</li>
-         <li class="freeText">${user.freeText}</li>
- 	  </ul>      
-      
-      <ul class="menu">
-        <li><a href="#"><span id="badgesNumber">${badges.size()}</span> Badges</a></li> 
-        <li><a href="#"><span id="tagsNumber">${user.tags.size()}</span> Tags</a></li>
-      </ul>   
- 
+    	<div class="details_panel">
+    		<img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" />
+			<ul class="description">
+				<li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
+				<li class="company">${user.company}</li>
+				<li class="jobTitle">${user.department}, ${user.jobTitle}</li>
+				<li class="phone">Phone: ${user.phone}</li>
+				<li class="city">${user.city}, ${user.country}</li>
+				<li class="freeText">„${user.freeText}„</li>
+			</ul>
+			
+			<h3 class="badgesHeading"><span>${badges.size()}</span> Badges : </h3>
+			<ul class="badges">
+				<g:each in="${badges}" var="badge">
+					<li><img src="/spine/images/badges/36x36/${badge.image}" alt="${badge}" title="${badge}"/><li>
+				</g:each>
+			</ul>
+			
+			<hr class="clear" />
+			
+			<h3 class="tagsHeading"><span>${user.tags.size()}</span> Tags : </h3>
+			<ul class="tags">
+				<g:each in="${user.tags}" var="tag">
+					<li>
+						<span class="tag"><a href="/spine/network/index?filter=Innovation">${tag.key}</a></span>
+						<span class="nb">${tag.value}</span></li>
+					</li>
+				</g:each>
+			</ul>
+			
+    	</div>
     </div>
     <!-- END : LEFT MENU -->    
     
