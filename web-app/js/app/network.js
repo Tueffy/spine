@@ -231,9 +231,11 @@ var addTagClick = function () {
  * Tag added by filling a text field
  */
 var addTagText = function () {
-	var jObject_contact = jQuery(this).closest('.contact');
-	var tag = jQuery(this).find('input[name=tag]').val();
-	var targetEmail = jObject_contact.attr('id');
+	var $this = jQuery(this);
+	var $contact = $this.closest('.contact');
+	var $input = $this.find('input[name=tag]');
+	var tag = $input.val();
+	var targetEmail = $contact.attr('id');
 	
 	// Make the AJAX call
 	jQuery.getJSON('/spine/network/addTag', {tag: tag, email: targetEmail}, function (data) {
@@ -241,32 +243,36 @@ var addTagText = function () {
 		var ok = false; 
 		
 		// Go through all tags to check if the tag is already applied to the targeted user
-		jObject_contact.find('.tags .tag').each(function () {
-			var jObject_tag = jQuery(this);
-			if(tag_added == jObject_tag.attr('tag')) // tag found on the user :) 
+		$contact.find('.tags .tag').each(function () {
+			var $tag = jQuery(this);
+			if(tag_added == $tag.attr('tag')) // tag found on the user :) 
 			{
 				ok = true;
 				// The targetted person is already tagged with this tag
-				if(jObject_tag.hasClass('direct_tag'))
+				if($tag.hasClass('direct_tag'))
 					return false;
-				jObject_tag.addClass('direct_tag'); // the tag is now a direct tag
-				jObject_tag.attr('nb', parseInt(jObject_tag.attr('nb')) + 1); // nb property is increased by 1
-				jObject_tag.find('.add_tag').removeClass('add_tag').addClass('remove_tag').text('-'); // toggle add/remove tag action
+				$tag.addClass('direct_tag'); // the tag is now a direct tag
+				$tag.attr('nb', parseInt($tag.attr('nb')) + 1); // nb property is increased by 1
+				$tag.find('.add_tag').removeClass('add_tag').addClass('remove_tag').text('-'); // toggle add/remove tag action
 			}
 		});
 		
 		if(!ok) // if it's a new tag, let's add it ! 
 		{
-			var jObject_tag = jQuery(document.createElement('li'))
+			var $tag = jQuery(document.createElement('li'))
 								.addClass('tag')
 								.addClass('direct_tag')
 								.attr('tag', tag_added)
 								.attr('nb', 1)
 								.text(tag_added)
 								.append('<a class="remove_tag" href="#">-</a>')
-								.appendTo(jObject_contact.find('.tags'));
-			reorderTags(jObject_contact.find('.tags'));
+								.appendTo($contact.find('.tags'));
+			reorderTags($contact.find('.tags'));
 		}
+		
+		// Clear text input
+		$input.val('');
+		
 	});
 	
 	return false;
