@@ -151,7 +151,7 @@ var updateSelectedUser = function(e) {
 	// Managing the "All tags" link
 	if(nb_tags > 10) {
 		viewAllTags.show();
-		viewAllTagsLink.text("All tags");
+		viewAllTagsLink.text("More tags");
 	}
 	else
 		viewAllTags.hide();
