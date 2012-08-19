@@ -38,7 +38,7 @@
 		    	<img src="${resource(dir:'images/info',file:'spine_network1.png')}" alt="Connected Person"><br><br>
 		    	
 		    	Below an example for a person not directly connected to the logged in user. A distance of two means that one of 
-		    	your direct contacts has tagged this person.<<br><br>
+		    	your direct contacts has tagged this person.<br><br>
 
 		    	<img src="${resource(dir:'images/info',file:'spine_network2.png')}" alt="Distant Person"><br><br>
 
@@ -62,7 +62,7 @@
 
 		    	<img src="${resource(dir:'images/info',file:'spine_network5.png')}" alt="Final result"><br><br>
 
-		    	So now go ahead and create your network in order to build the ppine of your organisation!<br><br>
+		    	So now go ahead and create your network in order to build the knowledge backbone of your organisation!<br>
 	    	</div>
 	    </div>
 	    <div class="grid_19 alpha omega close">
@@ -92,7 +92,7 @@
 
 		    	<img src="${resource(dir:'images/info',file:'spine_search3.png')}" alt="Connected Person"><br><br>
 
-		    	So Spine offers you all the possibilities to find your expert for your needs!<br><br>
+		    	So spine offers you all the possibilities to find your expert for your needs!<br>
 	    	</div>
 	    </div>
 	    <div class="grid_19 alpha omega close">
@@ -110,6 +110,7 @@
 				
 		    	<img src="${resource(dir:'images/info',file:'spine_badges1.png')}" alt="Person Details"><br><br>
 
+				Badges will make the people strive for becoming expert and knowledge heroes in the organisation!<br>
 	    	</div>
 	    </div>
 	    <div class="grid_19 alpha omega close">
