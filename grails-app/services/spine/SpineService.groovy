@@ -327,6 +327,28 @@ class SpineService {
 		def success = !relationship.hasTag(tag)
 		return success
     }
+	
+	def String formatTag(String tag) {
+		def previousWasSpace = false
+		def newTag = ""
+		for(c in tag) {
+			// Upper case char after a replaced underscore
+			if(previousWasSpace) {
+				c = c.toUpperCase()
+				previousWasSpace = false
+			}
+				
+			// Replace a space by underscore
+			if(c == " ") {
+				c = "_"
+				previousWasSpace = true
+			}
+				
+			newTag += c
+		}
+		
+		return newTag
+	}
 
     /**
      * Get the badges based on a list of tags provided

@@ -267,9 +267,10 @@ class NetworkController {
 	def addTag = {
 		def user = new User()
 		user = session.user
-		spineService.addTag(user.email, params.email, params.tag)
+		def tag = spineService.formatTag(params.tag)
+		spineService.addTag(user.email, params.email, tag)
 		//render user as JSON
-		def response = [tag: params.tag]
+		def response = [tag: tag]
 		render response as JSON
 	}
 
