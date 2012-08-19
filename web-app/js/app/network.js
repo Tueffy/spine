@@ -60,6 +60,11 @@ window.onload = function() {
 	jQuery('#right').on('click', 'a.remove_tag', removeTagClick );
 	jQuery('#right').on('click', 'a.add_tag', addTagClick );
 	jQuery('#right').on('submit', 'form.add_tag', addTagText);
+	
+	/**
+	 * Set up live profile update
+	 */
+	setUpLiveProfileEdit();
 
 }
 
@@ -225,7 +230,7 @@ var addTagClick = function () {
 		reorderTags(jObject_tag.closest('.tags')); 
 	});
 	return false;
-}
+};
 
 /**
  * Tag added by filling a text field
@@ -276,7 +281,7 @@ var addTagText = function () {
 	});
 	
 	return false;
-}
+};
 
 /**
  * Tag removed by clicking the "-" link
@@ -296,7 +301,7 @@ var removeTagClick = function () {
 		}
 	});
 	return false;
-}
+};
 
 var reorderTagsByNb = function (jObject_tagList) {
 	
@@ -327,7 +332,7 @@ var reorderTagsByNb = function (jObject_tagList) {
 	jQuery.each(tags, function () {
 		this.prependTo(jObject_tagList);
 	});
-}
+};
 
 var reorderTags = function (jObject_tagList) {
 	
@@ -362,35 +367,46 @@ var reorderTags = function (jObject_tagList) {
 	jQuery.each(tags, function () {
 		this.prependTo(jObject_tagList);
 	});
-}
+};
 
+var setUpLiveProfileEdit = function () {
+	jQuery('#left').on('dblclick', '#userJobTitle', { spanID:'userJobTitle', inputID:'userJobTitleEdit', propertyName:'jobTitle' }, setUpLiveProfileEditDblClick);
+	jQuery('#left').on('blur', '#userJobTitleEdit', { spanID:'userJobTitle', inputID:'userJobTitleEdit', propertyName:'jobTitle' }, setUpLiveProfileEditBlur);
+	jQuery('#left').on('dblclick', '#userDepartment', { spanID:'userDepartment', inputID:'userDepartmentEdit', propertyName:'department' }, setUpLiveProfileEditDblClick);
+	jQuery('#left').on('blur', '#userDepartmentEdit', { spanID:'userDepartment', inputID:'userDepartmentEdit', propertyName:'department' }, setUpLiveProfileEditBlur);
+	jQuery('#left').on('dblclick', '#userPhone', { spanID:'userPhone', inputID:'userPhoneEdit', propertyName:'phone' }, setUpLiveProfileEditDblClick);
+	jQuery('#left').on('blur', '#userPhoneEdit', { spanID:'userPhone', inputID:'userPhoneEdit', propertyName:'phone' }, setUpLiveProfileEditBlur);
+};
 
-///**
-// * 
-// * 
-// * @param e
-// */
-//var addTagUpdate = function(e, id){
-//	
-//	var response = eval("(" + e.responseText + ")");
-//	
-//	//alert(response.tag);
-//	
-//	var ul = $(id);
-//	var li = document.createElement("li");
-//	li.innerHTML = response.tag;
-//	ul.insertBefore(li, ul.getElementsByTagName("li")[1]);
-//	
-//}
-//
-//
-///**
-// * 
-// * @param e
-// */
-//var removeTagUpdate = function(e){
-//	
-//	$(e).fade({
-//		duration : 2.0
-//	});
-//}
+var setUpLiveProfileEditDblClick = function (event) {
+	var $input = jQuery('#' + event.data.inputID);
+	var $span = jQuery(this);
+	if($input.length == 0) 
+	{
+		$input = jQuery(document.createElement('input'));
+		$input.attr({
+			'type' : 'text', 
+			'id' : event.data.inputID
+		});
+		$input.width($span.width());
+		$input.val($span.text());
+		$span.hide();
+		$input.insertAfter($span);
+		$input.focus();
+	}
+	else 
+	{
+		$input.val($span.text());
+		$span.hide();
+		$input.show();
+		$input.focus();
+	}
+};
+
+var setUpLiveProfileEditBlur = function (event) {
+	var $input = jQuery(this);
+	var $span = jQuery('#' + event.data.spanID);
+	$input.hide();
+	$span.show();
+};
+

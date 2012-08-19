@@ -12,9 +12,9 @@
 			<ul class="description">
 				<li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
 				<li class="company">${user.company}</li>
-				<li class="jobTitle">${user.department}, ${user.jobTitle}</li>
-				<li class="phone">Phone: ${user.phone}</li>
-				<li class="city">${user.city}, ${user.country}</li>
+				<li class="jobTitle"><span id="userDepartment">${user.department}</span>, <span id="userJobTitle">${user.jobTitle}</span></li>
+				<li class="phone">Phone: <span id="userPhone">${user.phone}</span></li>
+				<li class="city"><span id="userCity">${user.city}</span>, <span id="userCountry">${user.country}</span></li>
 				<li class="freeText">„${user.freeText}„</li>
 			</ul>
 			
