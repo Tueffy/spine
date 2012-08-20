@@ -9,6 +9,7 @@ import groovy.text.SimpleTemplateEngine
 import pl.burningice.plugins.image.BurningImageService
 import spine.FileService
 import spine.SmtpService
+import spine.PasswordCodec
 
 /**
  * User Controller
@@ -22,7 +23,8 @@ class UserController {
 	BurningImageService burningImageService
 	FileService fileService
 	SmtpService smtpService
-
+	PasswordCodec codec
+	
 	/**
 	 * nothing displayed in case of login
 	 */
@@ -74,8 +76,6 @@ class UserController {
 	 * 
 	 */
 	def doLogin = {
-		
-//		log.info "Start login: ${params.email}"
 		
 		def user = new User();
 		user = spineService.getUser(params.email);
@@ -130,7 +130,7 @@ class UserController {
 			'company': params.company, 
 			'department': params.department,
 			'jobTitle': params.jobTitle, 
-			'password' : params.password, 
+			'password' : spineService.hashEncode(params.password), 
 			'image' : "",
 			'freeText' : params.freeText ]
 		
