@@ -9,17 +9,19 @@ class HomeController {
 	}
 
 	def about = {
-			redirect (controller : 'home' , action : 'index')
-	}
+			redirect (controller : 'home' , action : 'about')
+	}	
+	
 
-	def contact = {
-			redirect (controller : 'home' , action : 'index')
+	def how = {
+			redirect (controller : 'home' , action : 'howitworks')
 	}
 
 	def doSignup = {
 		session.email = params.email
-		println session.email
-		redirect (controller : 'user', action : 'register')
+		log.debug session.email
+		
+		redirect (controller : 'user', action : 'register', params:[ email: params.email])
 	}
 
 }

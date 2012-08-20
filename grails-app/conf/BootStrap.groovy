@@ -1,7 +1,14 @@
+import spine.SpineService;
+
 class BootStrap {
 
-    def init = {
+	SpineService spineService
+	
+    def init = { 
+		spineService.getHotTags();
     }
+	
     def destroy = {
+		
     }
 }

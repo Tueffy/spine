@@ -1,293 +1,426 @@
 package spine
 
+import java.security.MessageDigest
+import sun.misc.BASE64Encoder
+import sun.misc.CharacterEncoder
+import java.util.regex.*
+
 class SpineService {
 
     static transactional = false
-	def networkService = new NetworkService()
-	def badgeService = new BadgeService()
+    def  networkService
+    def badgeService
+	def SuperIndexService superIndexService
+	def LogService logService
 	
-	/**
-	 * take the email address and the password and verify, if exist in database and correct
-	 * if yes then instantiate the loggedInUser object, if not, return null
-	 * 
-	 * @param email
-	 * @param password
-	 * @return user as User object
-	 */
-	def loginUser(String email, String password) {
+	def static List hotTagsCache = []
 
-		def user
-		
-		// retrieve the node via email address
-		def userNode = networkService.readNode(email)
+	
+    /**
+     * take the email address and the password and verify, if exist in database and correct
+     * if yes then instantiate the loggedInUser object, if not, return null
+     *
+     * @param email
+     * @param password
+     * @return user as User object
+     */
+    def loginUser(String email, String password) {
 
-		// verify if user exists and if passwords are identical
-		if (userNode != null)
-			if (userNode.password == password) {
-				
+        def user
+
+       // retrieve the node via email address
+        def userNode = networkService.readNode(email)
+
+        // verify if user exists and if passwords are identical
+        if (userNode != null)
+            if (userNode.password == hashEncode(password)) {
+
 				//create an instance of the user
-				user = new User()
-				
-				// copy over the values from the hash map into the user object
-				user.firstName = userNode.firstName
-				user.lastName = userNode.lastName
-				user.email = userNode.email
-				user.country = userNode.country
-				user.city = userNode.city
-				user.imagePath = userNode.image
-				user.freeText = 'My biography'
-				user.tags = networkService.getIncomingTagsForNode(userNode.email)
-				if (user.tags != null)
-					user.badges = badgeService.evaluateTags(user.tags)
-			}
-	
-		//returns either the loggedInUser or null, if login was not successful
-		return user
-	}
+                user = new User()
 
-	
-	/**
-	 * 
-	 * @param contextUser
-	 * @param filter
-	 * @param offset
-	 * @return userList of type User
-	 */
-	def getUserNetwork(User contextUser, String filter, int offset) {
+                // copy over the values from the hash map into the user object
+                user.firstName = userNode.firstName
+                user.lastName = userNode.lastName
+				user.password = userNode.password
+                user.email = userNode.email
+                user.country = userNode.country
+                user.city = userNode.city
+                user.imagePath = userNode.image
+        		user.freeText = userNode.freeText
+				user.company = userNode.company
+				user.department = userNode.department
+				user.jobTitle = userNode.jobTitle
+				user.phone = userNode.phone
+				user.mobile = userNode.mobile
+				user.gender = userNode.gender
+				user.birthday = userNode.birthday
+				user.status = userNode.status
+        				
+                user.tags = networkService.getIncomingTagsForNode(userNode.email)
+                if (user.tags != null)
+                    user.badges = badgeService.evaluateTags(user.tags)
+            }
 
-		def queryReturn
-		def userList = []
-
-		// verify if a filter has been passed
-		
-		if ((filter == null) || (filter == '')) {
-			
-			// get the neighbours in batches of 20
-			queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
-
-		}
-		else {
-		
-			// first step is to tokenize the filter string
-			def tokens = " ,;"
-			def wordList = []
-			wordList = filter.tokenize(tokens)
-			
-			println "search filter: "+wordList
-			
-			// now we need to wait until the network service queryNode is ready, as this is not the case yet, use the same service as in the if
-			queryReturn = networkService.queryForNeighbourNodes(contextUser.email, offset, 20)
-		}
-		
-		// loop through the list and instantiate the user objects incl. tags
-		def user
-		
-		queryReturn.each {
-			user = new User()
-			user.firstName = it.firstName
-			user.lastName = it.lastName
-			user.email = it.email
-			user.country = it.country
-			user.city = it.city
-			user.imagePath = it.image
-			user.freeText = 'My biography'
-			user.tags = networkService.getIncomingTagsForNode(it.email)
-			user.distance = it.distance
-			if (user.tags != null)
-				user.badges = badgeService.evaluateTags(user.tags)
-
-			userList.add(user)
-		}
-
-		return userList
+        //returns either the loggedInUser or null, if login was not successful
+        return user
     }
 
-	/**
-	 * returns a User object based on email address
-	 * 
-	 * @return
-	 */
-	def getUser(String email) {
-		
-		// instantiate return structure
-		def user = new User()
-
-		// retrieve the properties
-		def userNode = networkService.readNode(email)
-		
-		// copy over the values from the hash map into the user object
-		user.firstName = userNode.firstName
-		user.lastName = userNode.lastName
-		user.email = userNode.email
-		user.country = userNode.country
-		user.city = userNode.city
-		user.imagePath = userNode.image
-		user.freeText = 'My biography'
-		user.tags = networkService.getIncomingTagsForNode(userNode.email)
-		if (user.tags != null)
-			user.badges = badgeService.evaluateTags(user.tags)
-
-		// add something related to distance to the current contextUser
-		
-		return user
-	}
-
-	/**
-	 * retrieve the list of tags of all incoming connections to a given user, incl. amount and sorted (highest amount first)
-	 * 
-	 * @param user
-	 * @param amount
-	 * @return userTagMap
-	 */
-	def getUserTags(User user) {
-
-		def userTagMap = [:]
-
-		// get the tags
-		userTagMap = networkService.getIncomingTagsForNode(user.email)
-		
-		return userTagMap
-	}
 	
-	/**
-	 * create a new user in the network, which from an UI perspective only works with adding a relationship from myself and tagging it
-	 * 
-	 * @param userparams
-	 * @param tags
-	 * @return success or fail
-	 */
-	def createNewUser(HashMap userparams, List tags) {
+    /**
+     *
+     * @param contextUser
+     * @param filter
+     * @param offset
+     * @return userList of type User
+     */
+    def Network getUserNetwork(User contextUser, String filter, int offset, int limit) {
 		
-		def newUser = new User()
-		def success = false
+        def Network network
+		network = networkService.queryForNeighbourNodes(contextUser.email, offset, limit, filter)
 
-		// copy over the values from the hash map into the user object to trigger validation
-		newUser.firstName = userparams.firstName
-		newUser.lastName = userparams.lastName
-		newUser.password = userparams.password
-		newUser.email = userparams.email
-		newUser.city = userparams.city
-		newUser.country = userparams.country
-		newUser.imagePath = userparams.image
-		//newUser.freeText = "Free Text"
-		
-		// set over into map for call
-		def userProps = ['firstName' : newUser.firstName,
-							'lastName' : newUser.lastName, 
-							'city' : newUser.city,
-							'country' : newUser.country,
-							'email' : newUser.email,
-							'password' : newUser.password,
-							'image' : newUser.imagePath]
-				
-		// verify if node with same email does not exist already
-		if (networkService.readNode(newUser.email) != null)
-			success = false
-		else {
-					
-			// create the node
-			def userNode = networkService.createNode(userProps)
-			
-			// create the node
-			if (userNode != null) {
-				
-				// if a tag list has been provided, this means that a relationship should be created with these tags
-				if (tags != null) {
-					def currentUser = session.user
-					success = setTag(currentUser, newUser, tags)
-				}
-				
-				success = true
-			}
+		// Grab tabs and badges for each user of the network
+		network.networkedUsers.each {
+			networkedUser -> 
+			networkedUser.user.tags = networkService.getIncomingTagsForNode(networkedUser.user.email)
+			networkedUser.user.badges = badgeService.evaluateTags(networkedUser.user.tags)
+			networkedUser.sortTags()
+		}
+
+        return network
+    }
+	
+	def NetworkedUser getUserInNetworkContext(User contextUser, String targetEmail) {
+		def NetworkedUser networkedUser = networkService.queryUserInNetworkContext(contextUser.email, targetEmail)
+		if(networkedUser != null) {
+			networkedUser.user.tags = networkService.getIncomingTagsForNode(networkedUser.user.email)
+			networkedUser.user.badges = badgeService.evaluateTags(networkedUser.user.tags)
+			networkedUser.sortTags()
 		}
 		
-		return success
+		return networkedUser
 	}
-	
 
-	/**
-	 * Update node properties
-	 * 
-	 * @param loggedInUser
-	 * @param properties
-	 * @return success
-	 */
-	def updateUserProfile(User loggedInUser, HashMap properties) {
-	
-		def success = new Boolean()
+    /**
+     * returns a User object based on email address
+     *
+     * @return User
+     */
+    def User getUser(String email, boolean getTags = true) {
+
+        def User user = networkService.readUserNode(email)
+		if(user == null)
+			return null
 			
-		// update node properties
-		
-		return success
-	}
-	
-	
-	/**
-	 * Add a tag to an existing relationship or create a new one
-	 * 
-	 * @param loggedInUser = User
-	 * @param targetUser = Email
-	 * @param taglist = space , ; separated list
-	 * @return success
-	 */
-	def addTag(User loggedInUser, String targetUser, String tags) {
-		
-		// tokenize taglist, then check, if relationship exists, if yes then update, if not then create new one
-		
-		def success = new Boolean()
-		def parameters = new HashMap()
-		
-		parameters.put('startNode',loggedInUser.email)
-		parameters.put('endNode',targetUser)
-		parameters.put('tags',tags)
-		
-		//Todo: Relationship exists?
-		if (networkService.readRelationship() == null){
-			networkService.createRelationship(parameters)
+		// get tags
+		if(getTags) {
+			user.tags = networkService.getIncomingTagsForNode(user.email)
+			if (user.tags != null)
+				user.badges = badgeService.evaluateTags(user.tags)
 		}
-		networkService.setProperty(parameters)
-		
-		return success=true
-	}
+        
+        return user
+    }
+
+    /**
+     * retrieve the list of tags of all incoming connections to a given user, incl. amount and sorted (highest amount first)
+     *
+     * @param user
+     * @param amount
+     * @return userTagMap
+     */
+    def getUserTags(User user) {
+        def userTagMap = [:]
+        // get the tags
+        userTagMap = networkService.getIncomingTagsForNode(user.email)
+        return userTagMap
+    }
+
+    /**
+     * create a new user in the network, which from an UI perspective only works with adding a relationship from myself and tagging it
+     *
+     * @param userparams
+     * @param tags
+     * @return success or fail
+     */
+    def createNewUser(HashMap userparams, List tags) {
+
+        def newUser = new User()
+        def success = false
+
+        // copy over the values from the hash map into the user object to trigger validation
+        newUser.firstName = userparams.firstName
+        newUser.lastName = userparams.lastName
+        newUser.password = userparams.password
+        newUser.email = userparams.email
+        newUser.city = userparams.city
+        newUser.country = userparams.country
+        newUser.imagePath = userparams.image
+		newUser.freeText = userparams.freeText
+		newUser.company = userparams.company
+		newUser.department = userparams.department
+		newUser.jobTitle = userparams.jobTitle
+		newUser.phone = userparams.phone
+		newUser.mobile = userparams.mobile
+		newUser.gender = userparams.gender
+		newUser.birthday = userparams.birthday
+		newUser.status = userparams.status
+
+        // set over into map for call
+        def userProps = ['firstName': newUser.firstName,
+                'lastName': newUser.lastName,
+                'city': newUser.city,
+                'country': newUser.country,
+                'email': newUser.email,
+                'password': newUser.password,
+                'image': newUser.imagePath,
+				'freeText': newUser.freeText,
+				'company' : newUser.company,
+				'department' : newUser.department,
+				'jobTitle' : newUser.jobTitle,
+				'phone' : newUser.phone,
+				'mobile' : newUser.mobile,
+				'gender' : newUser.gender,
+				'birthday' : newUser.birthday,
+				'status' : newUser.status
+				]
+
+        // verify if node with same email does not exist already
+        if (networkService.readNode(newUser.email) != null)
+            success = false
+        else {
+
+            // create the node
+            def userNode = networkService.createNode(userProps)
+
+            // create the node
+            if (userNode != null) {
+
+                // if a tag list has been provided, this means that a relationship should be created with these tags
+                if (tags != null) {
+                    def currentUser = session.user
+                    success = setTag(currentUser, newUser, tags)
+                }
+
+                success = true
+            }
+        }
+
+        return success
+    }
 	
 	/**
-	 * Remove a tag from relationship and delete, if non left
+	 * Activate a user
+	 * @param User user
+	 * @return Boolean success
+	 */
+	def activateUser(User user)
+	{
+		return updateUserProfile(user, ['status' : 'active'])
+	}
+
+    /**
+     * Update node properties
+     *
+     * @param loggedInUser
+     * @param properties
+     * @return Boolean success
+     */
+    def updateUserProfile(User loggedInUser, HashMap properties) {
+
+        def success = false
+		
+        		def userProps = [
+	     			'email': loggedInUser.email,
+	     			'firstName': properties.firstName ? properties.firstName : loggedInUser.firstName, 
+	     			'lastName': properties.lastName ? properties.lastName : loggedInUser.lastName,
+	     			'city': properties.city ? properties.city : loggedInUser.city,
+	     			'country': properties.country ? properties.country : loggedInUser.country,
+	     			'imagePath': properties.imagePath ? properties.imagePath : loggedInUser.imagePath,
+	     			'freeText': properties.freeText ? properties.freeText : loggedInUser.freeText,
+	     			'password': properties.password ? properties.password : loggedInUser.password,
+	     			'company': properties.company ? properties.company : loggedInUser.company,
+	     			'department': properties.department ? properties.department : loggedInUser.department,
+	     			'jobTitle': properties.jobTitle ? properties.jobTitle : loggedInUser.jobTitle,
+	     			'phone': properties.phone ? properties.phone : loggedInUser.phone,
+	     			'mobile': properties.mobile ? properties.mobile : loggedInUser.mobile,
+	     			'gender': properties.gender ? properties.gender : loggedInUser.gender,
+	     			'birthday': properties.birthday ? properties.birthday : loggedInUser.birthday,
+	     			'status': properties.status ? properties.status : loggedInUser.status
+	     			]
+		
+//		log.trace("UserPops : \n " + userProps.toString())
+		networkService.updateNode(loggedInUser.email, userProps)
+		
+		success = true
+        return success
+    }
+
+    /**
+     * Add a tag to an existing relationship or create a new one
+     *
+     * @param loggedInUser = User
+     * @param targetUser = Email
+     * @param tag
+     * @return success
+     */
+    def addTag(String loggedInUser, String targetUser, String tag) {
+		def User fromUser = getUser(loggedInUser, false)
+		def User toUser = getUser(targetUser, false)
+		return addTag(fromUser, toUser, tag)
+    }
+	
+	/**
 	 * 
 	 * @param loggedInUser
 	 * @param targetUser
-	 * @param taglist
-	 * @return sucess
+	 * @param tag
+	 * @return
 	 */
-	def removeTag(User loggedInUser, User targetUser, String tag) {
+	def addTag(User loggedInUser, User targetUser, String tag) {
 		
-		// remove tag from relationship properties; if no property left, delete relationship
+		if(!loggedInUser.self)
+			loggedInUser = getUser(loggedInUser.email, false)
+		if(!targetUser.self)
+			targetUser = getUser(targetUser.email, false)
 		
-		def success = new Boolean()
-		def parameters = new HashMap()
+		// Get "connect" relationship between two users
+		// If does not exist: relationship will be created			
+		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email, true)
+		relationship.addTag(tag)
+		relationship.persist(networkService.graphCommunicatorService);
+		superIndexService.addTagToIndex(tag, relationship.end.self)
 		
-		parameters.put('startNode',loggedInUser)
-		parameters.put('endNode',targetUser)
-		parameters.put('tag',tag)
+		// Log the action
+		logService.addTag(tag, loggedInUser, targetUser)
 		
-		success = networkService.deleteProperty(parameters)
-		
-		
+		def success = relationship.self && relationship.hasTag(tag)
 		return success
 	}
-	
+
+    /**
+     * Remove a tag from relationship and delete, if none left
+     *
+     * @param loggedInUser
+     * @param targetUser
+     * @param String tag
+     * @return Boolean success
+     */
+    def removeTag(User loggedInUser, User targetUser, String tag) {
+		
+		if(!loggedInUser.self)
+			loggedInUser = getUser(loggedInUser.email, false)
+		if(!targetUser.self)
+			targetUser = getUser(targetUser.email, false)
+		
+		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email)
+		if(!relationship || !relationship.self)
+			return false
+		relationship.removeTag(tag)
+		superIndexService.removeTagFromIndex(tag, relationship.end.self)
+		
+		// Should we delete or update the relationship ? 
+		if(relationship.data.size() == 0)
+			relationship.delete(networkService.graphCommunicatorService)
+		else
+			relationship.persist(networkService.graphCommunicatorService);
+			
+		// Log the action
+		logService.removeTag(tag, loggedInUser, targetUser)
+			
+		def success = !relationship.hasTag(tag)
+		return success
+    }
+
+    /**
+     * Get the badges based on a list of tags provided
+     *
+     * @param Map tags
+     * @return List badgeList (List of Badge objects)
+     */
+    def getBadges(Map tags) {
+        def badgeList = []
+		badgeList = badgeService.evaluateTags(tags)
+        return badgeList
+    }
 	
 	/**
-	 * Calls the method evaluateBadgeRules from the badge service based on a list of tags provided
-	 * 
-	 * @param user
-	 * @return badgeList
+	 * Get the badges based on a user object
+	 * @param User user
+	 * @return List List of Badge objects
 	 */
-	def getBadges(TreeMap tags) {
-		
-		def badgeList = ['javahero', 'godofhtml']
-		
-		// retrieve list of badges, actually just a list of imagepaths
-		
-		return badgeList
+	def getBadges(User user)
+	{
+		def userTags = getUserTags(user)
+		return getBadges(userTags)
 	}
+	
+	/**
+	* Get a list of hot tags
+	*
+	* @param 
+	* @return List tagList
+	*/
+   def List getHotTags() {
+	   if(hotTagsCache.isEmpty())
+	   {
+		   log.debug("Caching hot tags... ");
+		   Map allTags = networkService.getAllProperties().sort { a,b -> b.value <=> a.value } // sort by value desc
+		   allTags.each {
+			   key, value ->
+			   if(hotTagsCache.size() < 10) hotTagsCache.add(key)
+		   }
+	   }
+	   else
+	   		log.debug("Getting hot tags from cache... ");
+	   return hotTagsCache
+   }
+   
+   /**
+    * 
+    * @param String query One tag to search for (No multitag autocompletion)
+    * @return List List of the matching tags : [[tag: x, number: y]]
+    */
+   def List autocompleteTags(String query)
+   {
+	   def allTheTags = networkService.getAllProperties()
+	   def correspondingTags = []
+	   Pattern pattern
+	   Matcher matcher
+	   
+	   // The idea is to go throw each tags and by applying a regexp determine the corresponding tags.
+	   // Search is : *query* where query is lowercased 
+	   allTheTags.each {
+		   tag, number -> 
+		   pattern = Pattern.compile("(.*)" + query.toLowerCase() + "(.*)")
+		   matcher = pattern.matcher(tag.toLowerCase())
+		   if(matcher.find()) {
+			   correspondingTags.add([
+			   		tag: tag, 
+					number: number
+			   ]);
+		   }
+	  }
+	  return correspondingTags
+   }
+	
+	def filterRelationShip (Map queryObject)
+	{
+		return networkService.queryRelationship(queryObject)
+	}
+	
+   /**
+    * I put it here
+    * @param String data, which should be hashed
+    * @return hashed data
+    */
+	def hashEncode(String data)
+	{
+		MessageDigest md = MessageDigest.getInstance('SHA')
+		md.update(data.getBytes('UTF-8'))
+		return (new BASE64Encoder()).encode(md.digest())
+
+	}
+	
+	// what is this?
+	def search
 }

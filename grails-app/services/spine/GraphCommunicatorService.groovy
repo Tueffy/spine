@@ -1,79 +1,100 @@
+
 package spine
 
-import grails.converters.JSON
+import groovyx.net.http.AsyncHTTPBuilder
+import groovyx.net.http.Method
+import org.apache.commons.logging.LogFactory
 import static groovyx.net.http.ContentType.JSON
-import groovyx.net.http.HttpResponseException
-import groovyx.net.http.RESTClient
+import static groovyx.net.http.Method.*
+
+import java.util.concurrent.Future;
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class GraphCommunicatorService {
 
     static transactional = false
+    private static final log = LogFactory.getLog(this)
+	String cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
 
-	def http = new RESTClient( 'http://localhost:7474' )
+	AsyncHTTPBuilder asyncHTTPBuilder = new AsyncHTTPBuilder(
+		poolsize: 10, 
+		uri: 'http://localhost:7474', 
+		contentType: JSON
+	);
 	
-	def neoPost(requestPath, requestQuery) {
-		def result = ''
-		println 'Request query = ' + requestQuery
-		try {
-			http.post( path: requestPath, body: requestQuery, requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				result = json 
-				//println "Result reveived: " +  resp + ", " + json
-				}
-		} catch (HttpResponseException ex) {
-			println 'http exception: ' + ex.toString() + " with content type: " + ex.response.contentType
-			//println 'Stack Trace: ' + ex.printStackTrace()
-			return []
-		}
-		return result
-	}
-	
-	def neoGet(String requestPath) {
-		//returns json
-		def result = ''
-		try {
-			http.get( path: requestPath,  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				result = json }
-		}	catch (HttpResponseException ex) {
-			println 'Nothing found when filtering edges: ' + ex.toString()
-			return []
-		}
-		return result
-	}
+
+	def String encodeMapToJSONString(Map map) {
+		def jsonString = '{ '
 		
-	def neoGet(String requestPath, LinkedHashMap requestQuery) {
-		//returns json
-		def result = ''
-		try {
-			http.get( path: requestPath , query: requestQuery,  requestContentType: groovyx.net.http.ContentType.JSON    ) {resp, json ->
-				result = json }
-		}	catch (HttpResponseException ex) {
-			println 'Nothing found when filtering edges: ' + ex.toString()
-			return []
+		def i = 1;
+		def mapSize = map.size()
+		map.each {
+			jsonString += '"'+ it.key.toString() + '" : '
+			if(it.value instanceof Map)
+				jsonString += encodeMapToJSONString(it.value)
+			else 
+				jsonString += '"' + it.value.toString() + '"'
+			if(i != mapSize)
+				jsonString += ', '
+			i++
 		}
-		return result
+		
+		jsonString += ' }'
+		return jsonString
 	}
 	
-	def neoPut(requestPath,  requestQuery) {
-		def result = ''
-		try {
-			http.put( path: requestPath, body: requestQuery, requestContentType: groovyx.net.http.ContentType.JSON )
-		} catch (HttpResponseException ex) {
-			println 'http exception: ' + ex.toString()
-			return []
+    def neoPost(requestPath, requestQuery) {
+        internalRequest(POST, requestPath, requestQuery)
+    }
+
+    def neoGet(String requestPath) {
+        internalRequest(GET, requestPath)
+    }
+
+    def neoGet(String requestPath, LinkedHashMap requestQuery) {
+        internalRequest(GET, requestPath, requestQuery)
+    }
+
+    def neoPut(requestPath, requestQuery) {
+        internalRequest(PUT, requestPath, requestQuery)
+    }
+
+    def neoDelete(requestPath) {
+        internalRequest(DELETE, requestPath)
+    }
+
+    private def internalRequest(Method method, String requestPath, requestQuery = null) {
+		requestPath = cleanRequestPath(requestPath)
+//		log.trace("Sending Request: ${method.name()} : ${requestPath} : ${requestQuery}")
+		
+		Future result = asyncHTTPBuilder.request(method) {
+			uri.path = requestPath
+			if(method == GET)
+				uri.query = requestQuery
+			else if(method in [PUT, POST])
+				body = requestQuery
+				
+			response.success = { resp, json ->
+//                log.trace("Received response: ${json}")
+                return json
+            }
+
+            response.failure = { resp ->
+                log.error("Request failure: ${resp.properties}")
+                return []
+            }
 		}
-		return result
-	}
+		return result.get();
+    }
 	
-	def neoDelete(requestPath) {
-		def result = ''
-		println 'Delete ' + requestPath
-		try {
-			result = http.delete( path: requestPath)
-		}	catch (HttpResponseException ex) {
-			println 'Nothing found when trying to delete: ' + ex.toString()
-			return []
-		}
-		return result
+	private String cleanRequestPath(String requestPath) {
+		// If the URL starts with http://localhost:7474 remove it
+		def Pattern pattern = Pattern.compile("^http://localhost:7474(.*)")
+		def Matcher matcher = pattern.matcher(requestPath)
+		if(matcher.matches())
+			requestPath = matcher.group(1)
+		return requestPath
 	}
-	
 }
