@@ -116,7 +116,7 @@ class UserController {
 	 */
 	def doRegister = {	
 		
-		// create map with parameters
+		// create map with parameters (password will be hashed)
 		def userparams = [
 			'gender': params.gender, 
 			'firstName' : params.firstName,
