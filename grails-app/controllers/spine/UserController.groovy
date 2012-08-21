@@ -182,6 +182,33 @@ class UserController {
 	
 	/**
 	 * 
+	 */
+	def updateProfileAjax = {
+		def User user = spineService.getUser(session.user.email, false)
+		def field = params.field
+		def data = params.data
+		
+		switch(field) {
+			case 'phone': 
+				user.phone = data
+				break
+			case 'department':
+				user.department = data
+				break
+			case 'jobTitle':
+				user.jobTitle = data 
+				break
+		}
+		
+		user.persist(spineService.networkService.graphCommunicatorService)
+		
+		def returnMap = [:]
+		returnMap[field] = data
+		render returnMap as JSON
+	}
+	
+	/**
+	 * 
 	 * @return
 	 */
 	private Boolean cropUserPicture(){

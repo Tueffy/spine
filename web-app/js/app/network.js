@@ -406,6 +406,12 @@ var setUpLiveProfileEditDblClick = function (event) {
 var setUpLiveProfileEditBlur = function (event) {
 	var $input = jQuery(this);
 	var $span = jQuery('#' + event.data.spanID);
+	var value = jQuery.trim($input.val());
+	if(value != '') {
+		jQuery.get('/spine/user/updateProfileAjax', {field: event.data.propertyName, data: value}, function (data) {
+			$span.text(data[event.data.propertyName]);
+		});
+	}
 	$input.hide();
 	$span.show();
 };
