@@ -190,13 +190,19 @@ class UserController {
 		
 		switch(field) {
 			case 'phone': 
+				spineService.superIndexService.removePhoneFromIndex(user.phone, user.self)
 				user.phone = data
+				spineService.superIndexService.addPhoneToIndex(user.phone, user.self)
 				break
 			case 'department':
+				spineService.superIndexService.removeDepartmentFromIndex(user.department, user.self)
 				user.department = data
+				spineService.superIndexService.addDepartmentToIndex(user.department, user.self)
 				break
 			case 'jobTitle':
+				spineService.superIndexService.removeJobTitleFromIndex(user.jobTitle, user.self)
 				user.jobTitle = data 
+				spineService.superIndexService.addJobTitleToIndex(user.jobTitle, user.self)
 				break
 		}
 		

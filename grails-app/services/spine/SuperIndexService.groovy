@@ -15,6 +15,11 @@ class SuperIndexService {
 	def GraphCommunicatorService graphCommunicatorService
 
 	
+	def resetIndex() {
+		graphCommunicatorService.neoDelete(indexPath)
+		graphCommunicatorService.neoPost('/db/data/index/node/', [ name : 'super_index' ])
+	}
+	
 	/* 
 	 * 
 	 *  	POPULATE THE INDEX
@@ -51,6 +56,18 @@ class SuperIndexService {
 	
 	def addLastNameToIndex(String lastName, String nodeURI) {
 		addNodeToSuperIndex("lastname", lastName, nodeURI)
+	}
+	
+	def addJobTitleToIndex(String jobTitle, String nodeURI) {
+		addNodeToSuperIndex("jobTitle", jobTitle, nodeURI)
+	}
+	
+	def addDepartmentToIndex(String department, String nodeURI) {
+		addNodeToSuperIndex("department", department, nodeURI)
+	}
+	
+	def addPhoneToIndex(String phone, String nodeURI) {
+		addNodeToSuperIndex("phone", phone, nodeURI)
 	}
 
 	/**
@@ -159,6 +176,18 @@ class SuperIndexService {
 	
 	def removeLastNameFromIndex(String lastName, String nodeURI) {
 		removeNodeFromSuperIndex("lastname", lastName, nodeURI)
+	}
+	
+	def removeJobTitleFromIndex(String jobTitle, String nodeURI) {
+		removeNodeFromSuperIndex("jobTitle", jobTitle, nodeURI)
+	}
+	
+	def removeDepartmentFromIndex(String department, String nodeURI) {
+		removeNodeFromSuperIndex("department", department, nodeURI)
+	}
+	
+	def removePhoneFromIndex(String phone, String nodeURI) {
+		removeNodeFromSuperIndex("phone", phone, nodeURI)
 	}
 	
 	

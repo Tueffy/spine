@@ -11,6 +11,7 @@ class TestController {
 	def SpineService spineService;
 	
 	def index = {
+		superIndexService.resetIndex()
 		def json = graphCommunicatorService.neoGet('/db/data/index/node/names', ['query': 'email:*'])
 		json.each { indexNode(it.self, it) }
 		render "ok"
@@ -92,6 +93,15 @@ class TestController {
 		
 		if(json.data?.city)  // adding city
 			superIndexService.addCityToIndex(json.data.city, nodeURI)
+		
+		if(json.data?.jobTitle) // adding jobTitle
+			superIndexService.addJobTitleToIndex(json.data.jobTitle, nodeURI);
+		
+		if(json.data?.department) // adding department
+			superIndexService.addDepartmentToIndex(json.data.department, nodeURI);
+		
+		if(json.data?.phone) // adding phone
+			superIndexService.addPhoneToIndex(json.data.phone, nodeURI);
 	}
 
 	
