@@ -23,6 +23,8 @@ class UserController {
 	FileService fileService
 	SmtpService smtpService
 
+	
+	
 	/**
 	 * nothing displayed in case of login
 	 */
@@ -50,7 +52,7 @@ class UserController {
 	* Activate user and forward him to the login page
 	*/
     def activate = {		
-		log.info "Activate user: ${params.id}"
+		//log.info "Activate user: ${params.id}"
 		
 		//@TODO: Use unique IDs
 		def user = spineService.getUser(params.id)
@@ -74,8 +76,6 @@ class UserController {
 	 * 
 	 */
 	def doLogin = {
-		
-//		log.info "Start login: ${params.email}"
 		
 		def user = new User();
 		user = spineService.getUser(params.email);
@@ -130,7 +130,7 @@ class UserController {
 			'company': params.company, 
 			'department': params.department,
 			'jobTitle': params.jobTitle, 
-			'password' : params.password, 
+			'password' : spineService.hashEncode(params.password), 
 			'image' : "",
 			'freeText' : params.freeText ]
 		

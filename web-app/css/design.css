@@ -175,5 +175,7 @@ a:hover { color:#67624e; }
 #right .details_panel { margin-left: -25px; background:white; border-radius:0 15px 0 0; padding-top:10px; }
 #right .details_panel ul.description { display: none; }
 
+#left .details_panel .profile_more_options_link { text-align: right; }
+#left .details_panel .profile_more_options { display: none; }
 
 

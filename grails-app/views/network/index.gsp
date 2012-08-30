@@ -18,6 +18,12 @@
 				<li class="freeText">„${user.freeText}„</li>
 			</ul>
 			
+			<p class="profile_more_options_link"><a href="">More options</a></p>
+			
+			<ul class="profile_more_options">
+				<li><a href="">Change password</a></li>
+			</ul>
+			
 			<h3 class="badgesHeading"><span>${badges.size()}</span> Badges : </h3>
 			<ul class="badges">
 				<g:each in="${badges}" var="badge">

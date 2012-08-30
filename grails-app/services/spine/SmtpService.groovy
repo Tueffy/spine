@@ -6,7 +6,8 @@ import groovy.text.SimpleTemplateEngine
 
 class SmtpService {
 	
-	grails.plugin.mail.MailService mailService 
+	grails.plugin.mail.MailService mailService
+	def grailsApplication
 	
 	private sendAccountActivationMail(String toMail, String fromMail){
 		
@@ -15,7 +16,7 @@ class SmtpService {
 			to toMail
 			from fromMail
 			println "Sending email: " + fromMail + " to " + toMail
-			subject "Hello John"
+			subject "Your Spine Account activation email"
 			body(
 				view: "/emails/account-activation",
 				//plugin:"email-confirmation",

@@ -5,96 +5,71 @@
 	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div class="grid_5 landing">&nbsp;</div>
-	<div class="grid_19 landing" style="text-align: center">
-		<h2>About us</h2>
-	</div>
-	<br />
+  	<div class="grid_21 landing" id="left">
+      <h2>About Spine</h2> 
+    </div>
+  	<br/>
 	<!-- START : LEFT MENU -->
 	<div id="left" class="grid_5">
 		<ul class="menu">
-			<li><a href="#">Who we are</a></li>
-			<li><a href="#">What we do</a></li>
-			<li><a href="#">Why Spine</a></li>
+			<li><a href="#about">About Spine</a></li>
+			<li><a href="#commercial">Commercial Information</a></li>
+			<li><a href="#company">The Company</a></li>
 		</ul>
 	</div>
 	<!-- END : LEFT MENU -->
 	<!-- BEGIN : RIGHT COLUMN -->
 	<div id="right" class="grid_19 feed">
 		<div class="grid_19 feed">
-			<div class="grid_6 content" style="text-align: center">
-				<img src="${resource(dir:'images/home/aboutus',file:'thomas.jpg')}"
-					alt="Thomas Michelbach" style="width: 150px"> <img
-					src="${resource(dir:'images/home/aboutus',file:'christian.jpg')}"
-					alt="Christian" style="margin-top: 40px; width: 150px"> <img
-					src="${resource(dir:'images/home/aboutus',file:'jure.jpg')}"
-					alt="Jure" style="margin-top: 40px; width: 150px"> <img
-					src="${resource(dir:'images/home/aboutus',file:'ingmar.jpg')}"
-					alt="Ingmar" style="margin-top: 40px; width: 150px">
-			</div>
+	    	<div class="grid_6 content">  
+	    		<a name="about">About Spine</a>
+	    	</div>
 			<div class="grid_12 content">
-				Thomas M. Michelbach is a German/Brazilian technology enthusiast.
-				Right now he is a senior technology architect with vast experience
-				in system integration projects for the banking and public services
-				industry. Since 2000, Thomas has worked for internet agencies around
-				the world and finally settled on enterprise consulting at Accenture
-				in the year 2006. Thomas is passionate about making the difference
-				through daring ideas and emerging technologies. <br /> <br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br /> Christian Tüffers is a cloud computing guru in Germany. As
-				such he has led the Accenture Cloud Computing capabilities for ASG
-				(Austria / Switzerland / Germany) for the last two years. Since 1998
-				Christian is leading multiple international project engagements as
-				responsible project manager and technical architect. He is a
-				certified Master Technical Architect within Accenture.<br /> <br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br /> Jure Zakotnik is an agile development evangelist, who worked
-				in a variety of innovation projects in Accenture. He is a known
-				expert for integration solutions and agile management of
-				geographically distributed teams with different skills and cultural
-				backgrounds. Since 2002, he is involved in data mining algorithms,
-				NoSQL technologies and architecture.<br /> <br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br /> Ingmar Müller <br /> <br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br /> Alexander B. Michelbach is a German/Brazilian creative minded
-				guy and digital artist. At the moment he lives in Switzerland,
-				working as a freelancer for different clients around the globe.
-				Started in 1999 as Flash instructor and since then worked for big
-				clients in Brazil, USA, Germany and Switzerland, creating creative
-				solutions from websites to crossmedia campaigns. <br /> <br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br /> Raphael Schmid <br />
+				During our professional life we spend a lot of time looking for experts either for us, or because someone asked us, 
+				if we know someone, who has knowledge about certain topics. This is not only a waste of time, it is also very 
+				inefficient. Because:<br><br>
+				<ul>
+					<li>You cannot be sure that the person, you might consider an expert, is really the best choice. There might
+					be better suited experts in the organisation, of whom you are not aware.</li>
+					<li>The search can take a long time, because typically you forward the request to the people in your network, 
+					and then these people forward as well, and so on.</li>
+				</ul>
+				Therefore we creates spine!<br><br>
+				Spine is a social democratic crowd solution for your organisation. It works by tagging people by their expertise.
+				Everyone can tag everyone and all together results in a transparent knowledge backbone of your organisation. Do
+				not loose time in inefficient search for an expert. Start using spine!<br>
 			</div>
 		</div>
-		<div class="grid_19 alpha omega close">&nbsp;</div>
+	    <div class="grid_19 alpha omega close">
+        	&nbsp;
+   		</div>   
+		<div class="grid_19 feed">
+	    	<div class="grid_6 content">  
+	    		<a name="commercial">Commercial Information</a>
+	    	</div>
+			<div class="grid_12 content">
+				We offer spine as a freemium model. This means that the basic functionality is free in case you use our hosted
+				soluton (also called SaaS, Software-as-a-Service). When you want to install spine on your premise or want additional
+				enterprise features like connectivity to your enterprise user directory, then we offer a yearly subscription fee,
+				based upon the amount of users in your organisation.
+			</div>
+		</div>
+	    <div class="grid_19 alpha omega close">
+        	&nbsp;
+   		</div>   
+		<div class="grid_19 feed">
+	    	<div class="grid_6 content">  
+	    		<a name="company">The Company</a>
+	    	</div>
+			<div class="grid_12 content">
+				We are a young and dynamic start-up company. But we are very experienced people. Most of us are already for over 10
+				years in professional life, mainly in the IT area. We have seen a lot and all our experience we have put into spine
+				to make it very attractive and based upon most modern technologies.
+			</div>
+		</div>
+	    <div class="grid_19 alpha omega close">
+        	&nbsp;
+   		</div>   
 	</div>
 	<!-- END : RIGHT COLUMN -->
 </body>

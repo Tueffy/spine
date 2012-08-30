@@ -37,28 +37,16 @@ font-size:10px;
 
 <body>
 	<table width="100%" border="0" cellspacing="0">
+		
 		<tr>
-			<td height="120" bgcolor="#7cd6f8" class="cellMargin">
-				<a href="#" target="blank"> 	
-					<img src="spine-logo.gif" width="235" height="80" border="0">
-				</a>
-			</td>
-		</tr>
-		<tr border="0">
-			<td  height="30" bgcolor="#a0dded" ></td>
-		</tr>
-		<tr>
-			<td height="500" valign="top" class="cellMargin"> <br/><h1>Congrats!</h1>
-			<h2>You have just joined Spine, <br/>
-			 your private social network <br/>
-			 for your company.</h2><br/><br/>
-			<div class="callToAction">Follow the link below to confirm your subscription to spine.</div>
-			<div class="link"><a href="#" target=blank> http://localhost/spine/user/activate/${id} 
-			</a></div><br/><br/><div class="text">
-			If you received this email by mistake, simply delete it. <br/>
-			You won't be subscribed if you don't click the confirmation link above.<br/>
+			<td height="500" valign="top" class="cellMargin"> <br/><h1>Welcome expert!</h1>
+			<h2>You have just joined Spine, your social knowledge tool.</h2><br/><br/>
+			<div class="callToAction">Follow the link below to confirm your subscription to Spine.</div>
+			<div class="link"><a href="${grailsApplication.config.grails.serverURL}/user/activate/${id}">Activation link</a> for ${id}</div><br/><br/><div class="text">
+			If you received this email by mistake, please delete it. <br/>
+			
 			<br/>
-			For questions about this service, please contact: <a href="mailto:contact@spine.de">contact@spine.de<br/></div>		
+			For questions about this service, please contact: <a href="mailto:team@spine-it.com">team@spine-it.com<br/></div>		
 		</td>
 		</tr>
 	</table>

@@ -1,5 +1,8 @@
 package spine
 
+import java.security.MessageDigest
+import sun.misc.BASE64Encoder
+import sun.misc.CharacterEncoder
 import java.util.regex.*
 
 class SpineService {
@@ -25,14 +28,14 @@ class SpineService {
 
         def user
 
-        // retrieve the node via email address
+       // retrieve the node via email address
         def userNode = networkService.readNode(email)
 
         // verify if user exists and if passwords are identical
         if (userNode != null)
-            if (userNode.password == password) {
+            if (userNode.password == hashEncode(password)) {
 
-                //create an instance of the user
+				//create an instance of the user
                 user = new User()
 
                 // copy over the values from the hash map into the user object
@@ -427,5 +430,19 @@ class SpineService {
 		return networkService.queryRelationship(queryObject)
 	}
 	
+   /**
+    * 
+    * @param String data, which should be hashed
+    * @return hashed data
+    */
+	def hashEncode(String data)
+	{
+		MessageDigest md = MessageDigest.getInstance('SHA')
+		md.update(data.getBytes('UTF-8'))
+		return (new BASE64Encoder()).encode(md.digest())
+
+	}
+	
+	// what is this?
 	def search
 }
