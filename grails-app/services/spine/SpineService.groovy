@@ -336,13 +336,18 @@ class SpineService {
 		return success
     }
 	
+	/**
+	 * Format a tag to be compliant with our formatting rules
+	 * @param String tag
+	 * @return String
+	 */
 	def String formatTag(String tag) {
 		def previousWasSpace = false
 		def newTag = ""
 		for(c in tag) {
 			// Upper case char after a replaced underscore
 			if(previousWasSpace) {
-				c = c.toUpperCase()
+				// c = c.toUpperCase() 
 				previousWasSpace = false
 			}
 				

@@ -15,7 +15,7 @@
 	      	<li><a href="/spine/disclaimer">Disclaimer</a></li>
 	      	<!-- BEGIN : CHECK USER FOR SESSION LOGGED IN -->
 	      	<g:if test="${session.user != $null}">
-     			<li><g:link controller="user" onclick="return confirm('Are you sure?');" action="doLogout">Logout</g:link ></li>
+     			<li><g:link controller="user" action="doLogout">Logout</g:link ></li>
 			</g:if>
 			<g:else env="development">
 			   <li><a href="/spine/user/login">Login</a></li>
