@@ -118,4 +118,17 @@ class User extends Node {
 		firstName(blank:false)
 		password(blank:false, password:true)
 	}
+	
+	def reIndex(SuperIndexService superIndexService) {
+		if(!self)
+			throw new Exception("Impossible to index a non persisted user!")
+			
+		if(email) superIndexService.addEmailToIndex(email, self)
+		if(firstName) superIndexService.addFirstNameToIndex(firstName, self)
+		if(lastName) superIndexService.addLastNameToIndex(lastName, self)
+		if(city) superIndexService.addCityToIndex(city, self)
+		if(jobTitle) superIndexService.addJobTitleToIndex(jobTitle, self)
+		if(department) superIndexService.addDepartmentToIndex(department, self)
+		if(phone) superIndexService.addPhoneToIndex(phone, self)
+	}
 }

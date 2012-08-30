@@ -200,6 +200,11 @@ class SpineService {
                     def currentUser = session.user
                     success = setTag(currentUser, newUser, tags)
                 }
+				
+				// Then index the newly created user
+				def User newUserNode = new User()
+				newUserNode.bind(userNode)
+				newUserNode.reIndex(superIndexService)
 
                 success = true
             }
