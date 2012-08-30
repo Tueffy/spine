@@ -89,7 +89,7 @@
         <!-- BEGIN : Details block -->
         <div class="grid_5 omega details_panel" id="details_panel" >          
           <!-- <img src="/spine/images/avatar2.jpg" alt="Avatar" class="avatar" />  -->
-          <img src="/spine/images/profiles/anonymous.gif"" alt="anonymous" width="125" height="125" class="avatar" id="selectedImage" />
+          <img src="/spine/images/profiles/anonymous.jpg"" alt="anonymous" width="125" height="125" class="avatar" id="selectedImage" />
      	  <span id="selectUser" style="font-size:9pt">Please choose one of your contacts to see more details!</span>
           <ul class="description">
             <li class="name" id="selectedUserName"></li>

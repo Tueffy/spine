@@ -241,16 +241,16 @@ class UserController {
 			if(oldFileToDelete.exists() && !oldFileToDelete.directory)
 			{
 				oldFileDeleted = oldFileToDelete.delete();
-				log.debug("\nFile deleted = ${oldFileDeleted}");
+				//log.debug("\nFile deleted = ${oldFileDeleted}");
 			}
 		}
 		
 		// Finalize upload by putting the cropped picture to its right place
-		log.debug "File renaming = "
+		//log.debug "File renaming = "
 		File file = new File(outputDir + inputFilename)
 		String outputFileName = params.email + "." + inputFileExtension
 		Boolean fileMoved = file.renameTo(new File(outputDir + outputFileName))
-		log.debug fileMoved.toString() + "\n" + outputDir + outputFileName
+		//log.debug fileMoved.toString() + "\n" + outputDir + outputFileName
 		
 		// If moving failed, delete the tmp file
 		if(!fileMoved)
@@ -280,7 +280,7 @@ class UserController {
 			'freeText' : params.freeText ]
 		
 		// If an image has been sent, apply cropping
-		log.debug "picture = ${params.picture}"
+		//log.debug "picture = ${params.picture}"
 		if(params.picture != ""){
 			cropUserPicture()
 			userparams.imagePath = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
