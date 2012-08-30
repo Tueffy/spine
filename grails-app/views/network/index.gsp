@@ -10,7 +10,7 @@
     	<div class="details_panel">
     		<img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" />
 			<ul class="description">
-				<li class="name"><a href="../user/profile">${user.firstName} ${user.lastName}</a></li>
+				<li class="name">${user.firstName} ${user.lastName}</li>
 				<li class="company">${user.company}</li>
 				<li class="jobTitle"><span id="userDepartment">${user.department}</span>, <span id="userJobTitle">${user.jobTitle}</span></li>
 				<li class="phone">Phone: <span id="userPhone">${user.phone}</span></li>
