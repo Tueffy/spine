@@ -318,23 +318,49 @@ class SpineService {
 			targetUser = getUser(targetUser.email, false)
 		
 		def ConnectRelationship relationship = networkService.findConnectRelationship(loggedInUser.email, targetUser.email)
+		return removeTag(relationship, tag)
+    }
+	
+	/**
+	 * 
+	 * @param ConnectRelationship relationship
+	 * @param String tag
+	 * @return Boolean success
+	 */
+	def removeTag(ConnectRelationship relationship, String tag) {
 		if(!relationship || !relationship.self)
 			return false
+		
 		relationship.removeTag(tag)
 		superIndexService.removeTagFromIndex(tag, relationship.end.self)
 		
-		// Should we delete or update the relationship ? 
+		// Should we delete or update the relationship ?
 		if(relationship.data.size() == 0)
 			relationship.delete(networkService.graphCommunicatorService)
 		else
 			relationship.persist(networkService.graphCommunicatorService);
 			
 		// Log the action
-		logService.removeTag(tag, loggedInUser, targetUser)
-			
+		logService.removeTag(tag, relationship.start, relationship.end)
+		
 		def success = !relationship.hasTag(tag)
 		return success
-    }
+	}
+	
+	/**
+	 * Removes a tag applied to a user by any other user
+	 * @param user
+	 * @param tag
+	 * @return success
+	 */
+	def untag(User user, String tag) {
+		def relationships = networkService.getIncomingRelationships(user, tag)
+		def success = true
+		relationships.each {
+			success = success && removeTag(it, tag)
+		}
+		return success
+	}
 	
 	/**
 	 * Format a tag to be compliant with our formatting rules

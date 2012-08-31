@@ -41,7 +41,7 @@ class LogFilter {
 			}
 		}
 
-		println "Results = " + results
+		//println "Results = " + results
 
 		return results
 	}

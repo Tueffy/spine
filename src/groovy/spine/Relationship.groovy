@@ -37,6 +37,10 @@ abstract class Relationship {
 			data.remove(property)
 	}
 	
+	def hasData() {
+		return data.size() > 0
+	}
+	
 	def persist(GraphCommunicatorService graphCommunicatorService) {
 		if(start?.self && end?.self) {
 			if(self) // update relationship 

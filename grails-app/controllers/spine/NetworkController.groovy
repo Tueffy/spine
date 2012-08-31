@@ -48,7 +48,7 @@ class NetworkController {
 			
 		def endTime = System.currentTimeMillis()
 		def executionTime = endTime - startTime
-		log.debug("Execution time for loading the network page = " + executionTime + "ms. ")
+		//log.debug("Execution time for loading the network page = " + executionTime + "ms. ")
 		
 		// Get notifications.
 		def notifications = logService.getUserNotifications(user)
@@ -272,6 +272,15 @@ class NetworkController {
 		//render user as JSON
 		def response = [tag: tag]
 		render response as JSON
+	}
+	
+	def untagMe = {
+		def String tag = params.tag
+		def User user = spineService.getUser(session.user.email)
+		def success = spineService.untag(user, tag)
+		def response = [success:success]
+		//render response as JSON
+		redirect(controller:'network', action:'index')
 	}
 
 	

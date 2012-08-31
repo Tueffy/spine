@@ -18,12 +18,6 @@
 				<li class="freeText">„${user.freeText}„</li>
 			</ul>
 			
-			<p class="profile_more_options_link"><a href="">More options</a></p>
-			
-			<ul class="profile_more_options">
-				<li><a href="">Change password</a></li>
-			</ul>
-			
 			<h3 class="badgesHeading"><span>${badges.size()}</span> Badges : </h3>
 			<ul class="badges">
 				<g:each in="${badges}" var="badge">
@@ -37,7 +31,10 @@
 			<ul class="tags">
 				<g:each in="${user.tags}" var="tag">
 					<li>
-						<span class="tag"><a href="/spine/network/index?filter=Innovation">${tag.key}</a></span>
+						<span class="tag">
+							<a href="/spine/network/index?filter=Innovation">${tag.key}</a>
+							<a href="/spine/network/untagMe?tag=${tag.key}" class="untagMe" title="Untag me" >-</a>
+						</span>
 						<span class="nb">${tag.value}</span></li>
 					</li>
 				</g:each>

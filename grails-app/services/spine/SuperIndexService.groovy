@@ -146,7 +146,7 @@ class SuperIndexService {
 	*/
 	
 	def removeNodeFromSuperIndex(String key, String value, String nodeURI) {
-		graphCommunicatorService.neoDelete(indexPath + getIdFromURI(nodeURI) + '/' + key + '/' + value)
+		graphCommunicatorService.neoDelete(indexPath + key + '/' + value + '/' + getIdFromURI(nodeURI))
 	}
 	
 	def removeNodeFromSuperIndex(String nodeURI)
@@ -155,7 +155,7 @@ class SuperIndexService {
 	}
 	
 	def removeTagFromIndex(String tag, String nodeURI) {
-		removeNodeFromSuperIndex("tag", tag, nodeURI)
+		removeNodeFromSuperIndex("tag", tag.toLowerCase(), nodeURI)
 	}
 
 	def removeBadgeFromIndex(String badge, String nodeURI) {
