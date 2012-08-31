@@ -117,7 +117,7 @@ class UserController {
 	 * Register user calls spine service to create a user without any tag yet
 	 */
 	def doRegister = {	
-		
+				
 		// create map with parameters
 		def userparams = [
 			'gender': params.gender, 
@@ -129,7 +129,8 @@ class UserController {
 			'email' : params.email,
 			'company': params.company, 
 			'department': params.department,
-			'jobTitle': params.jobTitle, 
+			'jobTitle': params.jobTitle,
+			'phone' : params.phone,
 			'password' : spineService.hashEncode(params.password), 
 			'image' : "",
 			'freeText' : params.freeText ]

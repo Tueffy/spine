@@ -18,6 +18,7 @@
 			Spine is the private social network <br />inside your company
 		</p>
 		<g:form method="post" action="doSignup" class="registration" controller="home">
+		    <g:if test="flash['message']"><p>${flash['message']}</p></g:if>
 			<g:if test="${home?.email}"><input type="text" name="email" value="${home?.email}" default="${home?.email}" class="auto_refill" /></g:if>
 			<g:else><input type="text" name="email" value="Enter your email address" default="Enter your email address" class="auto_refill" /></g:else>
 			<span style="align: right"><input type="submit"

@@ -37,16 +37,16 @@
     	<g:form action="doRegister" method="post" name="registration" class="registration">
     	
     		<ul class="pagination">
-	    		<li class="current">Personnal Details</li>
+	    		<li class="current">Personal Details</li>
 	    		<li>Photo</li>
-	    		<li>Aditional info</li>
+	    		<li>Additional info</li>
 	    	</ul>
     	
     		<div class="pages">
 	    		<!-- First Step -->
 	    		<div class="page">
 	    		
-	    			<h3>1. Personnal Details</h3>
+	    			<h3>1. Personal Details</h3>
 	    		
 	    			<table>
 	    				<tr>
@@ -79,7 +79,7 @@
 						</tr>
 						<tr>
 							<th class="label">
-								<label for="birthday">Birth Day:</label>
+								<label for="birthday">Birthday:</label>
 							</th>
 							<td>
 								<input id="birthday" type="text" name="birthday" value="${user?.birthday}" />
@@ -123,6 +123,14 @@
 							</th>
 							<td>
 								<input id="jobTitle" type="text" name="jobTitle" value="${user?.jobTitle}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="label">
+								<label for='phone'>Phone:</label>
+							</th>
+							<td>
+								<input id="phone" type="text" name="phone" value="${user?.phone}" />
 							</td>
 						</tr>
 						<tr>
@@ -185,7 +193,7 @@
 	    		
 	    		<!-- Third Step -->
 	    		<div class="page">
-	    			<h3>3. Aditional info </h3>
+	    			<h3>3. Additional info </h3>
 					<textarea name="freeText">...</textarea>
 	    		</div>
 	    		

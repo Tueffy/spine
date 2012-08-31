@@ -40,7 +40,7 @@ class NetworkService {
 	
 	def User readUserNode(String email) {
 		def json = graphCommunicatorService.neoGet('/db/data/index/node/names/email', ['query': '"' + email + '"'])
-		if(json == null)
+		if(json == null || json.data == null || json.data.isEmpty())
 			return null
 		User user = new User()
 		user.bind(json[0])
