@@ -131,4 +131,13 @@ class User extends Node {
 		if(department) superIndexService.addDepartmentToIndex(department, self)
 		if(phone) superIndexService.addPhoneToIndex(phone, self)
 	}
+	
+	def getIncomingRelationships(GraphCommunicatorService graphCommunicatorService, String tag) {
+		def query = ' '
+		query += ' start me=node:super_index("email:{email}") '
+		query += ' match user-[r:connect]->me '
+		if(!tag.trim().isEmpty())
+			query += ' where has(r.`{tag}`) '
+		query += ' return user '
+	}
 }

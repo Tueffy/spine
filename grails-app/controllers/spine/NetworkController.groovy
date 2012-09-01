@@ -273,6 +273,15 @@ class NetworkController {
 		def response = [tag: tag]
 		render response as JSON
 	}
+	
+	def untagMe = {
+		def String tag = params.tag
+		def User user = spineService.getUser(session.user.email)
+		def success = spineService.untag(user, tag)
+		def response = [success:success]
+		//render response as JSON
+		redirect(controller:'network', action:'index')
+	}
 
 	
 	/**

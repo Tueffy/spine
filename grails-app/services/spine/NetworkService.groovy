@@ -8,7 +8,7 @@ class NetworkService {
     static transactional = false
 
     def graphCommunicatorService
-	def cypherPlugin = '/db/data/ext/CypherPlugin/graphdb/execute_query'
+	def cypherPlugin = '/db/data/cypher'
 	def SuperIndexService superIndexService
     //def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 
@@ -821,6 +821,39 @@ class NetworkService {
         return props
         //println 'All tags: ' + props
     }
+	
+	def getIncomingRelationships(User user, String tag) {
+		def query = ' '
+		query += " start me=node:super_index(email={email}) "
+		query += ' match user-[r:connect]->me '
+		if(tag)
+			query += ' where has(r.`'+ tag +'`) '
+		query += ' return r, user '
+		
+		// Execute the query
+		def json = graphCommunicatorService.neoPost(cypherPlugin, '{"query": "'+ query +'", "params": {"email":"'+ user.email +'", "tag":"'+ tag +'"}}')
+		
+		def relationships = []
+		json.data.each {
+			
+			// it[0] = r
+			// it[1] = user
+			
+			// Get foreign user
+			def User contact = new User()
+			contact.bind(it[1])
+			
+			// Build the Relationship object
+			def ConnectRelationship rel = new ConnectRelationship()
+			rel.bind(it[0])
+			rel.start = contact
+			rel.end = user
+			
+			relationships.add(rel)
+		}
+		
+		return relationships
+	}
 
     /**
      * Remove a relationship using start and end node

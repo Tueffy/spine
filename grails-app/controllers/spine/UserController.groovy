@@ -76,7 +76,9 @@ class UserController {
 	 * 
 	 */
 	def doLogin = {
-		
+
+		println System.getProperty("file.encoding")
+				
 		def user = new User();
 		user = spineService.getUser(params.email);
 		
