@@ -8,7 +8,7 @@
     <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
     	<div class="details_panel">
-    		<img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" />
+    		<g:link controller="user" action="profile"><img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" /></g:link>
 			<ul class="description">
 				<li class="name">${user.firstName} ${user.lastName}</li>
 				<li class="company">${user.company}</li>
