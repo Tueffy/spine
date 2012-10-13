@@ -32,7 +32,7 @@
 				<g:each in="${user.tags}" var="tag">
 					<li>
 						<span class="tag">
-							<a href="/spine/network/index?filter=Innovation">${tag.key}</a>
+							<a href="/spine/network/index?filter=${tag.key}">${tag.key}</a>
 							<a href="/spine/network/untagMe?tag=${tag.key}" class="untagMe" title="Untag me" >-</a>
 						</span>
 						<span class="nb">${tag.value}</span></li>
