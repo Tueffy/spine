@@ -15,6 +15,7 @@ class NetworkController {
 	def spineService
 	def LogService logService
 	def smtpService
+	def StatisticService statisticService
 
 	/**
 	 * 
@@ -62,7 +63,9 @@ class NetworkController {
 	def ajaxAutoComplete = {
 		def results = []
 		def filter = params.filter ? params.filter : params.term
-		render spineService.autocompleteTags(filter) as JSON
+		def tags = spineService.autocompleteTags(filter)
+		statisticService.logAutocomplete(filter, tags.size())
+		render tags as JSON
 	}
 	
 	/**
