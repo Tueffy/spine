@@ -15,6 +15,7 @@ class NetworkController {
 	def spineService
 	def LogService logService
 	def smtpService
+	def StatisticService statisticService
 
 	/**
 	 * 
@@ -39,6 +40,10 @@ class NetworkController {
 		// Get user network (get the first page)
 		def Network network  = spineService.getUserNetwork(user, filter , 0, config.network.itemsPerPage)
 		
+		if(filter != null && !filter.isEmpty()) {
+			statisticService.logSearch(filter, network.networkSize)
+		}
+		
 		//Get stastistics for tags and badges
 		def badges = spineService.getBadges(user);
 		def hotTags = spineService.getHotTags();
@@ -62,7 +67,9 @@ class NetworkController {
 	def ajaxAutoComplete = {
 		def results = []
 		def filter = params.filter ? params.filter : params.term
-		render spineService.autocompleteTags(filter) as JSON
+		def tags = spineService.autocompleteTags(filter)
+		statisticService.logAutocomplete(filter, tags.size())
+		render tags as JSON
 	}
 	
 	/**

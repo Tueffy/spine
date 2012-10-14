@@ -244,7 +244,7 @@ class UserController {
 			if(oldFileToDelete.exists() && !oldFileToDelete.directory)
 			{
 				oldFileDeleted = oldFileToDelete.delete();
-				//log.debug("\nFile deleted = ${oldFileDeleted}");
+				println("\nFile deleted = ${oldFileDeleted}");
 			}
 		}
 		
@@ -269,28 +269,33 @@ class UserController {
 	 */
 	def updateProfile = {
 		// Get the current user
-		User user = session.user
+		User user = spineService.getUser(session.user.email)
 		
-		// create map with parameters
-		def userparams = [
-			'firstName' : params.firstName,
-			'lastName' : params.lastName,
-			'city' : params.city,
-			'country' : params.country,
-			'email' : params.email,
-			'password' : params.password, 
-			'imagePath' : "",
-			'freeText' : params.freeText ]
+		if(params?.lastName) 
+			user.lastName = params.lastName
+		if(params?.firstName)
+			user.firstName = params.firstName
+		if(params?.city)
+			user.city = params.city
+		if(params?.country)
+			user.country = params.country
+		if(params?.email)
+			user.email = params.email
+		if(params?.password)
+			user.password = spineService.hashEncode(params.password)
+		if(params?.freeText)
+			user.freeText = params.freeText
 		
 		// If an image has been sent, apply cropping
 		//log.debug "picture = ${params.picture}"
 		if(params.picture != ""){
 			cropUserPicture()
-			userparams.imagePath = session.user.email + "." + fileService.extractExtensionFromFileName(params.picture)
+			def imagePath = user.email + "." + fileService.extractExtensionFromFileName(params.picture)
 		}
 		
-		Boolean success = spineService.updateUserProfile(user, userparams)
-		[ user: userparams ]
+		user.persist(spineService.networkService.graphCommunicatorService)
+		def success = true
+		[ user: user ]
 		
 		if(success){
 			// Reload the user in the session

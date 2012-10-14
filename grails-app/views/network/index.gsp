@@ -8,7 +8,7 @@
     <!-- START : LEFT MENU -->
     <div class="grid_5" id="left">
     	<div class="details_panel">
-    		<img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" />
+    		<g:link controller="user" action="profile"><img src="/spine/images/profiles/${user.email}.jpg" alt="${user.firstName}" width="125" height="125" class="avatar" /></g:link>
 			<ul class="description">
 				<li class="name">${user.firstName} ${user.lastName}</li>
 				<li class="company">${user.company}</li>
@@ -32,7 +32,7 @@
 				<g:each in="${user.tags}" var="tag">
 					<li>
 						<span class="tag">
-							<a href="/spine/network/index?filter=Innovation">${tag.key}</a>
+							<a href="/spine/network/index?filter=${tag.key}">${tag.key}</a>
 							<a href="/spine/network/untagMe?tag=${tag.key}" class="untagMe" title="Untag me" >-</a>
 						</span>
 						<span class="nb">${tag.value}</span></li>
