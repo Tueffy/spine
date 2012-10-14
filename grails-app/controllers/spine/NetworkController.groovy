@@ -40,6 +40,10 @@ class NetworkController {
 		// Get user network (get the first page)
 		def Network network  = spineService.getUserNetwork(user, filter , 0, config.network.itemsPerPage)
 		
+		if(filter != null && !filter.isEmpty()) {
+			statisticService.logSearch(filter, network.networkSize)
+		}
+		
 		//Get stastistics for tags and badges
 		def badges = spineService.getBadges(user);
 		def hotTags = spineService.getHotTags();
