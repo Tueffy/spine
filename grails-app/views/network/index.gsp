@@ -76,6 +76,12 @@
 <%--          </div>--%>
            <!-- END : filter & my updates -->          
          
+         <g:if test="${flash.message}">
+	         <div class="grid_14 alpha omega notice">
+	         	${flash.message}
+	         </div>
+         </g:if>
+         
           <!--  BEGIN Flux -->
           <g:render template="inc/page"></g:render>
           <!-- END Flux -->
