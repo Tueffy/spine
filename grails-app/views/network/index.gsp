@@ -1,6 +1,9 @@
 <html>
 <head>
+
 	<meta name="layout" content="main">
+	<title>Spine</title>
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
   	<g:javascript src="app/scroll.js" />
 	<g:javascript src="app/network.js" />
 </head>

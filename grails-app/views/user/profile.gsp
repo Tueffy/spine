@@ -1,8 +1,9 @@
 <html>
 <head>
 	<meta name="layout" content="main">
-	<title>My Spine</title>
-	<link href="${resource(dir:'css',file:'landing.css')}" rel="stylesheet" type="text/css" />
+	<title>Spine</title>
+	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
 	<g:javascript src="jquery/jquery-1.7.min.js" />
 	<g:javascript>jQuery.noConflict();</g:javascript>
 	<g:javascript src="app/landing.js" />

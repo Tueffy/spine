@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>Spine Landing</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Spine</title>
+  <link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
   <link href="/spine/css/reset.css" rel="stylesheet" type="text/css">
   <link href="/spine/css/960.css" rel="stylesheet" type="text/css">
   <link href="/spine/css/design.css" rel="stylesheet" type="text/css">
