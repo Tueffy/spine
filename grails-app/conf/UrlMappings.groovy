@@ -11,6 +11,7 @@ class UrlMappings {
 		"/about"(view:"/home/about")
 		"/how"(view:"/home/how")
 		"/disclaimer"(view:"/home/disclaimer")
+		"/feedback"(view:"/home/feedback")
 		"/terms"(view:"/home/terms")
 		"/user/forgot"(view:"/user/forgot")
 		"/user/activate"(view:"/user/activate")

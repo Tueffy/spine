@@ -2,8 +2,9 @@
 <html>
 <head>
 <meta name="layout" content="main">
-  <title>Spine Landing</title>
-  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<title>Spine</title>
+	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script type="text/javascript" src="/spine/js/prototype/event.simulate.js"></script>
   <script type="text/javascript" src="/spine/js/app/landing.js"></script>

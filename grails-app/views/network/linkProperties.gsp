@@ -1,8 +1,8 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="layout" content="main" />
-<title>Social Graph</title>
+	<meta name="layout" content="main">
+	<title>Spine</title>
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
 <g:javascript src="d3.js" />
 <g:javascript src="d3.geom.js" />
 <g:javascript src="d3.layout.js" />
