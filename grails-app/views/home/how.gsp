@@ -1,8 +1,9 @@
 <html>
 <head>
-  	<meta name="layout" content="main">
-	<title>Spine Landing</title>
+	<meta name="layout" content="main">
+	<title>Spine</title>
 	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
 </head>
 <body>
   	<div class="grid_21 landing" id="left">

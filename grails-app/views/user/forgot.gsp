@@ -1,8 +1,9 @@
 <html>
 <head>
-<meta name="layout" content="main">
-  <title>Spine Landing</title>
-  <link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<meta name="layout" content="main">
+	<title>Spine</title>
+	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
 </head>
 <body>
   <!-- BEGIN : CONTAINER -->

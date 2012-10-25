@@ -11,12 +11,15 @@ class HomeController {
 	}
 
 	def about = {
-			redirect (controller : 'home' , action : 'about')
+		redirect (controller : 'home' , action : 'about')
 	}	
-	
+
+	def feedback = {
+		redirect (controller : 'home' , action : 'feedback')
+}
 
 	def how = {
-			redirect (controller : 'home' , action : 'howitworks')
+		redirect (controller : 'home' , action : 'howitworks')
 	}
 
 	def doSignup = {
@@ -38,4 +41,11 @@ class HomeController {
 		redirect (controller : 'user', action : 'register', params:[ email: params.email])
 	}
 
+	def doFeedback = {
+		
+		// check if user already exists
+		println "Do Feedback"
+		redirect (controller : 'home', action : 'index')
+	}
+		
 }
