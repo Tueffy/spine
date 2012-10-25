@@ -301,7 +301,7 @@ class UserController {
 			// Reload the user in the session
 			session.user = spineService.getUser(user.email) 
 			flash.message = "Profile updated ! ";
-			redirect(action: "profile")
+			redirect(controller: "network", action: "index")
 		}
 		else
 			render(view:"profile")
