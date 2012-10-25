@@ -10,6 +10,7 @@ class NetworkService {
     def graphCommunicatorService
 	def cypherPlugin = '/db/data/cypher'
 	def SuperIndexService superIndexService
+	def defaultTags = [:]
     //def http = new RESTClient( 'http://localhost:7575' ) //tcpmon
 
     /*
@@ -797,6 +798,12 @@ class NetworkService {
 			return '-1'
 	}
 
+	def initDefaultTags() {
+		//read file with default tags
+		new File("grails-app/conf/defaultTags.txt").eachLine { line -> defaultTags[line] = 0 }
+		//defaultTags = ['mammolshain':0, 'salesforce':0]
+	}
+	
     /**
      * Returns a list of all existing properties on relationships and their number
      *
@@ -805,7 +812,9 @@ class NetworkService {
     def getAllProperties() {
         //TODO go through index of edges and collect all properties. Cache this later.
         def props = [:]
-        def json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': '*:*'])
+		props = defaultTags.clone() //use the default list of tags
+        
+		def json = graphCommunicatorService.neoGet('/db/data/index/relationship/edges', ['query': '*:*'])
         //TODO: not optimal solution, because there are too many edges returned. moreover, this can be done better using groovy magic
         json.data.each {
             def edge = it
