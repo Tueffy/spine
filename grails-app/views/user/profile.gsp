@@ -14,37 +14,37 @@
 
 		<div class="landing">
 			<h2>My Profile</h2>
-        	<p class="subtitle">Update your profile details...</p>
+        	<p class="subtitle">Update your profile details</p>
 			<g:form action="updateProfile">
 				<table class="userForm" style="width:100%;">
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='lastName'>Last Name:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="lastName" type='text' name='lastName'	value='${user?.lastName}' /></td>
+						<td valign='middle' style='text-align: left;' width='20%'><label for='lastName'>Last Name:</label></td>
+						<td valign='middle' style='text-align: left;' width='80%'><input id="lastName" type='text' name='lastName'	value='${user?.lastName}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='firstName'>First Name:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="firstName" type='text' name='firstName' value='${user?.firstName}' /></td>
+						<td valign='middle' style='text-align: left;' width='20%'><label for='firstName'>First Name:</label></td>
+						<td valign='middle' style='text-align: left;' width='80%'><input id="firstName" type='text' name='firstName' value='${user?.firstName}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='country'>Country:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="country" type='text' name='country' value='${user?.country}' />
+						<td valign='middle' style='text-align: left;' width='20%'><label for='country'>Country:</label></td>
+						<td valign='middle' style='text-align: left;' width='80%'><input id="country" type='text' name='country' value='${user?.country}' />
 						</td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='city'>City:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="city" type='text' name='city' value='${user?.city}' /></td>
+						<td valign='middle' style='text-align: left;' width='20%'><label for='city'>City:</label></td>
+						<td valign='middle' style='text-align: left;' width='80%'><input id="city" type='text' name='city' value='${user?.city}' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='password'>Password:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><input id="password" type='password' name='password' value='' /></td>
+						<td valign='middle' style='text-align: left;' width='20%'><label for='password'>Password:</label></td>
+						<td valign='middle' style='text-align: left;' width='80%'><input id="password" type='password' name='password' value='' /></td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'><label for='freeText'>More about yourself:</label></td>
-						<td valign='top' style='text-align: left;' width='80%'><textarea id="freeText" name="freeText">${user?.freeText}</textarea>
+						<td valign='middle' style='text-align: left;' width='20%'><label for='freeText'>More about yourself:</label></td>
+						<td valign='middle' style='text-align: left;' width='80%'><textarea id="freeText" name="freeText">${user?.freeText}</textarea>
 						</td>
 					</tr>
 					<tr class='prop'>
-						<td valign='top' style='text-align: left;' width='20%'>Change picture : </td>
+						<td valign='middle' style='text-align: left;' width='20%'>Change picture : </td>
 						<td>
 							<div class="upload_box">
 								<uploader:uploader id="picture" multiple="false">
