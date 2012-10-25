@@ -12,6 +12,7 @@
 	      	<li><a href="/spine/network/index">Home</a></li>
 	      	<li><a href="/spine/about">About Spine</a></li>
 	      	<li><a href="/spine/how">How it works</a></li>
+	      	<li><a href="/spine/feedback">Feedback</a></li>
 	      	<li><a href="/spine/disclaimer">Disclaimer</a></li>
 	      	<!-- BEGIN : CHECK USER FOR SESSION LOGGED IN -->
 	      	<g:if test="${session.user != $null}">

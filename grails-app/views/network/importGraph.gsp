@@ -1,8 +1,9 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="layout" content="main" />
-<title>Import Social Graph</title>
+	<meta name="layout" content="main">
+	<title>Spine</title>
+	<link href="/spine/css/landing.css" rel="stylesheet" type="text/css">
+	<link rel="icon" type="image/gif" href="/spine/images/spinefavicon.gif" />
 </head>
 <body>
 	<div class="body">
