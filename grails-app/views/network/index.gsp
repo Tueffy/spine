@@ -77,9 +77,11 @@
            <!-- END : filter & my updates -->          
          
          <g:if test="${flash.message}">
-	         <div class="grid_14 alpha omega notice">
-	         	${flash.message}
-	         </div>
+         	<div class="grid_13 alpha omega">
+         		<div class="alert alert-info">
+		         	${flash.message}
+		         </div>
+         	</div>
          </g:if>
          
           <!--  BEGIN Flux -->
