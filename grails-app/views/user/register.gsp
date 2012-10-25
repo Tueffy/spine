@@ -166,6 +166,9 @@
 								new Cropper.Img('cropper-img',{
 								 	autoIncludeCSS: false, 
 								 	ratioDim:{x:40,y:40}, 
+								 	minWidth: 162, 
+								 	minHeight: 162, 
+								 	displayOnInit: 1, 
 								 	onEndCrop: function(coords, dimensions) { 
 										$( 'crop_x1' ).value = coords.x1;
 										$( 'crop_y1' ).value = coords.y1;
