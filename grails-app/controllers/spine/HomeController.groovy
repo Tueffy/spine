@@ -3,6 +3,7 @@ package spine
 class HomeController {
 
 	SpineService spineService
+	SmtpService smtpService
 	
 	def index = {
 		if (session.user != null) {
@@ -44,7 +45,8 @@ class HomeController {
 	def doFeedback = {
 		
 		// check if user already exists
-		println "Do Feedback"
+		smtpService.sendFeedbackMail(params.subject, params.message, params.email, "team@spine-it.com")
+		flash['message'] = "Message has been sent!"
 		redirect (controller : 'home', action : 'index')
 	}
 		
