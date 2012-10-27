@@ -26,7 +26,18 @@ class SmtpService {
 		  }
 	 }
 	
-	
+	private sendFeedbackMail(String title, String message, String fromMail, String toMail){
+		
+		mailService.sendMail {
+			//multipart true
+			to toMail
+			from toMail
+			cc fromMail
+			subject title
+			body message
+		}
+	}
+
 	private sendAccountRemovalMail(String toMail, String fromMail){
 		
 		mailService.sendMail {
