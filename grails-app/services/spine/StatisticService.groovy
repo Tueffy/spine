@@ -11,7 +11,8 @@ class StatisticService {
 		def fileName = "search.${today.year}-${today.month}-${today.dayOfMonth}.log"
 		
 		if(searchLog == null || !searchLog.name.equals(fileName)) {
-			searchLog = new File("logs/${fileName}")
+			//searchLog = new File("logs/${fileName}") //use String relativeWebPath = "/path/to/file.xsd String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
+			searchLog = new File("${fileName}")
 			searchLog.createNewFile()
 		}
 	}
@@ -27,7 +28,8 @@ class StatisticService {
 		def fileName = "autoComplete.${today.year}-${today.month}-${today.dayOfMonth}.log"
 		
 		if(autoCompleteLog == null || !autoCompleteLog.name.equals(fileName)) {
-			autoCompleteLog = new File("logs/${fileName}")
+			//autoCompleteLog = new File("logs/${fileName}") //use String relativeWebPath = "/path/to/file.xsd String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
+			autoCompleteLog = new File("${fileName}")
 			autoCompleteLog.createNewFile()
 		}
 	}

@@ -800,8 +800,13 @@ class NetworkService {
 
 	def initDefaultTags() {
 		//read file with default tags
-		new File("grails-app/conf/defaultTags.txt").eachLine { line -> defaultTags[line] = 0 }
-		//defaultTags = ['mammolshain':0, 'salesforce':0]
+		//new File("grails-app/conf/defaultTags.txt").eachLine { line -> defaultTags[line] = 0 }
+		//new File("defaultTags.txt").eachLine { line -> defaultTags[line] = 0 }
+		defaultTags = ['exhibition':0, 'salesforce':0]
+		//TODO sample 
+		//String relativeWebPath = "/path/to/file.xsd";
+		//String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
+		//File file = new File(absoluteDiskPath);
 	}
 	
     /**
