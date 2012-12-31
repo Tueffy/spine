@@ -1,6 +1,12 @@
 spine (refactoring)
 ================
 
+Things to see are currently in: 
+
+ - grails-app/services/
+ - test/
+ - src/groovy/
+
 Services description: 
 ====
 
