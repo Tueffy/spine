@@ -122,7 +122,7 @@ var updateSelectedUser = function(e) {
 	jQuery.each(user.badges, function (i, badge) {
 		var li = jQuery(document.createElement('li'));
 		li.addClass('badge');
-		li.html('<img src="/spine/images/badges/36x36/' + badge.image + '" title="' + badge.name + '" alt="' + badge.name + '" width="36" height="36" />');
+		li.html('<img src="/spine/images/badges/36x36/' + badge.image + '" title="' + badge.name + '" alt="' + badge.name + '" width="90" height="90" />');
 		li.appendTo(badgesList);
 	});
 	

@@ -24,7 +24,7 @@
 			<h3 class="badgesHeading"><span>${badges.size()}</span> Badges : </h3>
 			<ul class="badges">
 				<g:each in="${badges}" var="badge">
-					<li><img src="/spine/images/badges/36x36/${badge.image}" alt="${badge}" title="${badge}"/><li>
+					<li><img src="/spine/images/badges/36x36/${badge.image}" alt="${badge}" title="${badge}" width="90" height="90"/><li>
 				</g:each>
 			</ul>
 			
