@@ -5,6 +5,7 @@ import static org.junit.Assert.*
 import org.junit.*
 
 import spine.exception.graphdb.RelationshipNotFoundException;
+import spine.viewModel.UserNetwork;
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -263,6 +264,28 @@ class SpineServiceTests {
 		assert relationship.startNode.id == cTueffers.id
 		assert relationship.endNode.id == pjVauthier.id
 		assert relationship.data["Java"] == 1
+	}
+	
+	void testGetUserNetworkForLonelyUser() {
+		importTestData()
+		def GraphNode jonasBrother = spineService.getUserByEmail("jonas.brother@techbank.com")
+		assert jonasBrother.id != null
+		
+		def UserNetwork userNetwork = spineService.getUserNetwork(jonasBrother)
+		assert userNetwork.networkedUsers.size() == 4 // Four extra users in the extended network
+		assert userNetwork.networkSize == 0
+	}
+	
+	void testGetUserNetwork() {
+		importTestData()
+		def cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		assert cTueffers.id != null
+		
+		def UserNetwork userNetwork = spineService.getUserNetwork(cTueffers)
+		assert userNetwork.networkSize == 2
+		assert userNetwork.networkedUsers.size() == 4 // Two extra user in the extended network
+		assert userNetwork.networkedUsers[0].user.email == "paul-julien.vauthier@techbank.com"
+		assert userNetwork.networkedUsers[1].user.email == "jure.zakotnik@techbank.com"
 	}
 
 }

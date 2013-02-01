@@ -159,6 +159,43 @@ class Neo4jServiceTests {
 	/*
 	 * Node properties
 	 */
+	
+	@Test
+	void testPersistNodeProperty() {
+		def node = new GraphNode()
+		neo4jService.persistNode(node)
+		
+		neo4jService.persistNodeProperty(node, "email", "test@test.com")
+		
+		node = neo4jService.getNode(node.id)
+		assert node.email == "test@test.com"
+	}
+	
+	@Test 
+	void testPersistNodeProperties() {
+		def node = new GraphNode()
+		node.email = "test@test.com"
+		neo4jService.persistNode(node)
+		
+		def props = [ email: "support@test.com", city: "Frankfurt" ]
+		neo4jService.persistNodeProperties(node, props)
+		
+		node = neo4jService.getNode(node.id)
+		assert node.email == "support@test.com"
+		assert node.city == "Frankfurt"
+	}
+	
+	@Test
+	void testDeleteNodeProperty() {
+		def node = new GraphNode()
+		node.email = "test@test.com"
+		neo4jService.persistNode(node)
+		
+		neo4jService.deleteNodeProperty(node, "email")
+		
+		node = neo4jService.getNode(node.id)
+		assert node.email == null
+	}
 
 	/*
 	 * Relationships
@@ -251,6 +288,11 @@ class Neo4jServiceTests {
 		assert rels1.size() == 1
 		def rels2 = neo4jService.getIncomingRelationships(node2)
 		assert rels2.size() == 1
+		
+		rels1 = neo4jService.getIncomingRelationships(node1, "TEST")
+		assert rels1.size() == 0
+		rels1 = neo4jService.getIncomingRelationships(node1, "CONNECT")
+		assert rels1.size() == 1
 	}
 	
 	@Test
@@ -269,6 +311,11 @@ class Neo4jServiceTests {
 		assert rels1.size() == 1
 		def rels2 = neo4jService.getOutgoingRelationships(node2)
 		assert rels2.size() == 1
+		
+		rels1 = neo4jService.getOutgoingRelationships(node1, "TEST")
+		assert rels1.size() == 0
+		rels1 = neo4jService.getOutgoingRelationships(node1, "CONNECT")
+		assert rels1.size() == 1
 	}
 	
 	@Test
@@ -349,6 +396,55 @@ class Neo4jServiceTests {
 	/*
 	 * Relationship properties 
 	 */
+	
+	@Test
+	void testPersistRelationshipProperty() {
+		def node1 = new GraphNode()
+		def node2 = new GraphNode()
+		neo4jService.persistNode(node1)
+		neo4jService.persistNode(node2)
+		def rel = new GraphRelationship(node1, node2, 'CONNECT')
+		neo4jService.persistRelationship(rel)
+		
+		neo4jService.persistRelationshipProperty(rel, "score", "1")
+		
+		rel = neo4jService.getRelationship(rel.id)
+		rel.score == "1"
+	}
+	
+	@Test
+	void testPersistRelationshipProperties() {
+		def node1 = new GraphNode()
+		def node2 = new GraphNode()
+		neo4jService.persistNode(node1)
+		neo4jService.persistNode(node2)
+		def rel = new GraphRelationship(node1, node2, 'CONNECT')
+		rel.score = "1"
+		neo4jService.persistRelationship(rel)
+		
+		def props = [ score: "0.5", Java: "1" ]
+		neo4jService.persistRelationshipProperties(rel, props)
+		
+		rel = neo4jService.getRelationship(rel.id)
+		rel.score == "0.5"
+		rel.Java == "1"
+	}
+	
+	@Test
+	void testDeleteRelationshipProperty() {
+		def node1 = new GraphNode()
+		def node2 = new GraphNode()
+		neo4jService.persistNode(node1)
+		neo4jService.persistNode(node2)
+		def rel = new GraphRelationship(node1, node2, 'CONNECT')
+		rel.score = "1"
+		neo4jService.persistRelationship(rel)
+		
+		neo4jService.deleteRelationshipProperty(rel, "score")
+		
+		rel = neo4jService.getRelationship(rel.id)
+		assert rel.score == null
+	}
 
 	/*
 	 * Node Indexes
@@ -366,6 +462,17 @@ class Neo4jServiceTests {
 		// Delete the created index
 		neo4jService.deleteNodeIndex(index)
 		assert neo4jService.listNodeIndexes().size() == 0
+	}
+	
+	void testCreateNodeIndexIfNotExisting() {
+		neo4jService.deleteAll()
+		assert neo4jService.listNodeIndexes().size() == 0
+		
+		neo4jService.createNodeIndexIfNotExisting("test_index")
+		assert neo4jService.listNodeIndexes().size() == 1
+		
+		neo4jService.createNodeIndexIfNotExisting("test_index")
+		assert neo4jService.listNodeIndexes().size() == 1
 	}
 	
 	void testAddAndRemoveNodeFromNodeIndex() {
@@ -472,6 +579,18 @@ class Neo4jServiceTests {
 		neo4jService.deleteRelationshipIndex(index)
 		assert neo4jService.listRelationshipIndexes().size() == 0
 	}
+
+	@Test
+	void testCreateRelationshipIndexIfNotExisting() {
+		neo4jService.deleteAll()
+		assert neo4jService.listRelationshipIndexes().size() == 0
+		
+		neo4jService.createRelationshipIndexIfNotExisting("test_index")
+		assert neo4jService.listRelationshipIndexes().size() == 1
+		
+		neo4jService.createRelationshipIndexIfNotExisting("test_index")
+		assert neo4jService.listRelationshipIndexes().size() == 1
+	}	
 	
 	void testAddAndRemoveRelationshipFromNodeIndex() {
 		neo4jService.deleteAll()

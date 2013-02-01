@@ -1,13 +1,15 @@
 package spine
 
-import groovyx.net.http.RESTClient
-import static groovyx.net.http.ContentType.*
+import spine.viewModel.UserNetwork;
+
+import grails.converters.JSON
+
 
 class TestController {
 
-	def Neo4jService neo4jService
+	def spineService
 
 	def index() {
-		render "ok"
+		render "Test Controller... "
 	}
 }

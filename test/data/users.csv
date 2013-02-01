@@ -1,1 +1,2 @@
 uuid,firstname,lastname,password,birthdate,city,country,email,salt1,Christian,Tueffers,password,1980-01-01,Frankfurt,Germany,christian.tueffers@techbank.com,qwerty2,Jure,Zaktonik,password,1980-01-01,Frankfurt,Germany,jure.zakotnik@techbank.com,qwerty3,Ingmar,Muller,password,1980-01-01,Frankfurt,Germany,ingmar.muller@techbank.com,qwerty4,Paul-Julien,Vauthier,password,1992-06-15,Lille,France,paul-julien.vauthier@techbank.com,qwerty
+5,Jonas,Brother,password,1980-01-01,Frankfurt,Germany,jonas.brother@techbank.com,qwerty

@@ -1,13 +1,13 @@
 package spine
 
-import java.nio.charset.Charset;
+import java.nio.charset.Charset
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.InitializingBean
 
-import spine.exception.graphdb.GraphDbException;
-import spine.exception.graphdb.RelationshipNotFoundException;
+import spine.exception.graphdb.GraphDbException
+import spine.exception.graphdb.RelationshipNotFoundException
 
 import groovyx.net.http.RESTClient
 import static groovyx.net.http.ContentType.*
@@ -37,7 +37,7 @@ class Neo4jService implements InitializingBean {
 	 */
 	
 	/**
-	 *
+	 * Execute a given Cypher query with parameters. 
 	 * @param query
 	 * @param params
 	 * @return
@@ -161,7 +161,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 * 
-	 * TODO: To be tested
 	 * @param node
 	 * @param key
 	 * @param value
@@ -175,7 +174,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 * 
-	 * TODO: To be tested
 	 * @param node
 	 * @param properties
 	 * @return
@@ -192,7 +190,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 * 
-	 * TODO: To be tested
 	 * @param node
 	 * @param key
 	 * @return
@@ -353,7 +350,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 * Get all the incoming relationships of a node
-	 * TODO: Implements type filter
 	 * @param node
 	 * @param type
 	 * @return
@@ -365,14 +361,14 @@ class Neo4jService implements InitializingBean {
 		def rels = []
 		response.data.each {
 			def rel = bindRelationship(it)
-			rels.add(rel)
+			if(type == null || (type != null && rel.type == type))
+				rels.add(rel)
 		}
 		return rels
 	}
 	
 	/**
 	 * Get all the outgoing relationships of node
-	 * TODO: Implements type filter
 	 * @param node
 	 * @param type
 	 * @return
@@ -384,7 +380,8 @@ class Neo4jService implements InitializingBean {
 		def rels = []
 				response.data.each {
 					def rel = bindRelationship(it)
-							rels.add(rel)
+					if(type == null || (type != null && rel.type == type))
+						rels.add(rel)
 				}
 		return rels
 	}
@@ -432,7 +429,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 *
-	 * TODO: To be tested
 	 * @param relationship
 	 * @param key
 	 * @param value
@@ -450,7 +446,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 *
-	 * TODO: To be tested
 	 * @param relationship
 	 * @param properties
 	 * @return
@@ -467,7 +462,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 *
-	 * TODO: To be tested
 	 * @param relationship
 	 * @param key
 	 * @return
@@ -550,7 +544,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 * Create a node index the index does not already exists
-	 * TODO: To be tested
 	 * @param name
 	 * @return
 	 */
@@ -717,7 +710,6 @@ class Neo4jService implements InitializingBean {
 	
 	/**
 	 * Create a relationship index the index does not already exists
-	 * TODO: To be tested
 	 * @param name
 	 * @return
 	 */

@@ -2,12 +2,16 @@ package spine
 
 import java.security.MessageDigest;
 
+import net.sf.json.JSONNull;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 import spine.exception.AuthenticationException
 import spine.exception.MissingMandatoryProperties;
 import spine.exception.graphdb.RelationshipNotFoundException;
+import spine.viewModel.NetworkedUser
+import spine.viewModel.UserNetwork;
 
 class SpineService implements InitializingBean {
 
@@ -109,6 +113,11 @@ class SpineService implements InitializingBean {
 		reindexUser(user)
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
 	def reindexUser(GraphNode user) {
 		neo4jService.addNodeToIndex(user, userIndex, "email", user.email, true)
 	}
@@ -151,11 +160,12 @@ class SpineService implements InitializingBean {
 	 */
 	
 	/**
-	 * Format a tag to be compliant with our formatting rules
+	 * Format a tag to be compliant with our formatting rules. 
+	 * If normalizeForIndex is set to true, the result will be lower cased. 
 	 * @param tag
 	 * @return
 	 */
-	def String normalizeTag(String tag, Boolean normalizeforIndex = false) {
+	def String normalizeTag(String tag, Boolean normalizeForIndex = false) {
 		def previousWasSpace = false
 		def String newTag = ""
 		for(c in tag) {
@@ -174,14 +184,14 @@ class SpineService implements InitializingBean {
 			newTag += c
 		}
 		
-		if(normalizeforIndex)
+		if(normalizeForIndex)
 			newTag = newTag.toLowerCase()
 		
 		return newTag
 	}
 	
 	/**
-	 * 
+	 * Tag an user and add fill in the database index. 
 	 * @param currentUser
 	 * @param user
 	 * @param tag
@@ -208,7 +218,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * 
+	 * Remove all occurrences of a tag applied to a user
 	 * @param currentUser
 	 * @param user
 	 * @return
@@ -293,16 +303,144 @@ class SpineService implements InitializingBean {
 	 */
 	
 	/**
-	 * 
-	 * TODO: To be tested
+	 * Get the network of an user with many possible configurations
 	 * @param user
-	 * @param filter
 	 * @param offset
 	 * @param limit
+	 * @param filter
+	 * @param extendedSearch
 	 * @return
 	 */
-	def getUserNetwork(GraphNode user, String filter, int offset, int limit) {
+	def UserNetwork getUserNetwork(GraphNode user, int page = 1, int itemsPerPage = 10, String filter = null, extendedSearch = true) {
+		def userNetwork = new UserNetwork(user, page, itemsPerPage, filter)
 		
+		// Get people within the user network
+		queryDirectUserNetwork(userNetwork)
+		computeDirectUserNetworkSize(userNetwork)
+			
+		// If the network is paginated over the number of actual result, 
+		// we look for results which the user currently has no connection with. 
+		// Do that only if the extended search is enabled
+		if(!extendedSearch || userNetwork.networkedUsers.size() >= itemsPerPage)
+			return userNetwork
+			
+		queryUserExtendedNetwork(userNetwork)
+		
+		return userNetwork
+	}
+	
+	/**
+	 * @param userNetwork
+	 */
+	def protected void queryDirectUserNetwork(UserNetwork userNetwork) {
+		// Turns the filter into a proper Lucene query
+		def String luceneQuery = null
+		if(userNetwork.filter != null)
+			luceneQuery = parseSearchIntoLuceneQuery(userNetwork.filter)
+			
+		def cypherQuery = """
+			START 
+				n = node(${userNetwork.user.id}) 
+				${ (luceneQuery) ? ", m = node:user_index(\""+ luceneQuery +"\")" : "" }
+			MATCH 
+				${ (luceneQuery) ? "" : "n-[:CONNECT*1..5]->m, " } 
+				p = shortestPath(n-[:CONNECT*..5]->m)
+			WHERE 
+				n <> m
+			RETURN 
+				DISTINCT m, length(p), relationships(p)
+			ORDER BY 
+				length(p)
+			SKIP ${userNetwork.getOffset()}
+			LIMIT ${userNetwork.itemsPerPage}
+		"""
+				
+		def result = neo4jService.doCypherQuery(cypherQuery)
+		result.data.each {
+			// Content of the "it" variable: 
+			// it[0] => m | it[1] => length(p) | it[2] => relationships(p)
+			def networkedUser = new NetworkedUser()
+			networkedUser.contextUser = userNetwork.user
+			networkedUser.user = neo4jService.bindNode(it[0])
+			networkedUser.distance = it[1]
+			
+			if(networkedUser.distance == 1) {
+				def tags = it[2].last().data
+				tags.each {
+					networkedUser.tags.add(it.key)
+				}
+			}
+			
+			userNetwork.networkedUsers.add(networkedUser)
+		}
+	}
+	
+	/**
+	 * @param userNetwork
+	 * @return
+	 */
+	def protected computeDirectUserNetworkSize(UserNetwork userNetwork) {
+		// Turns the filter into a proper Lucene query
+		def String luceneQuery = null
+		if(userNetwork.filter != null)
+			luceneQuery = parseSearchIntoLuceneQuery(userNetwork.filter)
+		
+		def cypherQuery = """
+			START 
+				n = node(${userNetwork.user.id}) 
+				${ (luceneQuery) ? ", m = node:user_index(\""+ luceneQuery +"\")" : "" }
+			MATCH 
+				${ (luceneQuery) ? "" : "n-[:CONNECT*1..5]->m, " } 
+				p = shortestPath(n-[:CONNECT*..5]->m)
+			WHERE 
+				n <> m
+			RETURN 
+				COUNT(DISTINCT m) AS nb
+		"""
+		def result = neo4jService.doCypherQuery(cypherQuery)
+		userNetwork.networkSize = (int) result.data[0][0]
+	}
+	
+	/**
+	 * @param userNetwork
+	 * @return
+	 */
+	def protected queryUserExtendedNetwork(UserNetwork userNetwork) {
+		// Turns the filter into a proper Lucene query
+		def String luceneQuery = "email:*"
+		if(userNetwork.filter != null)
+			luceneQuery = parseSearchIntoLuceneQuery(userNetwork.filter)
+		
+		int offset = userNetwork.getOffset() - userNetwork.networkSize
+		if(offset < 0) offset = 0
+		int limit = userNetwork.itemsPerPage - userNetwork.networkedUsers.size()
+		
+		def cypherQuery = """
+			START 
+				n = node(${userNetwork.user.id}) 
+				, m = node:user_index("${luceneQuery}") 
+			MATCH 
+				n-[r?:CONNECT*1..5]->m
+			WHERE 
+				r IS NULL 
+				 AND n <> m
+				 AND m IS NOT NULL
+			RETURN 
+				DISTINCT m
+			SKIP ${offset}
+			LIMIT ${limit}
+		"""
+		
+		def result = neo4jService.doCypherQuery(cypherQuery)
+		result.data.each {
+			// If query gives no result there will be a null entry, 
+			// and we don't want to iterate over it
+			def networkedUser = new NetworkedUser()
+			networkedUser.contextUser = userNetwork.user
+			networkedUser.user = neo4jService.bindNode(it[0])
+			networkedUser.distance = 0
+			userNetwork.networkedUsers.add(networkedUser)
+		}
 	}
 	
 	/**
@@ -315,15 +453,46 @@ class SpineService implements InitializingBean {
 	def GraphRelationship getDirectConnectionBetweenUsers(GraphNode startUser, GraphNode endUser) throws RelationshipNotFoundException {
 		return neo4jService.getSingleRelationshipBetween(startUser, endUser, "CONNECT")
 	}
+
+		
+	
+	/*
+	 * Helpers
+	 */
 	
 	/**
-	 * 
-	 * TODO: TO be tested
-	 * @param startUser
-	 * @param endUser
+	 * TODO: To refactor (code from old spine)
+	 * @param filter
 	 * @return
 	 */
-	def figureOutHowUsersAreRelated(GraphNode startUser, GraphNode endUser, Long lookupDepth = 4) {
-		
+	def String parseSearchIntoLuceneQuery(String filter) {
+		def List<String> tokenizedQuery = filter.tokenize(" ")
+		def operators = ['AND', 'OR']
+		def luceneQuery = ''
+		def lastWordWasOperator = false
+		tokenizedQuery.each {
+			if(lastWordWasOperator || (!lastWordWasOperator && !operators.contains(it)))
+			{
+				// Default implicit operator :
+				if(!lastWordWasOperator && !operators.contains(it) && luceneQuery != '')
+					luceneQuery += ' OR '
+				
+				luceneQuery += '(' +
+					'tag : ' + it.toLowerCase() + ' OR ' +
+					'badge : ' + it.toLowerCase() + ' OR ' +
+					'email : ' + it.toLowerCase() + ' OR ' +
+					'firstname : ' + it.toLowerCase() + ' OR ' +
+					'lastname : ' + it.toLowerCase() + ' OR ' +
+					'city : ' + it.toLowerCase() + '' +
+					')'
+				lastWordWasOperator = false
+			}
+			else
+			{
+				luceneQuery += ' ' + it + ' '
+				lastWordWasOperator = true
+			}
+		}
+		return luceneQuery
 	}
 }
