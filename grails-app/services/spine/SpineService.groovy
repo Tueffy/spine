@@ -304,6 +304,7 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Get the network of an user with many possible configurations
+	 * TODO: Tags need to be tested
 	 * @param user
 	 * @param offset
 	 * @param limit
@@ -367,7 +368,10 @@ class SpineService implements InitializingBean {
 			if(networkedUser.distance == 1) {
 				def tags = it[2].last().data
 				tags.each {
-					networkedUser.tags.add(it.key)
+					def tag = it.key
+					if(!networkedUser.tags.contains(tag)) {
+						networkedUser.tags.add(tag)
+					}
 				}
 			}
 			

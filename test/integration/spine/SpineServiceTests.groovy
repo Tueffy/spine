@@ -284,8 +284,16 @@ class SpineServiceTests {
 		def UserNetwork userNetwork = spineService.getUserNetwork(cTueffers)
 		assert userNetwork.networkSize == 2
 		assert userNetwork.networkedUsers.size() == 4 // Two extra user in the extended network
+		
 		assert userNetwork.networkedUsers[0].user.email == "paul-julien.vauthier@techbank.com"
+		assert userNetwork.networkedUsers[0].distance == 1
+		assert userNetwork.networkedUsers[0].tags.size() == 1
+		assert userNetwork.networkedUsers[0].tags.contains("Java");
+		
 		assert userNetwork.networkedUsers[1].user.email == "jure.zakotnik@techbank.com"
+		assert userNetwork.networkedUsers[1].distance == 2
+		assert userNetwork.networkedUsers[1].tags.size() == 0
+		
 	}
 
 }
