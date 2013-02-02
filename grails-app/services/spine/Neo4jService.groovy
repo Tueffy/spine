@@ -503,16 +503,37 @@ class Neo4jService implements InitializingBean {
 
 	/**
 	 * 
-	 * @param data
+	 * TODO: To be tested
+	 * @param relationshipData
+	 * @param startNodeData
+	 * @param endNodeData
 	 * @return
 	 */
-	def GraphRelationship bindRelationship(data) {
-		def startNode = getNode(extractIdFromURI(data.start))
-		def endNode = getNode(extractIdFromURI(data.end))
-		def rel = new GraphRelationship(startNode, endNode, data.type)
-		rel.id = extractIdFromURI(data.self)
+	def GraphRelationship bindRelationship(relationshipData, startNodeData = null, endNodeData = null) {
 		
-		data.data.each {
+		def GraphNode startNode = null
+		if(startNodeData == null) 
+			startNode = getNode(extractIdFromURI(relationshipData.start))
+		else
+			startNode = bindNode(startNodeData)
+			
+		def GraphNode endNode = null
+		if(endNodeData == null)
+			endNode = getNode(extractIdFromURI(relationshipData.end))
+		else 
+			endNode = bindNode(endNodeData)
+		
+		// Integrity checks (to ensure that you don't bind things which are not correct)
+		// TODO: Custom Exception type
+		if(extractIdFromURI(relationshipData.start) != startNode.id)
+			throw new Exception("Tried to bind a relationship for which the startNode id does not match. ")
+		if(extractIdFromURI(relationshipData.end) != endNode.id)
+			throw new Exception("Tried to bind a relationship for which the endNode id does not match. ")
+			
+		def rel = new GraphRelationship(startNode, endNode, relationshipData.type)
+		rel.id = extractIdFromURI(relationshipData.self)
+		
+		relationshipData.data.each {
 			rel.setProperty(it.key, it.value)
 		}
 		
@@ -818,15 +839,21 @@ class Neo4jService implements InitializingBean {
 	 * @return
 	 */
 	def List<GraphRelationship> findRelationship(String key, String value, String indexName) {
-		def response = rest.get(path: "data/index/relationship/${indexName}/${key}/${value}")
-		if(response.status != 200)
-			throw new Exception("Unable to retrive relationship from index '${indexName}' with key '${key}' and value '${value}'")
+		def cypherQuery = """
+			START 
+				r = relationship:${indexName}(${key} = "${value}") 
+			MATCH 
+				startNode-[r]->endNode 
+			RETURN r, startNode, endNode
+		"""
 		
+		def result = doCypherQuery(cypherQuery)
 		def List<GraphRelationship> relationships = []
-		response.data.each {
-			def relationship = bindRelationship(it)
+		result.data.each {
+			def relationship = bindRelationship(it[0], it[1], it[2])
 			relationships.add(relationship)
 		}
+		
 		return relationships
 	}
 	
@@ -837,18 +864,21 @@ class Neo4jService implements InitializingBean {
 	 * @return
 	 */
 	def List<GraphRelationship> findRelationshipByLuceneQuery(String query, String indexName) {
-		def response = rest.get(path: "data/index/relationship/${indexName}",
-			query: [
-				query: query
-			])
-		if(![200, 404].contains(response.status))
-			throw new Exception("Lucene query failed on relationship index '${indexName}'")
-			
+		def cypherQuery = """
+			START 
+				r = relationship:${indexName}("${query}") 
+			MATCH 
+				startNode-[r]->endNode 
+			RETURN r, startNode, endNode
+		"""
+		
+		def result = doCypherQuery(cypherQuery)
 		def List<GraphRelationship> relationships = []
-		response.data.each {
-			def relationship = bindRelationship(it)
+		result.data.each {
+			def relationship = bindRelationship(it[0], it[1], it[2])
 			relationships.add(relationship)
 		}
+		
 		return relationships
 	}
 	

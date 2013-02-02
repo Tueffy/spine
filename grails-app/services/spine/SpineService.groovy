@@ -11,6 +11,7 @@ import spine.exception.AuthenticationException
 import spine.exception.MissingMandatoryProperties;
 import spine.exception.graphdb.RelationshipNotFoundException;
 import spine.viewModel.NetworkedUser
+import spine.viewModel.User
 import spine.viewModel.UserNetwork;
 
 class SpineService implements InitializingBean {
@@ -32,6 +33,7 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Returns a node or throws an exception according to a given pair of email / password 
+	 * TODO: Use the User ViewModel instead
 	 * @param email
 	 * @param password
 	 * @return
@@ -69,19 +71,23 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Get a user with its id
+	 * TODO: Use the User ViewModel instead
+	 * TODO: Implements computeTags
 	 * @param id
 	 * @return
 	 */
-	def GraphNode getUserById(Long id) {
+	def GraphNode getUserById(Long id, computeTags = false) {
 		return neo4jService.getNode(id)
 	}
 	
 	/**
 	 * Get a user with its email address
+	 * TODO: Use the User ViewModel instead
+	 * TODO: Implements computeTags
 	 * @param email
 	 * @return
 	 */
-	def GraphNode getUserByEmail(String email) {
+	def GraphNode getUserByEmail(String email, computeTags = false) {
 		def nodes = neo4jService.findNode("email", email, userIndex)
 		if(nodes.size() == 0)
 			return null
@@ -89,6 +95,19 @@ class SpineService implements InitializingBean {
 			throw new Exception("There is more than one entry with the email '${email}' in the index ${userIndex}")
 		else 
 			return nodes[0]
+	}
+	
+	def protected computeUserTags(User user) {
+		def incomingRelationships = neo4jService.getIncomingRelationships(user.graphNode, "CONNECT")
+		incomingRelationships.each {
+			it.data.each {
+				def String tag = it.getKey()
+				if(user.tags.containsKey(tag))
+					user.tags[tag]++
+				else
+					user.tags[tag] = 1
+			}
+		}
 	}
 	
 	/**
@@ -360,9 +379,11 @@ class SpineService implements InitializingBean {
 		result.data.each {
 			// Content of the "it" variable: 
 			// it[0] => m | it[1] => length(p) | it[2] => relationships(p)
+			
 			def networkedUser = new NetworkedUser()
 			networkedUser.contextUser = userNetwork.user
-			networkedUser.user = neo4jService.bindNode(it[0])
+			networkedUser.user = new User(neo4jService.bindNode(it[0]))
+			computeUserTags(networkedUser.user)
 			networkedUser.distance = it[1]
 			
 			if(networkedUser.distance == 1) {
@@ -441,7 +462,8 @@ class SpineService implements InitializingBean {
 			// and we don't want to iterate over it
 			def networkedUser = new NetworkedUser()
 			networkedUser.contextUser = userNetwork.user
-			networkedUser.user = neo4jService.bindNode(it[0])
+			networkedUser.user = new User(neo4jService.bindNode(it[0]))
+			computeUserTags(networkedUser.user)
 			networkedUser.distance = 0
 			userNetwork.networkedUsers.add(networkedUser)
 		}

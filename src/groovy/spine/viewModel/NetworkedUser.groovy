@@ -4,7 +4,7 @@ import spine.GraphNode;
 
 class NetworkedUser {
 
-	GraphNode user
+	User user 
 	GraphNode contextUser
 	int distance
 	List<String> tags = []

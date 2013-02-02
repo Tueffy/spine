@@ -290,9 +290,17 @@ class SpineServiceTests {
 		assert userNetwork.networkedUsers[0].tags.size() == 1
 		assert userNetwork.networkedUsers[0].tags.contains("Java");
 		
+		// How is the user tagged in general (not only in the network context)
+		assert userNetwork.networkedUsers[0].user.tags.size() == 1;
+		assert userNetwork.networkedUsers[0].user.tags["Java"] == 1;
+		
 		assert userNetwork.networkedUsers[1].user.email == "jure.zakotnik@techbank.com"
 		assert userNetwork.networkedUsers[1].distance == 2
 		assert userNetwork.networkedUsers[1].tags.size() == 0
+		
+		// How is the user tagged in general (not only in the network context)
+		assert userNetwork.networkedUsers[1].user.tags.size() == 1;
+		assert userNetwork.networkedUsers[1].user.tags["ECB"] == 2;
 		
 	}
 
