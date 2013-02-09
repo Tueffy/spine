@@ -165,7 +165,6 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * 
-	 * TODO: Test tags refresh
 	 * @param user
 	 * @return
 	 */
