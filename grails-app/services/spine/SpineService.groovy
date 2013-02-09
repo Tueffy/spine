@@ -70,7 +70,6 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Get a user with its id
-	 * TODO: User View Model to be test + tags to be tested
 	 * @param id
 	 * @return
 	 */
@@ -84,7 +83,6 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Get a user with its email address
-	 * TODO: User View Model to be test + tags to be tested
 	 * @param email
 	 * @return
 	 */
@@ -103,6 +101,11 @@ class SpineService implements InitializingBean {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
 	def protected computeUserTags(User user) {
 		def incomingRelationships = neo4jService.getIncomingRelationships(user.graphNode, "CONNECT")
 		incomingRelationships.each {
@@ -117,7 +120,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Tests to be updated with User 
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -128,7 +131,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Tests to be updated with User
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -139,7 +142,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Tests to be updated with User
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -148,7 +151,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Tests to be updated with User
+	 * 
 	 * @param user
 	 * @return
 	 * @throws Exception
@@ -161,7 +164,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: To be tested with User
+	 * 
 	 * TODO: Test tags refresh
 	 * @param user
 	 * @return
@@ -224,7 +227,6 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Tag an user and add fill in the database index. 
-	 * TODO: Test with User viewmodel
 	 * @param currentUser
 	 * @param user
 	 * @param tag
@@ -252,7 +254,6 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Remove all occurrences of a tag applied to a user
-	 * TODO: Test with User viewmodel
 	 * @param currentUser
 	 * @param user
 	 * @return
@@ -284,7 +285,6 @@ class SpineService implements InitializingBean {
 	/**
 	 * Summarize user incoming relationships into a map: 
 	 * key is the tag, value the number of occurences of this tag
-	 * TODO: Test with User viewmodel
 	 * @param user
 	 * @return
 	 */
@@ -305,7 +305,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Check test
+	 * 
 	 * @param key
 	 * @param value
 	 * @return
@@ -320,7 +320,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Check test
+	 * 
 	 * @param tag
 	 * @return
 	 */
@@ -330,7 +330,7 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Check test
+	 * 
 	 * @param query
 	 * @return
 	 */
@@ -350,7 +350,6 @@ class SpineService implements InitializingBean {
 	/**
 	 * Get the network of an user with many possible configurations
 	 * TODO: Tags need to be tested
-	 * TODO: Test with User ViewModel
 	 * @param user
 	 * @param offset
 	 * @param limit
@@ -497,7 +496,6 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * TODO: Test with User viewModel
 	 * @param startUser
 	 * @param endUser
 	 * @throws RelationshipNotFoundException

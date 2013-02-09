@@ -108,6 +108,35 @@ class SpineServiceTests {
 		assert salt.size() == 6
 	}
 	
+	void testGetUser() {
+		importTestData()
+		def id = spineService.getUserByEmail("paul-julien.vauthier@techbank.com").id
+		
+		def User pjVauthier = spineService.getUserById(id, false)
+		assert pjVauthier.id == id
+		assert pjVauthier.email == "paul-julien.vauthier@techbank.com"
+		assert pjVauthier.tags.size() == 0
+		
+		pjVauthier = spineService.getUserById(id, true)
+		assert pjVauthier.id == id
+		assert pjVauthier.email == "paul-julien.vauthier@techbank.com"
+		assert pjVauthier.tags.size() == 1
+		assert pjVauthier.tags["Java"] == 1
+	}
+	
+	void testGetUserByEmail() {
+		importTestData()
+		
+		def User pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com", false)
+		assert pjVauthier.email == "paul-julien.vauthier@techbank.com"
+		assert pjVauthier.tags.size() == 0
+		
+		pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com", true)
+		assert pjVauthier.email == "paul-julien.vauthier@techbank.com"
+		assert pjVauthier.tags.size() == 1
+		assert pjVauthier.tags["Java"] == 1
+	}
+	
 	void testAddUser() {
 		// Create new user
 		def User user = createNewDummyUser() 
@@ -147,12 +176,21 @@ class SpineServiceTests {
 	}
 	
 	void testRefreshUser() {
-		def User user = createNewDummyUser()
-		def User toBeRefreshedUser = new User()
-		toBeRefreshedUser.id = user.id
-		spineService.refreshUser(toBeRefreshedUser)
-		assert toBeRefreshedUser.email == user.email
-		assert toBeRefreshedUser.city == user.city
+		importTestData()
+		def pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
+		assert pjVauthier.city == "Lille"
+		assert pjVauthier.tags.size() == 0
+		
+		pjVauthier.city = "Paris"
+		spineService.refreshUser(pjVauthier)
+		assert pjVauthier.city == "Lille"
+		assert pjVauthier.tags.size() == 0
+		
+		pjVauthier.city = "Paris"
+		spineService.refreshUser(pjVauthier, true)
+		assert pjVauthier.city == "Lille"
+		assert pjVauthier.tags.size() == 1
+		assert pjVauthier.tags["Java"] == 1
 	}
 	
 	void testNormalizeTag() {
