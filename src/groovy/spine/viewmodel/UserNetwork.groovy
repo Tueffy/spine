@@ -1,4 +1,4 @@
-package spine.viewModel
+package spine.viewmodel
 
 import spine.GraphNode;
 
@@ -7,7 +7,7 @@ class UserNetwork {
 	/**
 	 * The user at the center of the network
 	 */
-	GraphNode user
+	User user
 	
 	/**
 	 * The page to select
@@ -37,7 +37,7 @@ class UserNetwork {
 	/**
 	 * @param user
 	 */
-	def UserNetwork(GraphNode user, int page = 1, int itemPerPage = 10, String filter = null) {
+	def UserNetwork(User user, int page = 1, int itemPerPage = 10, String filter = null) {
 		this.user = user
 		this.page = page
 		this.itemsPerPage = itemPerPage

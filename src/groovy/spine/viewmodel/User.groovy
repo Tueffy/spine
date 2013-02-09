@@ -1,4 +1,4 @@
-package spine.viewModel
+package spine.viewmodel
 
 import spine.GraphNode
 
@@ -8,6 +8,7 @@ class User {
 	def Map<String, Integer> tags = [:]
 	
 	def User() {
+		graphNode = new GraphNode()
 	}
 	
 	def User(GraphNode graphNode) {

@@ -1,5 +1,7 @@
 package spine
 
+import spine.viewmodel.User
+
 /**
  * Imports test data
  */
@@ -17,25 +19,27 @@ class TestDataImporterService {
 	 * @param filename
 	 * @return
 	 */
-	def List<GraphNode> importUsers(String filename) {
-		def List<GraphNode> users = []
+	def List<User> importUsers(String filename) {
+		def List<User> users = []
 		File file = new File(filename);
 		
 		// Each line is split
 		def firstLinePassed = false;
 		file.splitEachLine(",") { fields -> 
 			if(firstLinePassed) {
-				def GraphNode user = new GraphNode()
-				user.uuid = fields[0]
-				user.firstname = fields[1]
-				user.lastname = fields[2]
-				user.password = fields[3]
-				user.birthdate = fields[4]
-				user.city = fields[5]
-				user.country = fields[6]
-				user.email = fields[7]
-				user.salt = fields[8]
-				user.password = spineService.hashPassword(user.password, user.salt)
+				def GraphNode userGraphNode = new GraphNode()
+				userGraphNode.uuid = fields[0]
+				userGraphNode.firstname = fields[1]
+				userGraphNode.lastname = fields[2]
+				userGraphNode.password = fields[3]
+				userGraphNode.birthdate = fields[4]
+				userGraphNode.city = fields[5]
+				userGraphNode.country = fields[6]
+				userGraphNode.email = fields[7]
+				userGraphNode.salt = fields[8]
+				userGraphNode.password = spineService.hashPassword(userGraphNode.password, userGraphNode.salt)
+				
+				def User user = new User(userGraphNode)
 				users.add(user)
 			}
 			else
@@ -50,7 +54,7 @@ class TestDataImporterService {
 	 * @param filename
 	 * @return
 	 */
-	def List<GraphNode> importAndPersistsUsers(String filename) {
+	def List<User> importAndPersistsUsers(String filename) {
 		// Import users from CSV
 		def users = importUsers(filename)
 		
@@ -73,7 +77,7 @@ class TestDataImporterService {
 	 * @param users
 	 * @return
 	 */
-	def List<GraphRelationship> importRelationships(String filename, List<GraphNode> users) {
+	def List<GraphRelationship> importRelationships(String filename, List<User> users) {
 		def List<GraphRelationship> relationships = []
 		File file = new File(filename);
 		
@@ -81,9 +85,9 @@ class TestDataImporterService {
 		def firstLinePassed = false;
 		file.splitEachLine(",") { fields ->
 			if(firstLinePassed) {
-				def GraphNode startNode = users.find { it.uuid == fields[0] }
-				def GraphNode endNode = users.find { it.uuid == fields[1] }
-				def GraphRelationship relationship  = new GraphRelationship(startNode, endNode, 'CONNECT')
+				def User startUser = users.find { it.graphNode.uuid == fields[0] }
+				def User endUser = users.find { it.graphNode.uuid == fields[1] }
+				def GraphRelationship relationship  = new GraphRelationship(startUser.graphNode, endUser.graphNode, 'CONNECT')
 				def tags = fields[2].split("-")
 				tags.each {
 					relationship[it] = 1
@@ -112,7 +116,9 @@ class TestDataImporterService {
 			def GraphRelationship relationship = it
 			relationship.data.each {
 				def String tag = it.getKey()
-				spineService.tagUser(relationship.startNode, relationship.endNode, tag)
+				def startUser = new User(relationship.startNode)
+				def endUser = new User(relationship.endNode)
+				spineService.tagUser(startUser, endUser, tag)
 			}
 		}
 		

@@ -5,7 +5,8 @@ import static org.junit.Assert.*
 import org.junit.*
 
 import spine.exception.graphdb.RelationshipNotFoundException;
-import spine.viewModel.UserNetwork;
+import spine.viewmodel.User
+import spine.viewmodel.UserNetwork;
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -41,9 +42,9 @@ class SpineServiceTests {
 	/**
 	 * Create a new user with dummy information
 	 */
-	def GraphNode createNewDummyUser() {
+	def User createNewDummyUser() {
 		// Create and persist an user into database
-		def GraphNode user = new GraphNode()
+		def User user = new User()
 		user.firstname = "Andrew"
 		user.lastname = "Tesla"
 		user.email = "test@test.com"
@@ -73,13 +74,13 @@ class SpineServiceTests {
 		spineService.neo4jService.countNodes() == 5
 		spineService.neo4jService.countRelationships() == 3
 		
-		def GraphNode user1 = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		def User user1 = spineService.getUserByEmail("christian.tueffers@techbank.com")
 		assert user1 != null
 		assert user1.firstname == "Christian"
 		assert user1.city == "Frankfurt"
 		assert user1.country == "Germany"
 		
-		def GraphNode user2 = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
+		def User user2 = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
 		assert user2 != null
 		assert user2.firstname == "Paul-Julien"
 		assert user2.city == "Lille"
@@ -109,7 +110,7 @@ class SpineServiceTests {
 	
 	void testAddUser() {
 		// Create new user
-		def GraphNode user = createNewDummyUser() 
+		def User user = createNewDummyUser() 
 		
 		// Retrieve the user from DB by ID
 		def foundUser = spineService.getUserById(user.id)
@@ -126,28 +127,28 @@ class SpineServiceTests {
 	}
 	
 	void testAuthenticateUser() {
-		def GraphNode user = createNewDummyUser()
+		def User user = createNewDummyUser()
 		
-		def GraphNode authenticatedUser = spineService.authenticateUser("test@test.com", "password")
+		def User authenticatedUser = spineService.authenticateUser("test@test.com", "password")
 		assert authenticatedUser != null
 		assert authenticatedUser.email == "test@test.com"
 	}
 	
 	void testUpdateUser() {
-		def GraphNode user = createNewDummyUser()
+		def User user = createNewDummyUser()
 		
 		user.city = "Munich"
 		spineService.updateUser(user)
 		
-		def GraphNode updatedUser = spineService.getUserByEmail("test@test.com")
+		def User updatedUser = spineService.getUserByEmail("test@test.com")
 		assert updatedUser != null
 		assert updatedUser.id == user.id
 		assert updatedUser.city == "Munich"
 	}
 	
 	void testRefreshUser() {
-		def GraphNode user = createNewDummyUser()
-		def GraphNode toBeRefreshedUser = new GraphNode()
+		def User user = createNewDummyUser()
+		def User toBeRefreshedUser = new User()
 		toBeRefreshedUser.id = user.id
 		spineService.refreshUser(toBeRefreshedUser)
 		assert toBeRefreshedUser.email == user.email
@@ -170,9 +171,9 @@ class SpineServiceTests {
 	 * Test deleting a tag, looking for it via incoming relationships, then via index
 	 */
 	void testTagging() {
-		def GraphNode cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
 		assert cTueffers.id != null
-		def GraphNode pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
+		def User pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
 		assert pjVauthier.id != null
 		
 		// Test adding a tag
@@ -183,12 +184,12 @@ class SpineServiceTests {
 		assert pjVauthierTags["Java"] == 1
 		
 		// Tests tag from the index
-		def List<GraphNode> usersWithJavaTag = spineService.searchTagInUserIndex("Java")
-		def GraphNode foundUser = usersWithJavaTag.find { it.id == pjVauthier.id }
+		def List<User> usersWithJavaTag = spineService.searchTagInUserIndex("Java")
+		def User foundUser = usersWithJavaTag.find { it.id == pjVauthier.id }
 		assert foundUser != null
 		assert foundUser.id == pjVauthier.id
 		
-		def List<GraphNode> usersWithGroovyTag = spineService.searchTagInUserIndex("Groovy")
+		def List<User> usersWithGroovyTag = spineService.searchTagInUserIndex("Groovy")
 		foundUser = usersWithGroovyTag.find { it.id == pjVauthier.id }
 		assert foundUser != null
 		assert foundUser.id == pjVauthier.id
@@ -211,11 +212,11 @@ class SpineServiceTests {
 	}
 	
 	void testUntagging() {
-		def GraphNode cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
 		assert cTueffers.id != null
-		def GraphNode pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
+		def User pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
 		assert pjVauthier.id != null
-		def GraphNode jZakotnik = spineService.getUserByEmail("jure.zakotnik@techbank.com")
+		def User jZakotnik = spineService.getUserByEmail("jure.zakotnik@techbank.com")
 		assert jZakotnik.id != null
 		
 		spineService.tagUser(cTueffers, jZakotnik, "Agile")
@@ -224,17 +225,17 @@ class SpineServiceTests {
 		spineService.untagUser(cTueffers, jZakotnik, "Agile")
 		
 		// We should still find jZakotnik tagged as Agile
-		def List<GraphNode> usersWithAgileTag = spineService.searchTagInUserIndex("Agile")
-		def GraphNode foundUser = usersWithAgileTag.find { it.id == jZakotnik.id }
+		def List<User> usersWithAgileTag = spineService.searchTagInUserIndex("Agile")
+		def User foundUser = usersWithAgileTag.find { it.id == jZakotnik.id }
 		assert foundUser != null
 		assert foundUser.id == jZakotnik.id
 	}
 	
 	void testSummarizeUserTags() {
-		def GraphNode cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
-		def GraphNode pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
-		def GraphNode jZakotnik = spineService.getUserByEmail("jure.zakotnik@techbank.com")
-		def GraphNode iMuller = spineService.getUserByEmail("ingmar.muller@techbank.com")
+		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		def User pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
+		def User jZakotnik = spineService.getUserByEmail("jure.zakotnik@techbank.com")
+		def User iMuller = spineService.getUserByEmail("ingmar.muller@techbank.com")
 		
 		assert cTueffers.id != null
 		assert pjVauthier.id != null
@@ -256,8 +257,8 @@ class SpineServiceTests {
 	}
 	
 	void testGetDirectConnectionBetweenUsers() {
-		def GraphNode cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
-		def GraphNode pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
+		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		def User pjVauthier = spineService.getUserByEmail("paul-julien.vauthier@techbank.com")
 		
 		def GraphRelationship relationship = spineService.getDirectConnectionBetweenUsers(cTueffers, pjVauthier)
 		assert relationship.id != null
@@ -268,7 +269,7 @@ class SpineServiceTests {
 	
 	void testGetUserNetworkForLonelyUser() {
 		importTestData()
-		def GraphNode jonasBrother = spineService.getUserByEmail("jonas.brother@techbank.com")
+		def User jonasBrother = spineService.getUserByEmail("jonas.brother@techbank.com")
 		assert jonasBrother.id != null
 		
 		def UserNetwork userNetwork = spineService.getUserNetwork(jonasBrother)
@@ -278,7 +279,7 @@ class SpineServiceTests {
 	
 	void testGetUserNetwork() {
 		importTestData()
-		def cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
 		assert cTueffers.id != null
 		
 		def UserNetwork userNetwork = spineService.getUserNetwork(cTueffers)

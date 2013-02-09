@@ -10,9 +10,9 @@ import org.springframework.beans.factory.InitializingBean;
 import spine.exception.AuthenticationException
 import spine.exception.MissingMandatoryProperties;
 import spine.exception.graphdb.RelationshipNotFoundException;
-import spine.viewModel.NetworkedUser
-import spine.viewModel.User
-import spine.viewModel.UserNetwork;
+import spine.viewmodel.NetworkedUser
+import spine.viewmodel.User
+import spine.viewmodel.UserNetwork;
 
 class SpineService implements InitializingBean {
 
@@ -33,13 +33,12 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Returns a node or throws an exception according to a given pair of email / password 
-	 * TODO: Use the User ViewModel instead
 	 * @param email
 	 * @param password
 	 * @return
 	 */
-	def GraphNode authenticateUser(String email, String password) {
-		def GraphNode user = getUserByEmail(email)
+	def User authenticateUser(String email, String password) {
+		def User user = getUserByEmail(email)
 		String hashedPassword = hashPassword(password, user.salt)
 		if(!hashedPassword.equals(user.password))
 			throw new AuthenticationException("Password and email do not match")
@@ -71,30 +70,37 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Get a user with its id
-	 * TODO: Use the User ViewModel instead
-	 * TODO: Implements computeTags
+	 * TODO: User View Model to be test + tags to be tested
 	 * @param id
 	 * @return
 	 */
-	def GraphNode getUserById(Long id, computeTags = false) {
-		return neo4jService.getNode(id)
+	def User getUserById(Long id, computeTags = false) {
+		def User user = new User()
+		user.graphNode = neo4jService.getNode(id)
+		if(computeTags)
+			computeUserTags(user)
+		return user
 	}
 	
 	/**
 	 * Get a user with its email address
-	 * TODO: Use the User ViewModel instead
-	 * TODO: Implements computeTags
+	 * TODO: User View Model to be test + tags to be tested
 	 * @param email
 	 * @return
 	 */
-	def GraphNode getUserByEmail(String email, computeTags = false) {
+	def User getUserByEmail(String email, computeTags = false) {
 		def nodes = neo4jService.findNode("email", email, userIndex)
 		if(nodes.size() == 0)
 			return null
 		else if(nodes.size() > 1)
 			throw new Exception("There is more than one entry with the email '${email}' in the index ${userIndex}")
-		else 
-			return nodes[0]
+		else {
+			def User user = new User()
+			user.graphNode = nodes[0]
+			if(computeTags)
+				computeUserTags(user)
+			return user
+		}
 	}
 	
 	def protected computeUserTags(User user) {
@@ -111,65 +117,72 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * 
+	 * TODO: Tests to be updated with User 
 	 * @param user
 	 * @return
 	 */
-	def addUser(GraphNode user) {
+	def addUser(User user) {
 		checkMandatoryFiledsForUser(user)
-		neo4jService.persistNode(user)
+		neo4jService.persistNode(user.graphNode)
 		reindexUser(user)
 	}
 	
 	/**
-	 * 
+	 * TODO: Tests to be updated with User
 	 * @param user
 	 * @return
 	 */
-	def updateUser(GraphNode user) {
+	def updateUser(User user) {
 		checkMandatoryFiledsForUser(user)
-		neo4jService.persistNode(user)
+		neo4jService.persistNode(user.graphNode)
 		reindexUser(user)
 	}
 	
 	/**
-	 * 
+	 * TODO: Tests to be updated with User
 	 * @param user
 	 * @return
 	 */
-	def reindexUser(GraphNode user) {
-		neo4jService.addNodeToIndex(user, userIndex, "email", user.email, true)
+	def reindexUser(User user) {
+		neo4jService.addNodeToIndex(user.graphNode, userIndex, "email", user.email, true)
 	}
 	
 	/**
-	 * 
+	 * TODO: Tests to be updated with User
 	 * @param user
 	 * @return
 	 * @throws Exception
 	 */
-	def protected checkMandatoryFiledsForUser(GraphNode user) throws Exception {
-		if(!user.data.containsKey("password"))
+	def protected checkMandatoryFiledsForUser(User user) throws Exception {
+		if(!user.graphNode.data.containsKey("password"))
 			throw new Exception("Missing property 'password' on user")
-		if(!user.data.containsKey("email"))
+		if(!user.graphNode.data.containsKey("email"))
 			throw new Exception("Missing property 'email' on user")
 	}
 	
 	/**
-	 *
+	 * TODO: To be tested with User
+	 * TODO: Test tags refresh
 	 * @param user
 	 * @return
 	 */
-	def refreshUser(GraphNode user) {
-		def GraphNode refreshedUser
+	def refreshUser(User user, refreshTags = false) {
+		def User refreshedUser
 		if(user.id)
-			refreshedUser = getUserById(user.id)
+			refreshedUser = getUserById(user.id, refreshTags)
 		else if(user.email)
-			refreshedUser =  getUserByEmail(user.email)
+			refreshedUser =  getUserByEmail(user.email, refreshTags)
 		else
 			throw new Exception("Impossible to refresh an user if none of user.email or user.id are specified. ")
 			
-		refreshedUser.data.each {
-			user.data[it.getKey()] = it.getValue()
+		// Refresh data
+		refreshedUser.graphNode.data.each {
+			user.graphNode.data[it.getKey()] = it.getValue()
+		}
+		
+		// Refresh tags
+		if(refreshTags) {
+			user.tags = refreshedUser.tags
 		}
 	}
 	
@@ -211,18 +224,19 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Tag an user and add fill in the database index. 
+	 * TODO: Test with User viewmodel
 	 * @param currentUser
 	 * @param user
 	 * @param tag
 	 * @return
 	 */
-	def tagUser(GraphNode currentUser, GraphNode user, String tag) {
+	def tagUser(User currentUser, User user, String tag) {
 		def GraphRelationship relationship = null
 		try {
-			relationship = neo4jService.getSingleRelationshipBetween(currentUser, user, "CONNECT")
+			relationship = neo4jService.getSingleRelationshipBetween(currentUser.graphNode, user.graphNode, "CONNECT")
 		} 
 		catch (RelationshipNotFoundException e) {
-			relationship = new GraphRelationship(currentUser, user, "CONNECT")
+			relationship = new GraphRelationship(currentUser.graphNode, user.graphNode, "CONNECT")
 			neo4jService.persistRelationship(relationship)
 		}
 		
@@ -232,18 +246,19 @@ class SpineService implements InitializingBean {
 			relationship[tag] = 1
 			neo4jService.persistRelationshipProperty(relationship, tag, "1")
 			def normalizedTagForIndex = normalizeTag(tag, true)
-			neo4jService.addNodeToIndex(user, userIndex, "tag", normalizedTagForIndex, true) // Overwrite the previous index entry if there is one
+			neo4jService.addNodeToIndex(user.graphNode, userIndex, "tag", normalizedTagForIndex, true) // Overwrite the previous index entry if there is one
 		}
 	}
 	
 	/**
 	 * Remove all occurrences of a tag applied to a user
+	 * TODO: Test with User viewmodel
 	 * @param currentUser
 	 * @param user
 	 * @return
 	 */
-	def untagUser(GraphNode currentUser, GraphNode user, String tag) {
-		def GraphRelationship relationship = neo4jService.getSingleRelationshipBetween(currentUser, user, "CONNECT")
+	def untagUser(User currentUser, User user, String tag) {
+		def GraphRelationship relationship = neo4jService.getSingleRelationshipBetween(currentUser.graphNode, user.graphNode, "CONNECT")
 		tag = normalizeTag(tag)
 		
 		// If the tag is not on the relationship: do nothing
@@ -262,19 +277,20 @@ class SpineService implements InitializingBean {
 		def userTags = summarizeUserTags(user)
 		if(!userTags.containsKey(tag)) {
 			def normalizedTagForIndex = normalizeTag(tag, true)
-			neo4jService.removeNodeFromIndex(user, userIndex, "tag", normalizedTagForIndex)
+			neo4jService.removeNodeFromIndex(user.graphNode, userIndex, "tag", normalizedTagForIndex)
 		}
 	}
 	
 	/**
 	 * Summarize user incoming relationships into a map: 
 	 * key is the tag, value the number of occurences of this tag
+	 * TODO: Test with User viewmodel
 	 * @param user
 	 * @return
 	 */
-	def Map<String, Long> summarizeUserTags(GraphNode user)
+	def Map<String, Long> summarizeUserTags(User user)
 	{
-		def List<GraphRelationship> incomingRelationships = neo4jService.getIncomingRelationships(user, "CONNECT")
+		def List<GraphRelationship> incomingRelationships = neo4jService.getIncomingRelationships(user.graphNode, "CONNECT")
 		def tags = [:]
 		incomingRelationships.each {
 			it.data.each {
@@ -289,32 +305,42 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * 
+	 * TODO: Check test
 	 * @param key
 	 * @param value
 	 * @return
 	 */
-	def List<GraphNode> searchUserIndex(String key, String value) {
-		return neo4jService.findNode(key, value, userIndex)
+	def List<User> searchUserIndex(String key, String value) {
+		def List<GraphNode> graphNodes = neo4jService.findNode(key, value, userIndex)
+		def List<User> users = []
+		graphNodes.each {
+			users.add(new User(it))
+		}
+		return users
 	}
 	
 	/**
-	 * 
+	 * TODO: Check test
 	 * @param tag
 	 * @return
 	 */
-	def List<GraphNode> searchTagInUserIndex(String tag) {
+	def List<User> searchTagInUserIndex(String tag) {
 		tag = normalizeTag(tag, true)
-		return searchUserIndex("tag", tag) 
+		return searchUserIndex("tag", tag)
 	}
 	
 	/**
-	 * 
+	 * TODO: Check test
 	 * @param query
 	 * @return
 	 */
-	def List<GraphNode> searchUserIndexByLuceneQuery(String query) {
-		return neo4jService.findNodeByLuceneQuery(query, userIndex)
+	def List<User> searchUserIndexByLuceneQuery(String query) {
+		List<GraphNode> graphNodes =  neo4jService.findNodeByLuceneQuery(query, userIndex)
+		List<User> users = []
+		graphNodes.each {
+			users.add(new User(it))
+		}
+		return users
 	}
 	
 	/*
@@ -324,6 +350,7 @@ class SpineService implements InitializingBean {
 	/**
 	 * Get the network of an user with many possible configurations
 	 * TODO: Tags need to be tested
+	 * TODO: Test with User ViewModel
 	 * @param user
 	 * @param offset
 	 * @param limit
@@ -331,7 +358,7 @@ class SpineService implements InitializingBean {
 	 * @param extendedSearch
 	 * @return
 	 */
-	def UserNetwork getUserNetwork(GraphNode user, int page = 1, int itemsPerPage = 10, String filter = null, extendedSearch = true) {
+	def UserNetwork getUserNetwork(User user, int page = 1, int itemsPerPage = 10, String filter = null, extendedSearch = true) {
 		def userNetwork = new UserNetwork(user, page, itemsPerPage, filter)
 		
 		// Get people within the user network
@@ -470,14 +497,14 @@ class SpineService implements InitializingBean {
 	}
 	
 	/**
-	 * 
+	 * TODO: Test with User viewModel
 	 * @param startUser
 	 * @param endUser
 	 * @throws RelationshipNotFoundException
 	 * @return
 	 */
-	def GraphRelationship getDirectConnectionBetweenUsers(GraphNode startUser, GraphNode endUser) throws RelationshipNotFoundException {
-		return neo4jService.getSingleRelationshipBetween(startUser, endUser, "CONNECT")
+	def GraphRelationship getDirectConnectionBetweenUsers(User startUser, User endUser) throws RelationshipNotFoundException {
+		return neo4jService.getSingleRelationshipBetween(startUser.graphNode, endUser.graphNode, "CONNECT")
 	}
 
 		

@@ -1,11 +1,11 @@
-package spine.viewModel
+package spine.viewmodel
 
 import spine.GraphNode;
 
 class NetworkedUser {
 
 	User user 
-	GraphNode contextUser
+	User contextUser
 	int distance
 	List<String> tags = []
 	
