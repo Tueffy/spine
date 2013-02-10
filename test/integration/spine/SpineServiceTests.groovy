@@ -310,7 +310,8 @@ class SpineServiceTests {
 		def User jonasBrother = spineService.getUserByEmail("jonas.brother@techbank.com")
 		assert jonasBrother.id != null
 		
-		def UserNetwork userNetwork = spineService.getUserNetwork(jonasBrother)
+		def UserNetwork userNetwork = new UserNetwork(jonasBrother)
+		spineService.getUserNetwork(userNetwork)
 		assert userNetwork.networkedUsers.size() == 4 // Four extra users in the extended network
 		assert userNetwork.networkSize == 0
 	}
@@ -320,7 +321,8 @@ class SpineServiceTests {
 		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
 		assert cTueffers.id != null
 		
-		def UserNetwork userNetwork = spineService.getUserNetwork(cTueffers)
+		def UserNetwork userNetwork = new UserNetwork(cTueffers)
+		spineService.getUserNetwork(userNetwork)
 		assert userNetwork.networkSize == 2
 		assert userNetwork.networkedUsers.size() == 4 // Two extra user in the extended network
 		
@@ -329,18 +331,29 @@ class SpineServiceTests {
 		assert userNetwork.networkedUsers[0].tags.size() == 1
 		assert userNetwork.networkedUsers[0].tags.contains("Java");
 		
-		// How is the user tagged in general (not only in the network context)
-		assert userNetwork.networkedUsers[0].user.tags.size() == 1;
-		assert userNetwork.networkedUsers[0].user.tags["Java"] == 1;
-		
 		assert userNetwork.networkedUsers[1].user.email == "jure.zakotnik@techbank.com"
 		assert userNetwork.networkedUsers[1].distance == 2
 		assert userNetwork.networkedUsers[1].tags.size() == 0
+	}
+	
+	void testGetUserNetworkWithAutoFetchTags() {
+		importTestData()
+		def User cTueffers = spineService.getUserByEmail("christian.tueffers@techbank.com")
+		assert cTueffers.id != null
 		
-		// How is the user tagged in general (not only in the network context)
+		def UserNetwork userNetwork = new UserNetwork(cTueffers)
+		spineService.getUserNetwork(userNetwork, true, true)
+		
+		assert userNetwork.networkSize == 2
+		assert userNetwork.networkedUsers.size() == 4 // Two extra user in the extended network
+		
+		assert userNetwork.networkedUsers[0].user.email == "paul-julien.vauthier@techbank.com"
+		assert userNetwork.networkedUsers[0].user.tags.size() == 1
+		assert userNetwork.networkedUsers[0].user.tags["Java"] == 1
+		
+		assert userNetwork.networkedUsers[1].user.email == "jure.zakotnik@techbank.com"
 		assert userNetwork.networkedUsers[1].user.tags.size() == 1;
 		assert userNetwork.networkedUsers[1].user.tags["ECB"] == 2;
-		
 	}
 
 }

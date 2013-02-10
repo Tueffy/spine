@@ -107,6 +107,7 @@ class SpineService implements InitializingBean {
 	 * @return
 	 */
 	def protected computeUserTags(User user) {
+		user.tags.clear()
 		def incomingRelationships = neo4jService.getIncomingRelationships(user.graphNode, "CONNECT")
 		incomingRelationships.each {
 			it.data.each {
@@ -348,28 +349,29 @@ class SpineService implements InitializingBean {
 	
 	/**
 	 * Get the network of an user with many possible configurations
-	 * TODO: Tags need to be tested
-	 * @param user
-	 * @param offset
-	 * @param limit
-	 * @param filter
+	 * @param userNetwork
 	 * @param extendedSearch
+	 * @param autoFetchTags Automatically fetch the tags applied to a user
 	 * @return
 	 */
-	def UserNetwork getUserNetwork(User user, int page = 1, int itemsPerPage = 10, String filter = null, extendedSearch = true) {
-		def userNetwork = new UserNetwork(user, page, itemsPerPage, filter)
-		
+	def UserNetwork getUserNetwork(UserNetwork userNetwork, extendedSearch = true, autoFetchTags = false) {
 		// Get people within the user network
 		queryDirectUserNetwork(userNetwork)
 		computeDirectUserNetworkSize(userNetwork)
 			
-		// If the network is paginated over the number of actual result, 
-		// we look for results which the user currently has no connection with. 
+		// If the network is paginated over the number of actual result,
+		// we look for results which the user currently has no connection with.
 		// Do that only if the extended search is enabled
-		if(!extendedSearch || userNetwork.networkedUsers.size() >= itemsPerPage)
+		if(!extendedSearch || userNetwork.networkedUsers.size() >= userNetwork.itemsPerPage)
 			return userNetwork
 			
 		queryUserExtendedNetwork(userNetwork)
+		
+		if(autoFetchTags) {
+			userNetwork.networkedUsers.each {
+				computeUserTags(it.user)
+			}
+		}
 		
 		return userNetwork
 	}
@@ -408,7 +410,6 @@ class SpineService implements InitializingBean {
 			def networkedUser = new NetworkedUser()
 			networkedUser.contextUser = userNetwork.user
 			networkedUser.user = new User(neo4jService.bindNode(it[0]))
-			computeUserTags(networkedUser.user)
 			networkedUser.distance = it[1]
 			
 			if(networkedUser.distance == 1) {
@@ -488,7 +489,6 @@ class SpineService implements InitializingBean {
 			def networkedUser = new NetworkedUser()
 			networkedUser.contextUser = userNetwork.user
 			networkedUser.user = new User(neo4jService.bindNode(it[0]))
-			computeUserTags(networkedUser.user)
 			networkedUser.distance = 0
 			userNetwork.networkedUsers.add(networkedUser)
 		}
