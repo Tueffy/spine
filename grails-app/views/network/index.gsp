@@ -65,12 +65,7 @@
               	<input type="text" name="filter" id="autocomplete" class="autocomplete_tags" value="Filter ${user.firstName}'s spine" default="Filter ${user.firstName}'s spine" onClick="javascript:this.value='';" />
               </g:else>
                             
-<%--              <ul class="filter_list">--%>
-<%--                <li>Filter by</li>--%>
-<%--                <li><a href="#">Expertise</a></li>--%>
-<%--                <li><a href="#">Distances</a></li>--%>
-<%--            </ul>--%>
-            	<input type="hidden" value="${param}" id="filter_helper" />
+            <input type="hidden" value="${param}" id="filter_helper" />
             </g:form>            
           </div>
 <%--          <div class="grid_4 omega my_updates" id="test1">--%>

@@ -1,3 +1,4 @@
+<g:setProvider library="prototype"/>
 <div class="network_page">
 	<g:each in="${network.networkedUsers}" var="networkedUser">
 	          	  

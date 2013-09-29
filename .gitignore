@@ -2,3 +2,9 @@
 /target-eclipse
 /.link_to_grails_plugins
 /reports
+/.project
+/.classpath
+/.settings
+/logs
+.classpath
+.project

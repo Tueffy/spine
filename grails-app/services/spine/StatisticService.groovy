@@ -6,12 +6,19 @@ class StatisticService {
 	def File searchLog
 	def File autoCompleteLog
 
+	def initLogDir = {
+		def logDir = new File('logs');
+		if(!logDir.exists()) {
+			logDir.mkdirs();
+		}
+	}
+	
     def initSearchLog() {
 		def today = new Date().calendarDate
-		def fileName = "search.${today.year}-${today.month}-${today.dayOfMonth}.log"
+		def fileName = "logs/search.${today.year}-${today.month}-${today.dayOfMonth}.log"
 		
 		if(searchLog == null || !searchLog.name.equals(fileName)) {
-			//searchLog = new File("logs/${fileName}") //use String relativeWebPath = "/path/to/file.xsd String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
+			initLogDir()
 			searchLog = new File("${fileName}")
 			searchLog.createNewFile()
 		}
@@ -25,10 +32,10 @@ class StatisticService {
 	
 	def initAutoCompleteLog() {
 		def today = new Date().calendarDate
-		def fileName = "autoComplete.${today.year}-${today.month}-${today.dayOfMonth}.log"
+		def fileName = "logs/autoComplete.${today.year}-${today.month}-${today.dayOfMonth}.log"
 		
 		if(autoCompleteLog == null || !autoCompleteLog.name.equals(fileName)) {
-			//autoCompleteLog = new File("logs/${fileName}") //use String relativeWebPath = "/path/to/file.xsd String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
+			initLogDir()
 			autoCompleteLog = new File("${fileName}")
 			autoCompleteLog.createNewFile()
 		}

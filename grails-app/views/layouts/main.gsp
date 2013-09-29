@@ -20,7 +20,9 @@
   		jQuery.noConflict();
   	</g:javascript>
   	<g:javascript src="main.js" />
+  	<g:javascript library='prototype' />
   	<g:javascript library='scriptaculous' />
+  	<g:setProvider library="prototype"/>
   	<g:layoutHead />
 </head>
 

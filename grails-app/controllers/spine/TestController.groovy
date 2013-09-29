@@ -51,7 +51,7 @@ class TestController {
 	 * @param json
 	 * @return
 	 */
-	def indexNode(String nodeURI, json = null) {
+	def indexNode(String nodeURI, json) {
 		if(json == null) {
 			json = graphCommunicatorService.neoGet(nodeURI)
 		}
