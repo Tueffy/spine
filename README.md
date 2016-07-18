@@ -2,6 +2,13 @@
 
 Explanation
 -----
+We decided to open source spine. The application is suited for identifying skills within an organisation by using a social platform where people can tag other people and connect to them easily. 
+
+
+Architecture
+-----
+The application is based upon neo4j for managing the relationship between people. Furthermore Groovy/Grails is used for the services and the front end.
+
 
 License
 -----
